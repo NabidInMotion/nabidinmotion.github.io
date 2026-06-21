@@ -925,6 +925,30 @@ section { padding: 3.5rem 0; }
   color: var(--text);
 }
 
+.legal-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--text);
+}
+
+.legal-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+.legal-nav {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.legal-nav a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
 .legal-card p,
 .legal-card li {
   color: var(--text-muted);

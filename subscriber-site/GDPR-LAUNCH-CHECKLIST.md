@@ -17,11 +17,9 @@ Complete these steps before pointing your domain to production. The codebase is 
 
 ## You must complete before go live
 
-1. **Impressum address**  
-   Edit `impressum.html` and replace `[Straße und Hausnummer]` and `[PLZ]` with your full postal address in Berlin.
+1. **Impressum address** — done (`impressum.html`: full provider, Gewerbe, and disclaimer text)
 
-2. **Contact email**  
-   Replace `privacy@nabidinmotion.com` in `datenschutz.html`, `impressum.html`, `privacy.html`, and `.well-known/security.txt` with your real mailbox. Set up the inbox.
+2. **Contact email** — done (`nabidinmotion@gmail.com` in legal pages and `security.txt`). Keep the inbox monitored.
 
 3. **Hosting DPA (AVV)**  
    Sign a Data Processing Agreement with your host (Cloudflare, Netlify, Vercel, Azure, etc.) under Article 28 GDPR.

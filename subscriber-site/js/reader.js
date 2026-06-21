@@ -249,8 +249,8 @@ function renderLessonLegal(content) {
       "p",
       "lesson-legal-text",
       `Source: ${content.source}. Synced ${synced}${commit ? ` (GitHub ${commit})` : ""}. ` +
-        "This lesson may differ from versions you saw before. Educational use only. No warranty. " +
-        "See Nutzungsbedingungen for change and liability terms."
+        "This lesson may differ from versions you saw before. Open-source educational material. Not guaranteed accurate or complete. Use at your own risk. External links may change. " +
+        "See Nutzungsbedingungen for liability terms."
     )
   );
 

@@ -2,7 +2,7 @@
  * Site-wide legal meta: content sync stamp, terms acknowledgment banner.
  */
 const TERMS_STORAGE_KEY = "nim-terms-v1";
-const TERMS_VERSION = "2026-06-21";
+const TERMS_VERSION = "2026-06-22";
 
 export async function fetchManifest() {
   try {
@@ -63,7 +63,7 @@ export function renderContentStamp(container, manifest) {
   const legalLine = document.createElement("p");
   legalLine.className = "content-stamp-legal";
   legalLine.innerHTML =
-    'Educational content only · No warranty · <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a> · <a href="terms.html">Terms (EN)</a>';
+    'Educational only · No accuracy guarantee · Use at your own risk · <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a> · <a href="terms.html">Terms (EN)</a>';
   container.append(legalLine);
 }
 
@@ -125,8 +125,8 @@ export function initTermsBanner() {
   banner.innerHTML = `
     <div class="terms-banner-inner container">
       <p>
-        <strong>Notice:</strong> This Study Hub provides free educational material that may be updated, corrected, or removed at any time.
-        There is no guarantee of completeness or permanent availability. By continuing, you accept the
+        <strong>Notice:</strong> Free open-source educational material. We do not guarantee accuracy or completeness.
+        External links may change. Use at your own risk. By continuing, you accept the
         <a href="nutzungsbedingungen.html">Nutzungsbedingungen (DE)</a> and
         <a href="terms.html">Terms of Use (EN)</a>.
       </p>
