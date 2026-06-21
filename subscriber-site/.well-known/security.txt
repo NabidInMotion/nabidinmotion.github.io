@@ -1,3 +1,4 @@
 Contact: mailto:nabidinmotion@gmail.com
 Preferred-Languages: en, de
 Policy: https://github.com/NabidAlam/nabidinmotion/blob/main/subscriber-site/security-acknowledgments.html
+# Canonical: set after deploy, e.g. https://nabidalam.github.io/

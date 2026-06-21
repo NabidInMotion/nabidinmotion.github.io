@@ -1,42 +1,73 @@
 # GDPR Launch Checklist (Germany)
 
-Complete these steps before pointing your domain to production. The codebase is prepared for GDPR. These operator steps are required by law.
+Complete these steps before pointing your domain to production. The codebase is prepared for GDPR. Operator steps below are required or strongly recommended by law.
 
 ## Already implemented in code
 
 - [x] Self hosted fonts (no Google Fonts CDN)
-- [x] No cookies, no analytics, no tracking scripts
-- [x] No YouTube embeds or third party thumbnail requests
-- [x] External links only on click (GitHub, YouTube)
+- [x] No cookies, no analytics, no tracking scripts on the Study Hub
+- [x] No YouTube or Facebook embeds or third party thumbnail requests
+- [x] External links only on click (GitHub, YouTube, Facebook)
 - [x] Content Security Policy with strict `self` only sources
-- [x] German Datenschutzerklärung (`datenschutz.html`)
-- [x] Impressum (`impressum.html`) per § 5 TMG
+- [x] German Datenschutzerklärung (`datenschutz.html`) incl. off-site monetization note
+- [x] Impressum (`impressum.html`) per § 5 DDG with Gewerbe and English summary
+- [x] Nutzungsbedingungen / Terms with open-source, at-your-own-risk, and link disclaimers
 - [x] English privacy summary (`privacy.html`)
+- [x] Terms acknowledgment banner and lesson content notices
+- [x] Progress export, import, and reset (local device only)
 - [x] Footer links on all pages
-- [x] Security headers for Netlify, Vercel, Azure
+- [x] Security headers for Netlify, Vercel, Azure, GitHub Pages
+- [x] Contact email `nabidinmotion@gmail.com` in legal pages and `security.txt`
 
-## You must complete before go live
+## Tier 1 — Before go live (required)
 
-1. **Impressum address** — done (`impressum.html`: full provider, Gewerbe, and disclaimer text)
+- [ ] **Verify Impressum facts** — name, address, Gewerbe registration, Kleinunternehmer status must match reality
+- [ ] **Monitor `nabidinmotion@gmail.com`** — privacy, legal, and security reports
+- [ ] **Hosting AVV (DPA)** — sign Article 28 GDPR agreement with host (GitHub, Cloudflare, Netlify, Vercel, etc.)
+- [ ] **HTTPS only** — deploy with valid TLS (GitHub Pages provides this)
+- [ ] **Set production URL** — after deploy, add canonical domain to `security.txt` `Canonical:` line and Impressum if desired
+- [ ] **Smoke test** — terms banner, one lesson, export/import progress, external links, mobile nav
 
-2. **Contact email** — done (`nabidinmotion@gmail.com` in legal pages and `security.txt`). Keep the inbox monitored.
+## Tier 2 — Platform monetization (YouTube + Facebook)
 
-3. **Hosting DPA (AVV)**  
-   Sign a Data Processing Agreement with your host (Cloudflare, Netlify, Vercel, Azure, etc.) under Article 28 GDPR.
+Revenue is off-site. Study Hub stays ad-free.
 
-4. **HTTPS**  
-   Deploy only over HTTPS so HSTS and secure cookies (if ever added) work correctly.
+- [ ] **YouTube** — channel complies with YouTube Terms, AdSense policies, and copyright rules
+- [ ] **Facebook** — profile/page complies with Meta Terms and monetization rules
+- [ ] **Do not add** AdSense, Meta Pixel, or analytics to the Study Hub without consent UI and updated Datenschutz
 
-5. **EU hosting (optional but recommended)**  
-   Choose a host or CDN with EU data processing if you want to minimize third country transfers in server logs.
+## Tier 3 — Tax and Gewerbe (Germany)
 
-6. **Domain in legal pages**  
-   After you know your domain, update links in `security.txt` and datenschutz if needed.
+- [ ] **Gewerbe** registration current at Bezirksamt Mitte von Berlin
+- [ ] **Steuerberater** — confirm Kleinunternehmer § 19 UStG and declare AdSense/Facebook payouts
+- [ ] **Bookkeeping** — track platform payouts even when small
+
+## Tier 4 — Content discipline
+
+- [ ] Label content as educational, not guaranteed outcomes
+- [ ] Fix reported serious factual errors in good faith
+- [ ] Do not copy unlicensed third-party course material
+- [ ] Avoid medical, legal, or investment advice framed as certainty
+
+## Tier 5 — Optional professional review
+
+- [ ] **Medienrecht lawyer** — one-time review of Impressum + Nutzungsbedingungen (recommended, not mandatory for free static site)
+- [ ] **Steuerberater** — before first meaningful AdSense tax year
 
 ## Fonts license
 
 Inter and JetBrains Mono are bundled under open licenses (OFL). Font files live in `assets/fonts/`.
 
-## No cookie banner needed
+## No cookie banner needed (today)
 
-This site does not set non essential cookies. Do not add Google Analytics or similar tools without a consent banner and updated Datenschutzerklärung.
+This site does not set non essential cookies. Do not add Google Analytics, Meta Pixel, or similar tools without a consent banner and updated Datenschutzerklärung.
+
+## Launch-day quick check
+
+```
+[ ] Impressum + Datenschutz + Terms live and linked in footer
+[ ] Lesson content notice visible
+[ ] No console errors on index + learn pages
+[ ] AVR/DPA documented with host
+[ ] security.txt reachable at /.well-known/security.txt
+```

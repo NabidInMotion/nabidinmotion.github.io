@@ -217,7 +217,7 @@ Security contact: `.well-known/security.txt` points to `security-acknowledgments
 ## Before you launch in Germany
 
 1. Fill in the Impressum address in `impressum.html`
-2. Set up a real mailbox for `privacy@nabidinmotion.com` (or your chosen address)
+2. Monitor `nabidinmotion@gmail.com` for privacy and legal requests
 3. Sign a hosting DPA (AVV) with your provider
 4. Deploy over HTTPS
 5. Ship the latest `content/`
