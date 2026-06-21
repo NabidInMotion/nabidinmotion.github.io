@@ -1,106 +1,97 @@
-# nabidinmotion
+# Nabid In Motion — Study Hub
 
-This folder on your PC holds **three separate things**. Git and GitHub should only ever see two of them.
+Static study hub for the [Road to Machine Learning](https://github.com/NabidAlam/road-to-machine-learning) curriculum. Subscribers read 265+ lessons in the browser, track progress locally, and filter modules by career path. No accounts, no cookies, no third-party tracking.
 
-| Area | Path | On GitHub? | Who sees it? |
-|------|------|------------|--------------|
-| **Study hub (website)** | `subscriber-site/` | Yes | Everyone (after Pages deploy) |
-| **Curriculum** | `road-to-machine-learning/` | Yes (its own repo) | Everyone ([Road to ML](https://github.com/NabidAlam/road-to-machine-learning)) |
-| **Channel studio** | `logo-src/`, `final-exports/`, `render_*.js`, artboards | **No** | Only you (local + `.gitignore`) |
+**Live site:** deploy `subscriber-site/` (GitHub Pages or similar)  
+**Curriculum source:** [NabidAlam/road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning) (git submodule)
 
-The study hub stays in sync with the curriculum via `scripts/sync-curriculum.js`. Full site docs: [subscriber-site/README.md](subscriber-site/README.md). Submodule notes: [CURRICULUM.md](CURRICULUM.md).
+Full site documentation: [subscriber-site/README.md](subscriber-site/README.md)  
+Submodule notes: [CURRICULUM.md](CURRICULUM.md)
 
-**Using `subscriber-site/assets/logo.png` on the website is fine** — that is a small exported copy for the header. Visitors never get your `logo-src/` sources, `final-exports/` banners, or render tooling.
+## How it fits together
 
-**Privacy note:** Banner/logo studio files stay on your machine only (`.gitignore`). This repo on GitHub contains the study hub and curriculum sync — not your artboards or exports.
-
-## Study Hub quick start
-
-```bash
-npm install
-npm run curriculum:init
-npm run curriculum:sync
-npm run site    # http://localhost:3080
-```
-
-For architecture, auto-sync, deployment, and GDPR notes, see [subscriber-site/README.md](subscriber-site/README.md).
-
-## Channel studio (local only — not pushed to GitHub)
-
-These files live in the same folder on your machine for convenience, but they are **gitignored** and isolated from the website and from [road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning). Nobody browsing the study hub or the curriculum repo sees them.
-
-Puppeteer loads HTML artboards and exports PNGs you upload to YouTube/Facebook yourself. When you need a logo on the site, copy an export into `subscriber-site/assets/` manually.
-
-### Platform sizes
-
-Layouts follow the rules in `.cursor/skills/SKILL.md` so text stays inside each platform safe zone.
-
-| Platform | Source | Dimensions | Output |
-|----------|--------|------------|--------|
-| YouTube | `artboard.html` | 2560 × 1440 | `final-exports/youtube/youtube_banner.png` |
-| Facebook | `facebook-src/artboard.html` | 820 × 360 | `final-exports/facebook/facebook_cover.png` |
-
-### Project layout
+Two Git repos work as a pair:
 
 ```text
-nabidinmotion/                     (GitHub: NabidAlam/nabidinmotion)
-├── subscriber-site/               # PUBLIC — deploy this (GitHub Pages)
-├── road-to-machine-learning/      # PUBLIC — separate repo (submodule pointer)
-├── scripts/                       # PUBLIC — curriculum sync + local preview
-├── .github/workflows/             # PUBLIC — auto-sync CI
-├── logo-src/                      # PRIVATE — gitignored
-├── final-exports/                 # PRIVATE — gitignored
-├── artboard.html, render_*.js     # PRIVATE — gitignored
-├── package.json
-├── CURRICULUM.md
-└── README.md
+road-to-machine-learning          nabidinmotion (this repo)
+  markdown lessons (.md)     →      subscriber-site/ (static HTML/JS/CSS)
+  own git history                   subscriber-site/content/ (built JSON)
+  submodule checked out here        scripts/sync-curriculum.js
 ```
 
-### Installation
+When you push markdown to the curriculum repo, a GitHub Action can notify this repo, rebuild `content/`, and redeploy the site.
 
-You need Node.js 18 or newer.
+## Quick start
+
+Requires Node.js 18 or newer.
 
 ```bash
 git clone --recurse-submodules https://github.com/NabidAlam/nabidinmotion.git
 cd nabidinmotion
 npm install
+npm run curriculum:init    # first time only
+npm run curriculum:sync    # pull latest markdown and rebuild content/
+npm run site               # http://localhost:3080
 ```
 
-The first install also downloads Chromium for Puppeteer.
+## Working with the curriculum
 
-### Generate banners
-
-Each platform has its own script. It opens headless Chromium, loads the artboard, waits for fonts to settle, and writes the PNG.
-
-YouTube (2560 × 1440):
+Edit lessons in `road-to-machine-learning/` — it is a full git clone of the curriculum repo, not a copy. Commit and push from inside that folder, then sync the site:
 
 ```bash
-npm run banner
+cd road-to-machine-learning
+git checkout main
+# edit markdown
+git add .
+git commit -m "Update lesson"
+git push origin main
+cd ..
+
+npm run curriculum:sync
+npm run site
 ```
 
-Output: `final-exports/youtube/youtube_banner.png`
+| Command | What it does |
+|---------|----------------|
+| `npm run curriculum:init` | Clone the curriculum submodule (first time) |
+| `npm run curriculum:pull` | Pull latest `main` from the curriculum repo |
+| `npm run sync:curriculum` | Rebuild `subscriber-site/content/` from local clone or GitHub |
+| `npm run curriculum:sync` | Pull submodule, then sync |
+| `npm run site` | Local preview at http://localhost:3080 |
 
-Facebook (820 × 360):
-
-```bash
-npm run facebook
-```
-
-Output: `final-exports/facebook/facebook_cover.png`
-
-A successful run prints something like:
+## Project layout
 
 ```text
-OK final-exports\youtube\youtube_banner.png  (802.0 KB, 2560x1440)
-OK final-exports\facebook\facebook_cover.png  (124.9 KB, 820x360)
+nabidinmotion/
+├── subscriber-site/               # Deploy this — static study hub
+│   ├── index.html, learn.html
+│   ├── js/, css/, data/
+│   ├── content/                 # Built from curriculum markdown
+│   └── assets/logo.png          # Site logo (exported copy)
+├── road-to-machine-learning/    # Git submodule — curriculum source
+├── scripts/
+│   ├── sync-curriculum.js       # Markdown → sanitized HTML + Shiki
+│   └── serve-site.js            # Local dev server
+├── .github/workflows/           # Auto-sync when curriculum changes
+├── package.json
+├── CURRICULUM.md
+└── README.md
 ```
 
-### Editing the design
+## Brand assets
 
-Brand tokens and layout rules live in `.cursor/skills/SKILL.md`. Edit `artboard.html` for YouTube and `facebook-src/artboard.html` for Facebook, then re-run the matching script.
+Place the site logo at `subscriber-site/assets/logo.png`. It appears in the header and browser tab on every page. Source design files stay local and are not part of this repo.
 
-### Tech stack
+## Going live
 
-- Node.js
-- Puppeteer (headless Chromium)
-- Tailwind CSS via CDN inside the artboards
+Run `npm run curriculum:sync` before deploy, or let GitHub Actions commit fresh `content/` after a curriculum push. Point your host at the `subscriber-site` directory.
+
+For architecture, auto-sync setup, security headers, and GDPR launch checklist, see [subscriber-site/README.md](subscriber-site/README.md).
+
+## Links
+
+| Resource | URL |
+|----------|-----|
+| Study hub repo | [NabidAlam/nabidinmotion](https://github.com/NabidAlam/nabidinmotion) |
+| Curriculum repo | [NabidAlam/road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning) |
+| YouTube | [@NabidInMotion](https://www.youtube.com/@NabidInMotion) |

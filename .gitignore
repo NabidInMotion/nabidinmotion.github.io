@@ -23,7 +23,7 @@ node_modules/
 # --- Private channel studio (banners, logos, thumbnails — not the study hub) ---
 logo-src/
 final-exports/
-assets/
+/assets/
 artboard.html
 artboard-v2.html
 facebook-src/
