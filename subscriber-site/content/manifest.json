@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-06-21T21:42:10.832Z",
+  "syncedAt": "2026-06-21T21:47:12.321Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 265,
   "modules": [
@@ -1533,6 +1533,12 @@
       "path": "guides/resources--imbalanced_data_cheatsheet.json"
     },
     {
+      "id": "readme",
+      "title": "Install Anaconda from https://www.anaconda.com/products/individual",
+      "source": "README.md",
+      "path": "guides/readme.json"
+    },
+    {
       "id": "resources--introduction_to_ml_cheatsheet",
       "title": "Introduction to ML Cheatsheet",
       "source": "resources/introduction_to_ml_cheatsheet.md",
@@ -1755,12 +1761,6 @@
       "path": "guides/resources--reinforcement_learning.json"
     },
     {
-      "id": "readme",
-      "title": "Road to ML: From Zero to Hero",
-      "source": "README.md",
-      "path": "guides/readme.json"
-    },
-    {
       "id": "resources--stakeholder_communication",
       "title": "Stakeholder Communication Guide for ML Projects",
       "source": "resources/stakeholder_communication.md",
@@ -1783,11 +1783,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-06-21T21:42:10.832Z",
-    "sourceCommit": "0b766423e10871b8d9300abb126e45045ce8acf0",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/0b766423e10871b8d9300abb126e45045ce8acf0",
-    "sourceCommitDate": "2026-06-21T23:41:17+02:00",
-    "sourceCommitMessage": "Wave 1: unify Module vs Stage naming and fix onboarding.",
+    "contentSyncedAt": "2026-06-21T21:47:12.321Z",
+    "sourceCommit": "864b0738cf1c0bdc21df566f44d24198fa067429",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/864b0738cf1c0bdc21df566f44d24198fa067429",
+    "sourceCommitDate": "2026-06-21T23:46:12+02:00",
+    "sourceCommitMessage": "Waves 2-4: facts, links, voice pass, and tutorial fixes.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
