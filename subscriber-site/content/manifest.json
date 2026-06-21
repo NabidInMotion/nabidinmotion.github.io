@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-06-21T21:33:01.371Z",
+  "syncedAt": "2026-06-21T21:42:10.832Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 265,
   "modules": [
@@ -9,7 +9,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 0: Prerequisites",
+          "title": "Module 00: Prerequisites",
           "source": "00-prerequisites/README.md",
           "path": "modules/00-prerequisites/readme.json"
         },
@@ -70,7 +70,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 1: Python for Data Science",
+          "title": "Module 01: Python for Data Science",
           "source": "01-python-for-data-science/README.md",
           "path": "modules/01-python-for-data-science/readme.json"
         },
@@ -167,7 +167,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 2: Introduction to Machine Learning",
+          "title": "Module 02: Introduction to Machine Learning",
           "source": "02-introduction-to-ml/README.md",
           "path": "modules/02-introduction-to-ml/readme.json"
         },
@@ -222,7 +222,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 3: Supervised Learning - Regression",
+          "title": "Module 03: Supervised Learning - Regression",
           "source": "03-supervised-learning-regression/README.md",
           "path": "modules/03-supervised-learning-regression/readme.json"
         },
@@ -259,7 +259,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 4: Supervised Learning - Classification",
+          "title": "Module 04: Supervised Learning - Classification",
           "source": "04-supervised-learning-classification/README.md",
           "path": "modules/04-supervised-learning-classification/readme.json"
         },
@@ -296,7 +296,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 5: Model Evaluation & Optimization",
+          "title": "Module 05: Model Evaluation & Optimization",
           "source": "05-model-evaluation-optimization/README.md",
           "path": "modules/05-model-evaluation-optimization/readme.json"
         },
@@ -333,7 +333,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 6: Ensemble Methods",
+          "title": "Module 06: Ensemble Methods",
           "source": "06-ensemble-methods/README.md",
           "path": "modules/06-ensemble-methods/readme.json"
         },
@@ -370,7 +370,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 7: Feature Engineering",
+          "title": "Module 07: Feature Engineering",
           "source": "07-feature-engineering/README.md",
           "path": "modules/07-feature-engineering/readme.json"
         },
@@ -407,7 +407,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 8: Unsupervised Learning",
+          "title": "Module 08: Unsupervised Learning",
           "source": "08-unsupervised-learning/README.md",
           "path": "modules/08-unsupervised-learning/readme.json"
         },
@@ -444,7 +444,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 9: Neural Networks Basics",
+          "title": "Module 09: Neural Networks Basics",
           "source": "09-neural-networks-basics/README.md",
           "path": "modules/09-neural-networks-basics/readme.json"
         },
@@ -481,7 +481,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 10: Deep Learning Frameworks",
+          "title": "Module 10: Deep Learning Frameworks",
           "source": "10-deep-learning-frameworks/README.md",
           "path": "modules/10-deep-learning-frameworks/readme.json"
         },
@@ -518,7 +518,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 11: Computer Vision",
+          "title": "Module 11: Computer Vision",
           "source": "11-computer-vision/README.md",
           "path": "modules/11-computer-vision/readme.json"
         },
@@ -555,7 +555,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 12: Natural Language Processing",
+          "title": "Module 12: Natural Language Processing",
           "source": "12-natural-language-processing/README.md",
           "path": "modules/12-natural-language-processing/readme.json"
         },
@@ -592,7 +592,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 13: Model Deployment",
+          "title": "Module 13: Model Deployment",
           "source": "13-model-deployment/README.md",
           "path": "modules/13-model-deployment/readme.json"
         },
@@ -629,7 +629,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 14: MLOps Basics",
+          "title": "Module 14: MLOps Basics",
           "source": "14-mlops-basics/README.md",
           "path": "modules/14-mlops-basics/readme.json"
         },
@@ -672,7 +672,7 @@
         },
         {
           "id": "readme",
-          "title": "Phase 15: Time Series Analysis",
+          "title": "Module 15: Time Series Analysis",
           "source": "15-time-series-analysis/README.md",
           "path": "modules/15-time-series-analysis/readme.json"
         },
@@ -940,7 +940,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 19: SQL and Database Fundamentals",
+          "title": "Module 19: SQL and Database Fundamentals",
           "source": "19-sql-database-fundamentals/README.md",
           "path": "modules/19-sql-database-fundamentals/readme.json"
         },
@@ -977,7 +977,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 20: Handling Imbalanced Data",
+          "title": "Module 20: Handling Imbalanced Data",
           "source": "20-handling-imbalanced-data/README.md",
           "path": "modules/20-handling-imbalanced-data/readme.json"
         },
@@ -1014,7 +1014,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 21: Model Explainability",
+          "title": "Module 21: Model Explainability",
           "source": "21-model-explainability/README.md",
           "path": "modules/21-model-explainability/readme.json"
         },
@@ -1051,7 +1051,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 22: Reinforcement Learning",
+          "title": "Module 22: Reinforcement Learning",
           "source": "22-reinforcement-learning/README.md",
           "path": "modules/22-reinforcement-learning/readme.json"
         },
@@ -1088,7 +1088,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 23: Graph Neural Networks",
+          "title": "Module 23: Graph Neural Networks",
           "source": "23-graph-neural-networks/README.md",
           "path": "modules/23-graph-neural-networks/readme.json"
         },
@@ -1125,7 +1125,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 24: Audio and Speech Processing",
+          "title": "Module 24: Audio and Speech Processing",
           "source": "24-audio-speech-processing/README.md",
           "path": "modules/24-audio-speech-processing/readme.json"
         },
@@ -1162,7 +1162,7 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Phase 7: Generative AI & Modern LLM Applications",
+          "title": "Module 25: Generative AI & Modern LLM Applications",
           "source": "25-generative-ai-llms/README.md",
           "path": "modules/25-generative-ai-llms/readme.json"
         },
@@ -1783,11 +1783,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-06-21T21:33:01.371Z",
-    "sourceCommit": "19bb9e1dd7012c4fca728a836ca9bd79c7740fc4",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/19bb9e1dd7012c4fca728a836ca9bd79c7740fc4",
-    "sourceCommitDate": "2026-06-21T23:32:11+02:00",
-    "sourceCommitMessage": "Fix README playlist section wording.",
+    "contentSyncedAt": "2026-06-21T21:42:10.832Z",
+    "sourceCommit": "0b766423e10871b8d9300abb126e45045ce8acf0",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/0b766423e10871b8d9300abb126e45045ce8acf0",
+    "sourceCommitDate": "2026-06-21T23:41:17+02:00",
+    "sourceCommitMessage": "Wave 1: unify Module vs Stage naming and fix onboarding.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
