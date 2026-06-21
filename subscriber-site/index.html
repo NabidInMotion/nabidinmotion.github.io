@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Nabid In Motion study hub for subscribers. Notes, modules, and YouTube videos for the Road to Machine Learning curriculum." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <title>Nabid In Motion Study Hub</title>
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/brand.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand-lockup" href="#top">
+        <img id="brand-logo" src="assets/logo.png" alt="Nabid In Motion" width="44" height="44" />
+        <span class="brand-name">Nabid <span>In Motion</span></span>
+      </a>
+      <ul class="nav-links" id="site-nav">
+        <li><a href="learn.html?g=learning-roadmap">Learn</a></li>
+        <li><a href="#notes">Notes</a></li>
+        <li><a href="#videos">Videos</a></li>
+        <li><a href="#career-path">Career Path</a></li>
+        <li><a href="#modules">Modules</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <span class="hero-badge">Subscriber Study Hub</span>
+      <h1>Road to <span class="accent">Machine Learning</span></h1>
+      <p class="hero-tagline" id="hero-tagline">AI Engineering · Tech Architecture · Life Adventures</p>
+      <p class="hero-skills" id="hero-skills">System Design // LLM Orchestration // Distributed Systems</p>
+      <p id="hero-repo-desc" class="hero-desc">
+        Read the full curriculum here. 265 lessons synced from GitHub. Track progress in your browser. No account required.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="learn.html?g=learning-roadmap">Read Roadmap ::</a>
+        <a class="btn btn-ghost" data-link="github" href="https://github.com/NabidAlam/road-to-machine-learning" target="_blank" rel="noopener noreferrer">Open GitHub ::</a>
+        <a class="btn btn-ghost" data-link="subscribe" href="https://www.youtube.com/@NabidInMotion?sub_confirmation=1" target="_blank" rel="noopener noreferrer">Subscribe ::</a>
+      </div>
+      <div id="progress-hero"></div>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <section id="notes" class="container">
+      <div class="section-header">
+        <div class="prompt">:: Study Notes</div>
+        <h2>Curriculum Guides</h2>
+        <p>Official notes from the <strong id="hero-repo-title">Road to ML</strong> repository. Read everything on site or open the source on GitHub.</p>
+      </div>
+      <div class="guide-grid" id="study-guides"></div>
+    </section>
+
+    <section id="videos" class="container">
+      <div class="section-header">
+        <div class="prompt">:: YouTube</div>
+        <h2>Video Library</h2>
+        <p>All video and playlist cards open on YouTube in a new tab. This site does not embed YouTube players or load third party thumbnails.</p>
+      </div>
+      <div class="video-grid" id="video-grid"></div>
+    </section>
+
+    <section id="career-path" class="container">
+      <div class="section-header">
+        <div class="prompt">:: Career Path</div>
+        <h2>Choose Your Target Role</h2>
+        <p>Same career paths table as the GitHub README. Pick a role and the hub shows only the modules you need for that path.</p>
+      </div>
+      <div id="career-role-summary" class="career-role-summary" hidden></div>
+      <div class="career-role-grid" id="career-role-grid"></div>
+    </section>
+
+    <section id="modules" class="container">
+      <div class="section-header">
+        <div class="prompt">:: Learning Path</div>
+        <h2 id="modules-heading">26 Modules from Zero to Hero</h2>
+        <p id="modules-desc">Filter by phase or browse the full path. Study on site with saved progress, or open notebooks on GitHub.</p>
+      </div>
+      <div class="phase-tabs" id="phase-tabs"></div>
+      <div class="module-list" id="module-list"></div>
+    </section>
+
+    <section id="about" class="container">
+      <div class="about-strip">
+        <div>
+          <div class="prompt about-prompt">:: About Nabid In Motion</div>
+          <p>
+            I am a Data Scientist sharing my journey through AI and Machine Learning. This channel covers deep technical work, music, travel, and family moments.
+            This study hub connects my YouTube channel with the open Road to Machine Learning curriculum so subscribers can learn, code, and build in one place.
+          </p>
+        </div>
+        <a class="btn btn-primary" data-link="youtube" href="https://www.youtube.com/@NabidInMotion" target="_blank" rel="noopener noreferrer">Visit Channel ::</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="footer-year"></span> Nabid In Motion. Progress saved locally. No cookies. No tracking.</p>
+      <ul class="footer-links">
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
+        <li><a href="privacy.html">Privacy (EN)</a></li>
+        <li><a href="nutzungsbedingungen.html">Nutzungsbedingungen</a></li>
+        <li><a href="terms.html">Terms (EN)</a></li>
+        <li><a data-link="github" href="https://github.com/NabidAlam/road-to-machine-learning" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a data-link="youtube" href="https://www.youtube.com/@NabidInMotion" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+        <li><a data-link="subscribe" href="https://www.youtube.com/@NabidInMotion?sub_confirmation=1" target="_blank" rel="noopener noreferrer">Subscribe</a></li>
+      </ul>
+    </div>
+    <div class="container content-stamp-wrap" id="content-stamp"></div>
+  </footer>
+
+  <script type="module">
+    import { initSiteMeta } from "./js/site-meta.js";
+    initSiteMeta();
+  </script>
+  <script src="js/main.js" type="module"></script>
+</body>
+</html>

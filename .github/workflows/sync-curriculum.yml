@@ -1,0 +1,64 @@
+# Sync curriculum from road-to-machine-learning into subscriber-site/content/
+#
+# Triggers:
+#   - Push to road-to-machine-learning main (via repository_dispatch — see setup below)
+#   - Manual: Actions → Sync curriculum → Run workflow
+#   - Scheduled: daily at 06:00 UTC (fallback)
+#
+# Setup for push → sync (one time, in road-to-machine-learning repo):
+#   1. Copy scripts/road-to-ml-notify-study-hub.yml.example to
+#      road-to-machine-learning/.github/workflows/notify-study-hub.yml
+#   2. Create a fine-grained PAT with access to this study hub repo.
+#   3. In road-to-machine-learning → Settings → Secrets → Actions:
+#        STUDY_HUB_DISPATCH_TOKEN = <PAT>
+#   4. In road-to-machine-learning → Settings → Variables → Actions:
+#        STUDY_HUB_REPO = NabidAlam/nabidinmotion
+
+name: Sync curriculum
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [curriculum-updated]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout study hub (with curriculum submodule)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update curriculum submodule to latest main
+        run: git submodule update --init --remote road-to-machine-learning
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site content from local curriculum clone
+        run: npm run sync:curriculum
+
+      - name: Commit synced content
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add subscriber-site/content/ road-to-machine-learning
+          if git diff --staged --quiet; then
+            echo "No curriculum changes to commit."
+            exit 0
+          fi
+          git commit -m "Sync curriculum from road-to-machine-learning." -m "Automated snapshot: markdown to sanitized HTML + syntax highlighting."
+          git push

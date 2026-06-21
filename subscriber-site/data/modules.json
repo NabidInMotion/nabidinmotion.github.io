@@ -1,0 +1,104 @@
+{
+  "phases": [
+    {
+      "id": "0",
+      "name": "Foundation",
+      "time": "2–6 months",
+      "modules": ["00-prerequisites"]
+    },
+    {
+      "id": "1",
+      "name": "Data Fundamentals",
+      "time": "2–6 months",
+      "modules": ["01-python-for-data-science"]
+    },
+    {
+      "id": "2",
+      "name": "ML Basics",
+      "time": "2–6 months",
+      "modules": ["02-introduction-to-ml", "03-supervised-learning-regression", "04-supervised-learning-classification", "05-model-evaluation-optimization"]
+    },
+    {
+      "id": "3",
+      "name": "Advanced Supervised",
+      "time": "1–4 months",
+      "modules": ["06-ensemble-methods", "07-feature-engineering"]
+    },
+    {
+      "id": "4",
+      "name": "Unsupervised Learning",
+      "time": "1–2 months",
+      "modules": ["08-unsupervised-learning"]
+    },
+    {
+      "id": "5",
+      "name": "Deep Learning Fundamentals",
+      "time": "2–4 months",
+      "modules": ["09-neural-networks-basics", "10-deep-learning-frameworks"]
+    },
+    {
+      "id": "6",
+      "name": "Specialized Deep Learning",
+      "time": "3–8 months",
+      "modules": ["11-computer-vision", "12-natural-language-processing", "15-time-series-analysis"]
+    },
+    {
+      "id": "7",
+      "name": "Generative AI & LLMs",
+      "time": "1–4 months",
+      "modules": ["25-generative-ai-llms"]
+    },
+    {
+      "id": "7.5",
+      "name": "Essential Skills",
+      "time": "1–4 months",
+      "modules": ["19-sql-database-fundamentals", "20-handling-imbalanced-data", "21-model-explainability"]
+    },
+    {
+      "id": "8",
+      "name": "Production & MLOps",
+      "time": "2–6 months",
+      "modules": ["13-model-deployment", "14-mlops-basics"]
+    },
+    {
+      "id": "9",
+      "name": "Projects",
+      "time": "Ongoing",
+      "modules": ["16-projects-beginner", "17-projects-intermediate", "18-projects-advanced"]
+    },
+    {
+      "id": "10",
+      "name": "Advanced Specialization",
+      "time": "2–3 months",
+      "modules": ["22-reinforcement-learning", "23-graph-neural-networks", "24-audio-speech-processing"]
+    }
+  ],
+  "modules": [
+    { "slug": "00-prerequisites", "title": "Prerequisites", "summary": "Python basics, math foundations, and environment setup." },
+    { "slug": "01-python-for-data-science", "title": "Python for Data Science", "summary": "NumPy, Pandas, Polars, visualization, and EDA." },
+    { "slug": "02-introduction-to-ml", "title": "Introduction to ML", "summary": "Core ML concepts, workflows, and first models." },
+    { "slug": "03-supervised-learning-regression", "title": "Supervised Learning — Regression", "summary": "Linear models, evaluation, and end-to-end regression projects." },
+    { "slug": "04-supervised-learning-classification", "title": "Supervised Learning — Classification", "summary": "Logistic regression, trees, SVM, and classification metrics." },
+    { "slug": "05-model-evaluation-optimization", "title": "Model Evaluation & Optimization", "summary": "Cross-validation, hyperparameter tuning, and leakage prevention." },
+    { "slug": "06-ensemble-methods", "title": "Ensemble Methods", "summary": "Bagging, boosting, stacking, and Random Forest / XGBoost." },
+    { "slug": "07-feature-engineering", "title": "Feature Engineering", "summary": "Encoding, scaling, selection, and pipeline design." },
+    { "slug": "08-unsupervised-learning", "title": "Unsupervised Learning", "summary": "Clustering, dimensionality reduction, and anomaly detection." },
+    { "slug": "09-neural-networks-basics", "title": "Neural Networks Basics", "summary": "Perceptrons, backpropagation, and training fundamentals." },
+    { "slug": "10-deep-learning-frameworks", "title": "Deep Learning Frameworks", "summary": "PyTorch and TensorFlow for production-grade models." },
+    { "slug": "11-computer-vision", "title": "Computer Vision", "summary": "CNNs, transfer learning, and image classification pipelines." },
+    { "slug": "12-natural-language-processing", "title": "Natural Language Processing", "summary": "Text preprocessing, embeddings, transformers, and NLP tasks." },
+    { "slug": "13-model-deployment", "title": "Model Deployment", "summary": "APIs, Docker, cloud deploy, and Hugging Face Spaces." },
+    { "slug": "14-mlops-basics", "title": "MLOps Basics", "summary": "MLflow, experiment tracking, CI/CD, and monitoring." },
+    { "slug": "15-time-series-analysis", "title": "Time Series Analysis", "summary": "ARIMA, seasonality, deep sequences, and temporal evaluation." },
+    { "slug": "16-projects-beginner", "title": "Beginner Projects", "summary": "6 hands-on projects including Iris classification and house prices." },
+    { "slug": "17-projects-intermediate", "title": "Intermediate Projects", "summary": "8 projects — churn, recommendations, fraud detection, and more." },
+    { "slug": "18-projects-advanced", "title": "Advanced Projects", "summary": "9 end-to-end projects spanning CV, NLP, and deployment." },
+    { "slug": "19-sql-database-fundamentals", "title": "SQL & Databases", "summary": "Queries, joins, aggregations, and data access for ML pipelines." },
+    { "slug": "20-handling-imbalanced-data", "title": "Handling Imbalanced Data", "summary": "Resampling, class weights, and metrics beyond accuracy." },
+    { "slug": "21-model-explainability", "title": "Model Explainability", "summary": "SHAP, LIME, feature importance, and interpretability." },
+    { "slug": "22-reinforcement-learning", "title": "Reinforcement Learning", "summary": "Agents, rewards, Q-learning, and policy optimization." },
+    { "slug": "23-graph-neural-networks", "title": "Graph Neural Networks", "summary": "Graph structures, GNN architectures, and relational data." },
+    { "slug": "24-audio-speech-processing", "title": "Audio & Speech Processing", "summary": "Spectrograms, speech models, and audio classification." },
+    { "slug": "25-generative-ai-llms", "title": "Generative AI & LLMs", "summary": "Prompt engineering, RAG, vector DBs, and LLM agents." }
+  ]
+}

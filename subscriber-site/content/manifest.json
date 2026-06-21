@@ -1,0 +1,1794 @@
+{
+  "version": 1,
+  "syncedAt": "2026-06-21T15:01:47.311Z",
+  "repo": "https://github.com/NabidAlam/road-to-machine-learning",
+  "totalLessons": 265,
+  "modules": [
+    {
+      "slug": "00-prerequisites",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 0: Prerequisites",
+          "source": "00-prerequisites/README.md",
+          "path": "modules/00-prerequisites/readme.json"
+        },
+        {
+          "id": "01-python-basics",
+          "title": "Python Basics for Machine Learning",
+          "source": "00-prerequisites/01-python-basics.md",
+          "path": "modules/00-prerequisites/01-python-basics.json"
+        },
+        {
+          "id": "02-linear-algebra",
+          "title": "Linear Algebra for Machine Learning - Deep Dive",
+          "source": "00-prerequisites/02-linear-algebra.md",
+          "path": "modules/00-prerequisites/02-linear-algebra.json"
+        },
+        {
+          "id": "03-statistics-probability",
+          "title": "Statistics and Probability for Machine Learning",
+          "source": "00-prerequisites/03-statistics-probability.md",
+          "path": "modules/00-prerequisites/03-statistics-probability.json"
+        },
+        {
+          "id": "04-calculus",
+          "title": "Calculus for Machine Learning",
+          "source": "00-prerequisites/04-calculus.md",
+          "path": "modules/00-prerequisites/04-calculus.json"
+        },
+        {
+          "id": "05-environment-setup",
+          "title": "Environment Setup for Machine Learning",
+          "source": "00-prerequisites/05-environment-setup.md",
+          "path": "modules/00-prerequisites/05-environment-setup.json"
+        },
+        {
+          "id": "prerequisites-advanced-topics",
+          "title": "Advanced Prerequisites Topics",
+          "source": "00-prerequisites/prerequisites-advanced-topics.md",
+          "path": "modules/00-prerequisites/prerequisites-advanced-topics.json"
+        },
+        {
+          "id": "prerequisites-project-tutorial",
+          "title": "Prerequisites Project Tutorial: Build a Neural Network from Scratch",
+          "source": "00-prerequisites/prerequisites-project-tutorial.md",
+          "path": "modules/00-prerequisites/prerequisites-project-tutorial.json"
+        },
+        {
+          "id": "prerequisites-quick-reference",
+          "title": "Prerequisites Quick Reference",
+          "source": "00-prerequisites/prerequisites-quick-reference.md",
+          "path": "modules/00-prerequisites/prerequisites-quick-reference.json"
+        }
+      ],
+      "title": "Prerequisites",
+      "summary": "Python basics, math foundations, and environment setup."
+    },
+    {
+      "slug": "01-python-for-data-science",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 1: Python for Data Science",
+          "source": "01-python-for-data-science/README.md",
+          "path": "modules/01-python-for-data-science/readme.json"
+        },
+        {
+          "id": "01-numpy",
+          "title": "NumPy Complete Guide",
+          "source": "01-python-for-data-science/01-numpy.md",
+          "path": "modules/01-python-for-data-science/01-numpy.json"
+        },
+        {
+          "id": "02-pandas",
+          "title": "Pandas Complete Guide",
+          "source": "01-python-for-data-science/02-pandas.md",
+          "path": "modules/01-python-for-data-science/02-pandas.json"
+        },
+        {
+          "id": "03-visualization",
+          "title": "Data Visualization Complete Guide",
+          "source": "01-python-for-data-science/03-visualization.md",
+          "path": "modules/01-python-for-data-science/03-visualization.json"
+        },
+        {
+          "id": "04-exploratory-data-analysis",
+          "title": "Exploratory Data Analysis (EDA) - Complete Guide",
+          "source": "01-python-for-data-science/04-exploratory-data-analysis.md",
+          "path": "modules/01-python-for-data-science/04-exploratory-data-analysis.json"
+        },
+        {
+          "id": "05-data-sources-and-integration",
+          "title": "Data Sources and Integration - Complete Guide",
+          "source": "01-python-for-data-science/05-data-sources-and-integration.md",
+          "path": "modules/01-python-for-data-science/05-data-sources-and-integration.json"
+        },
+        {
+          "id": "06-regular-expressions-text-processing",
+          "title": "Regular Expressions and Text Processing - Complete Guide",
+          "source": "01-python-for-data-science/06-regular-expressions-text-processing.md",
+          "path": "modules/01-python-for-data-science/06-regular-expressions-text-processing.json"
+        },
+        {
+          "id": "07-advanced-data-wrangling",
+          "title": "Advanced Data Wrangling - Complete Guide",
+          "source": "01-python-for-data-science/07-advanced-data-wrangling.md",
+          "path": "modules/01-python-for-data-science/07-advanced-data-wrangling.json"
+        },
+        {
+          "id": "08-working-with-dates-times",
+          "title": "Working with Dates and Times - Complete Guide",
+          "source": "01-python-for-data-science/08-working-with-dates-times.md",
+          "path": "modules/01-python-for-data-science/08-working-with-dates-times.json"
+        },
+        {
+          "id": "09-streamlit-dashboards",
+          "title": "Streamlit for Interactive Dashboards",
+          "source": "01-python-for-data-science/09-streamlit-dashboards.md",
+          "path": "modules/01-python-for-data-science/09-streamlit-dashboards.json"
+        },
+        {
+          "id": "10-flask-web-development",
+          "title": "Flask Web Development Complete Guide",
+          "source": "01-python-for-data-science/10-flask-web-development.md",
+          "path": "modules/01-python-for-data-science/10-flask-web-development.json"
+        },
+        {
+          "id": "11-tableau-visualization",
+          "title": "Tableau Complete Guide",
+          "source": "01-python-for-data-science/11-tableau-visualization.md",
+          "path": "modules/01-python-for-data-science/11-tableau-visualization.json"
+        },
+        {
+          "id": "python-for-data-science-advanced-topics",
+          "title": "Advanced Python for Data Science Topics",
+          "source": "01-python-for-data-science/python-for-data-science-advanced-topics.md",
+          "path": "modules/01-python-for-data-science/python-for-data-science-advanced-topics.json"
+        },
+        {
+          "id": "python-for-data-science-project-tutorial",
+          "title": "Complete Data Science Project Tutorial",
+          "source": "01-python-for-data-science/python-for-data-science-project-tutorial.md",
+          "path": "modules/01-python-for-data-science/python-for-data-science-project-tutorial.json"
+        },
+        {
+          "id": "python-for-data-science-quick-reference",
+          "title": "Python for Data Science Quick Reference",
+          "source": "01-python-for-data-science/python-for-data-science-quick-reference.md",
+          "path": "modules/01-python-for-data-science/python-for-data-science-quick-reference.json"
+        }
+      ],
+      "title": "Python for Data Science",
+      "summary": "NumPy, Pandas, Polars, visualization, and EDA."
+    },
+    {
+      "slug": "02-introduction-to-ml",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 2: Introduction to Machine Learning",
+          "source": "02-introduction-to-ml/README.md",
+          "path": "modules/02-introduction-to-ml/readme.json"
+        },
+        {
+          "id": "common-pitfalls-best-practices",
+          "title": "Common Pitfalls and Best Practices in Machine Learning",
+          "source": "02-introduction-to-ml/common-pitfalls-best-practices.md",
+          "path": "modules/02-introduction-to-ml/common-pitfalls-best-practices.json"
+        },
+        {
+          "id": "first-ml-project-tutorial",
+          "title": "Your First ML Project: Step-by-Step Tutorial",
+          "source": "02-introduction-to-ml/first-ml-project-tutorial.md",
+          "path": "modules/02-introduction-to-ml/first-ml-project-tutorial.json"
+        },
+        {
+          "id": "introduction-to-ml",
+          "title": "Introduction to Machine Learning - Complete Guide",
+          "source": "02-introduction-to-ml/introduction-to-ml.md",
+          "path": "modules/02-introduction-to-ml/introduction-to-ml.json"
+        },
+        {
+          "id": "introduction-to-ml-advanced-topics",
+          "title": "Advanced Introduction to ML Topics",
+          "source": "02-introduction-to-ml/introduction-to-ml-advanced-topics.md",
+          "path": "modules/02-introduction-to-ml/introduction-to-ml-advanced-topics.json"
+        },
+        {
+          "id": "introduction-to-ml-quick-reference",
+          "title": "Introduction to ML Quick Reference",
+          "source": "02-introduction-to-ml/introduction-to-ml-quick-reference.md",
+          "path": "modules/02-introduction-to-ml/introduction-to-ml-quick-reference.json"
+        },
+        {
+          "id": "ml-terminology",
+          "title": "Machine Learning Terminology - Complete Reference",
+          "source": "02-introduction-to-ml/ml-terminology.md",
+          "path": "modules/02-introduction-to-ml/ml-terminology.json"
+        },
+        {
+          "id": "problem-identification-algorithm-selection",
+          "title": "Problem Identification and Algorithm Selection Guide",
+          "source": "02-introduction-to-ml/problem-identification-algorithm-selection.md",
+          "path": "modules/02-introduction-to-ml/problem-identification-algorithm-selection.json"
+        }
+      ],
+      "title": "Introduction to ML",
+      "summary": "Core ML concepts, workflows, and first models."
+    },
+    {
+      "slug": "03-supervised-learning-regression",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 3: Supervised Learning - Regression",
+          "source": "03-supervised-learning-regression/README.md",
+          "path": "modules/03-supervised-learning-regression/readme.json"
+        },
+        {
+          "id": "regression",
+          "title": "Supervised Learning - Regression Complete Guide",
+          "source": "03-supervised-learning-regression/regression.md",
+          "path": "modules/03-supervised-learning-regression/regression.json"
+        },
+        {
+          "id": "regression-advanced-topics",
+          "title": "Advanced Regression Topics",
+          "source": "03-supervised-learning-regression/regression-advanced-topics.md",
+          "path": "modules/03-supervised-learning-regression/regression-advanced-topics.json"
+        },
+        {
+          "id": "regression-project-tutorial",
+          "title": "Complete Regression Project Tutorial",
+          "source": "03-supervised-learning-regression/regression-project-tutorial.md",
+          "path": "modules/03-supervised-learning-regression/regression-project-tutorial.json"
+        },
+        {
+          "id": "regression-quick-reference",
+          "title": "Regression Quick Reference Guide",
+          "source": "03-supervised-learning-regression/regression-quick-reference.md",
+          "path": "modules/03-supervised-learning-regression/regression-quick-reference.json"
+        }
+      ],
+      "title": "Supervised Learning — Regression",
+      "summary": "Linear models, evaluation, and end-to-end regression projects."
+    },
+    {
+      "slug": "04-supervised-learning-classification",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 4: Supervised Learning - Classification",
+          "source": "04-supervised-learning-classification/README.md",
+          "path": "modules/04-supervised-learning-classification/readme.json"
+        },
+        {
+          "id": "classification",
+          "title": "Supervised Learning - Classification Complete Guide",
+          "source": "04-supervised-learning-classification/classification.md",
+          "path": "modules/04-supervised-learning-classification/classification.json"
+        },
+        {
+          "id": "classification-advanced-topics",
+          "title": "Advanced Classification Topics",
+          "source": "04-supervised-learning-classification/classification-advanced-topics.md",
+          "path": "modules/04-supervised-learning-classification/classification-advanced-topics.json"
+        },
+        {
+          "id": "classification-project-tutorial",
+          "title": "Complete Classification Project Tutorial",
+          "source": "04-supervised-learning-classification/classification-project-tutorial.md",
+          "path": "modules/04-supervised-learning-classification/classification-project-tutorial.json"
+        },
+        {
+          "id": "classification-quick-reference",
+          "title": "Classification Quick Reference Guide",
+          "source": "04-supervised-learning-classification/classification-quick-reference.md",
+          "path": "modules/04-supervised-learning-classification/classification-quick-reference.json"
+        }
+      ],
+      "title": "Supervised Learning — Classification",
+      "summary": "Logistic regression, trees, SVM, and classification metrics."
+    },
+    {
+      "slug": "05-model-evaluation-optimization",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 5: Model Evaluation & Optimization",
+          "source": "05-model-evaluation-optimization/README.md",
+          "path": "modules/05-model-evaluation-optimization/readme.json"
+        },
+        {
+          "id": "evaluation-optimization",
+          "title": "Model Evaluation & Optimization Complete Guide",
+          "source": "05-model-evaluation-optimization/evaluation-optimization.md",
+          "path": "modules/05-model-evaluation-optimization/evaluation-optimization.json"
+        },
+        {
+          "id": "evaluation-optimization-advanced-topics",
+          "title": "Advanced Model Evaluation & Optimization Topics",
+          "source": "05-model-evaluation-optimization/evaluation-optimization-advanced-topics.md",
+          "path": "modules/05-model-evaluation-optimization/evaluation-optimization-advanced-topics.json"
+        },
+        {
+          "id": "evaluation-optimization-project-tutorial",
+          "title": "Complete Model Evaluation & Optimization Project Tutorial",
+          "source": "05-model-evaluation-optimization/evaluation-optimization-project-tutorial.md",
+          "path": "modules/05-model-evaluation-optimization/evaluation-optimization-project-tutorial.json"
+        },
+        {
+          "id": "evaluation-optimization-quick-reference",
+          "title": "Model Evaluation & Optimization Quick Reference Guide",
+          "source": "05-model-evaluation-optimization/evaluation-optimization-quick-reference.md",
+          "path": "modules/05-model-evaluation-optimization/evaluation-optimization-quick-reference.json"
+        }
+      ],
+      "title": "Model Evaluation & Optimization",
+      "summary": "Cross-validation, hyperparameter tuning, and leakage prevention."
+    },
+    {
+      "slug": "06-ensemble-methods",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 6: Ensemble Methods",
+          "source": "06-ensemble-methods/README.md",
+          "path": "modules/06-ensemble-methods/readme.json"
+        },
+        {
+          "id": "ensemble-methods",
+          "title": "Ensemble Methods Complete Guide",
+          "source": "06-ensemble-methods/ensemble-methods.md",
+          "path": "modules/06-ensemble-methods/ensemble-methods.json"
+        },
+        {
+          "id": "ensemble-methods-advanced-topics",
+          "title": "Advanced Ensemble Methods Topics",
+          "source": "06-ensemble-methods/ensemble-methods-advanced-topics.md",
+          "path": "modules/06-ensemble-methods/ensemble-methods-advanced-topics.json"
+        },
+        {
+          "id": "ensemble-methods-project-tutorial",
+          "title": "Complete Ensemble Methods Project Tutorial",
+          "source": "06-ensemble-methods/ensemble-methods-project-tutorial.md",
+          "path": "modules/06-ensemble-methods/ensemble-methods-project-tutorial.json"
+        },
+        {
+          "id": "ensemble-methods-quick-reference",
+          "title": "Ensemble Methods Quick Reference Guide",
+          "source": "06-ensemble-methods/ensemble-methods-quick-reference.md",
+          "path": "modules/06-ensemble-methods/ensemble-methods-quick-reference.json"
+        }
+      ],
+      "title": "Ensemble Methods",
+      "summary": "Bagging, boosting, stacking, and Random Forest / XGBoost."
+    },
+    {
+      "slug": "07-feature-engineering",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 7: Feature Engineering",
+          "source": "07-feature-engineering/README.md",
+          "path": "modules/07-feature-engineering/readme.json"
+        },
+        {
+          "id": "feature-engineering",
+          "title": "Feature Engineering Complete Guide",
+          "source": "07-feature-engineering/feature-engineering.md",
+          "path": "modules/07-feature-engineering/feature-engineering.json"
+        },
+        {
+          "id": "feature-engineering-advanced-topics",
+          "title": "Advanced Feature Engineering Topics",
+          "source": "07-feature-engineering/feature-engineering-advanced-topics.md",
+          "path": "modules/07-feature-engineering/feature-engineering-advanced-topics.json"
+        },
+        {
+          "id": "feature-engineering-project-tutorial",
+          "title": "Complete Feature Engineering Project Tutorial",
+          "source": "07-feature-engineering/feature-engineering-project-tutorial.md",
+          "path": "modules/07-feature-engineering/feature-engineering-project-tutorial.json"
+        },
+        {
+          "id": "feature-engineering-quick-reference",
+          "title": "Feature Engineering Quick Reference Guide",
+          "source": "07-feature-engineering/feature-engineering-quick-reference.md",
+          "path": "modules/07-feature-engineering/feature-engineering-quick-reference.json"
+        }
+      ],
+      "title": "Feature Engineering",
+      "summary": "Encoding, scaling, selection, and pipeline design."
+    },
+    {
+      "slug": "08-unsupervised-learning",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 8: Unsupervised Learning",
+          "source": "08-unsupervised-learning/README.md",
+          "path": "modules/08-unsupervised-learning/readme.json"
+        },
+        {
+          "id": "unsupervised-learning",
+          "title": "Unsupervised Learning Complete Guide",
+          "source": "08-unsupervised-learning/unsupervised-learning.md",
+          "path": "modules/08-unsupervised-learning/unsupervised-learning.json"
+        },
+        {
+          "id": "unsupervised-learning-advanced-topics",
+          "title": "Advanced Unsupervised Learning Topics",
+          "source": "08-unsupervised-learning/unsupervised-learning-advanced-topics.md",
+          "path": "modules/08-unsupervised-learning/unsupervised-learning-advanced-topics.json"
+        },
+        {
+          "id": "unsupervised-learning-project-tutorial",
+          "title": "Complete Unsupervised Learning Project Tutorial",
+          "source": "08-unsupervised-learning/unsupervised-learning-project-tutorial.md",
+          "path": "modules/08-unsupervised-learning/unsupervised-learning-project-tutorial.json"
+        },
+        {
+          "id": "unsupervised-learning-quick-reference",
+          "title": "Unsupervised Learning Quick Reference Guide",
+          "source": "08-unsupervised-learning/unsupervised-learning-quick-reference.md",
+          "path": "modules/08-unsupervised-learning/unsupervised-learning-quick-reference.json"
+        }
+      ],
+      "title": "Unsupervised Learning",
+      "summary": "Clustering, dimensionality reduction, and anomaly detection."
+    },
+    {
+      "slug": "09-neural-networks-basics",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 9: Neural Networks Basics",
+          "source": "09-neural-networks-basics/README.md",
+          "path": "modules/09-neural-networks-basics/readme.json"
+        },
+        {
+          "id": "neural-networks",
+          "title": "Neural Networks Basics Complete Guide",
+          "source": "09-neural-networks-basics/neural-networks.md",
+          "path": "modules/09-neural-networks-basics/neural-networks.json"
+        },
+        {
+          "id": "neural-networks-advanced-topics",
+          "title": "Advanced Neural Networks Topics",
+          "source": "09-neural-networks-basics/neural-networks-advanced-topics.md",
+          "path": "modules/09-neural-networks-basics/neural-networks-advanced-topics.json"
+        },
+        {
+          "id": "neural-networks-project-tutorial",
+          "title": "Complete Neural Network Project Tutorial",
+          "source": "09-neural-networks-basics/neural-networks-project-tutorial.md",
+          "path": "modules/09-neural-networks-basics/neural-networks-project-tutorial.json"
+        },
+        {
+          "id": "neural-networks-quick-reference",
+          "title": "Neural Networks Quick Reference Guide",
+          "source": "09-neural-networks-basics/neural-networks-quick-reference.md",
+          "path": "modules/09-neural-networks-basics/neural-networks-quick-reference.json"
+        }
+      ],
+      "title": "Neural Networks Basics",
+      "summary": "Perceptrons, backpropagation, and training fundamentals."
+    },
+    {
+      "slug": "10-deep-learning-frameworks",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 10: Deep Learning Frameworks",
+          "source": "10-deep-learning-frameworks/README.md",
+          "path": "modules/10-deep-learning-frameworks/readme.json"
+        },
+        {
+          "id": "deep-learning-frameworks",
+          "title": "Deep Learning Frameworks Complete Guide",
+          "source": "10-deep-learning-frameworks/deep-learning-frameworks.md",
+          "path": "modules/10-deep-learning-frameworks/deep-learning-frameworks.json"
+        },
+        {
+          "id": "deep-learning-frameworks-advanced-topics",
+          "title": "Advanced Deep Learning Frameworks Topics",
+          "source": "10-deep-learning-frameworks/deep-learning-frameworks-advanced-topics.md",
+          "path": "modules/10-deep-learning-frameworks/deep-learning-frameworks-advanced-topics.json"
+        },
+        {
+          "id": "deep-learning-frameworks-project-tutorial",
+          "title": "Complete Deep Learning Framework Project Tutorial",
+          "source": "10-deep-learning-frameworks/deep-learning-frameworks-project-tutorial.md",
+          "path": "modules/10-deep-learning-frameworks/deep-learning-frameworks-project-tutorial.json"
+        },
+        {
+          "id": "deep-learning-frameworks-quick-reference",
+          "title": "Deep Learning Frameworks Quick Reference Guide",
+          "source": "10-deep-learning-frameworks/deep-learning-frameworks-quick-reference.md",
+          "path": "modules/10-deep-learning-frameworks/deep-learning-frameworks-quick-reference.json"
+        }
+      ],
+      "title": "Deep Learning Frameworks",
+      "summary": "PyTorch and TensorFlow for production-grade models."
+    },
+    {
+      "slug": "11-computer-vision",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 11: Computer Vision",
+          "source": "11-computer-vision/README.md",
+          "path": "modules/11-computer-vision/readme.json"
+        },
+        {
+          "id": "computer-vision",
+          "title": "Computer Vision Complete Guide",
+          "source": "11-computer-vision/computer-vision.md",
+          "path": "modules/11-computer-vision/computer-vision.json"
+        },
+        {
+          "id": "computer-vision-advanced-topics",
+          "title": "Advanced Computer Vision Topics",
+          "source": "11-computer-vision/computer-vision-advanced-topics.md",
+          "path": "modules/11-computer-vision/computer-vision-advanced-topics.json"
+        },
+        {
+          "id": "computer-vision-project-tutorial",
+          "title": "Complete Computer Vision Project Tutorial",
+          "source": "11-computer-vision/computer-vision-project-tutorial.md",
+          "path": "modules/11-computer-vision/computer-vision-project-tutorial.json"
+        },
+        {
+          "id": "computer-vision-quick-reference",
+          "title": "Computer Vision Quick Reference Guide",
+          "source": "11-computer-vision/computer-vision-quick-reference.md",
+          "path": "modules/11-computer-vision/computer-vision-quick-reference.json"
+        }
+      ],
+      "title": "Computer Vision",
+      "summary": "CNNs, transfer learning, and image classification pipelines."
+    },
+    {
+      "slug": "12-natural-language-processing",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 12: Natural Language Processing",
+          "source": "12-natural-language-processing/README.md",
+          "path": "modules/12-natural-language-processing/readme.json"
+        },
+        {
+          "id": "nlp",
+          "title": "Natural Language Processing Complete Guide",
+          "source": "12-natural-language-processing/nlp.md",
+          "path": "modules/12-natural-language-processing/nlp.json"
+        },
+        {
+          "id": "nlp-advanced-topics",
+          "title": "Advanced Natural Language Processing Topics",
+          "source": "12-natural-language-processing/nlp-advanced-topics.md",
+          "path": "modules/12-natural-language-processing/nlp-advanced-topics.json"
+        },
+        {
+          "id": "nlp-project-tutorial",
+          "title": "Complete NLP Project Tutorial",
+          "source": "12-natural-language-processing/nlp-project-tutorial.md",
+          "path": "modules/12-natural-language-processing/nlp-project-tutorial.json"
+        },
+        {
+          "id": "nlp-quick-reference",
+          "title": "NLP Quick Reference Guide",
+          "source": "12-natural-language-processing/nlp-quick-reference.md",
+          "path": "modules/12-natural-language-processing/nlp-quick-reference.json"
+        }
+      ],
+      "title": "Natural Language Processing",
+      "summary": "Text preprocessing, embeddings, transformers, and NLP tasks."
+    },
+    {
+      "slug": "13-model-deployment",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 13: Model Deployment",
+          "source": "13-model-deployment/README.md",
+          "path": "modules/13-model-deployment/readme.json"
+        },
+        {
+          "id": "deployment",
+          "title": "Model Deployment Complete Guide",
+          "source": "13-model-deployment/deployment.md",
+          "path": "modules/13-model-deployment/deployment.json"
+        },
+        {
+          "id": "deployment-advanced-topics",
+          "title": "Advanced Model Deployment Topics",
+          "source": "13-model-deployment/deployment-advanced-topics.md",
+          "path": "modules/13-model-deployment/deployment-advanced-topics.json"
+        },
+        {
+          "id": "deployment-project-tutorial",
+          "title": "Complete Model Deployment Project Tutorial",
+          "source": "13-model-deployment/deployment-project-tutorial.md",
+          "path": "modules/13-model-deployment/deployment-project-tutorial.json"
+        },
+        {
+          "id": "deployment-quick-reference",
+          "title": "Model Deployment Quick Reference Guide",
+          "source": "13-model-deployment/deployment-quick-reference.md",
+          "path": "modules/13-model-deployment/deployment-quick-reference.json"
+        }
+      ],
+      "title": "Model Deployment",
+      "summary": "APIs, Docker, cloud deploy, and Hugging Face Spaces."
+    },
+    {
+      "slug": "14-mlops-basics",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 14: MLOps Basics",
+          "source": "14-mlops-basics/README.md",
+          "path": "modules/14-mlops-basics/readme.json"
+        },
+        {
+          "id": "mlops",
+          "title": "MLOps Basics Complete Guide",
+          "source": "14-mlops-basics/mlops.md",
+          "path": "modules/14-mlops-basics/mlops.json"
+        },
+        {
+          "id": "mlops-advanced-topics",
+          "title": "Advanced MLOps Topics",
+          "source": "14-mlops-basics/mlops-advanced-topics.md",
+          "path": "modules/14-mlops-basics/mlops-advanced-topics.json"
+        },
+        {
+          "id": "mlops-project-tutorial",
+          "title": "Complete MLOps Project Tutorial",
+          "source": "14-mlops-basics/mlops-project-tutorial.md",
+          "path": "modules/14-mlops-basics/mlops-project-tutorial.json"
+        },
+        {
+          "id": "mlops-quick-reference",
+          "title": "MLOps Quick Reference Guide",
+          "source": "14-mlops-basics/mlops-quick-reference.md",
+          "path": "modules/14-mlops-basics/mlops-quick-reference.json"
+        }
+      ],
+      "title": "MLOps Basics",
+      "summary": "MLflow, experiment tracking, CI/CD, and monitoring."
+    },
+    {
+      "slug": "15-time-series-analysis",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Time Series Exercises (Practice Pack)",
+          "source": "15-time-series-analysis/exercises/README.md",
+          "path": "modules/15-time-series-analysis/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Phase 15: Time Series Analysis",
+          "source": "15-time-series-analysis/README.md",
+          "path": "modules/15-time-series-analysis/readme.json"
+        },
+        {
+          "id": "resources",
+          "title": "Time Series Analysis — Additional Resources",
+          "source": "15-time-series-analysis/resources.md",
+          "path": "modules/15-time-series-analysis/resources.json"
+        },
+        {
+          "id": "time-series-advanced-topics",
+          "title": "Advanced Time Series Topics",
+          "source": "15-time-series-analysis/time-series-advanced-topics.md",
+          "path": "modules/15-time-series-analysis/time-series-advanced-topics.json"
+        },
+        {
+          "id": "time-series-analysis",
+          "title": "Time Series Analysis - Complete Guide",
+          "source": "15-time-series-analysis/time-series-analysis.md",
+          "path": "modules/15-time-series-analysis/time-series-analysis.json"
+        },
+        {
+          "id": "time-series-project-tutorial",
+          "title": "Complete Time Series Project Tutorial",
+          "source": "15-time-series-analysis/time-series-project-tutorial.md",
+          "path": "modules/15-time-series-analysis/time-series-project-tutorial.json"
+        },
+        {
+          "id": "time-series-quick-reference",
+          "title": "Time Series Quick Reference Guide",
+          "source": "15-time-series-analysis/time-series-quick-reference.md",
+          "path": "modules/15-time-series-analysis/time-series-quick-reference.json"
+        }
+      ],
+      "title": "Time Series Analysis",
+      "summary": "ARIMA, seasonality, deep sequences, and temporal evaluation."
+    },
+    {
+      "slug": "16-projects-beginner",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Project 6: Customer Data Dashboard with Streamlit",
+          "source": "16-projects-beginner/project-06-customer-dashboard/README.md",
+          "path": "modules/16-projects-beginner/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 5: Wine Quality Prediction",
+          "source": "16-projects-beginner/project-05-wine-quality/README.md",
+          "path": "modules/16-projects-beginner/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 4: Spam Email Detection",
+          "source": "16-projects-beginner/project-04-spam-detection/README.md",
+          "path": "modules/16-projects-beginner/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 3: Titanic Survival Prediction",
+          "source": "16-projects-beginner/project-03-titanic-survival/README.md",
+          "path": "modules/16-projects-beginner/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 2: Iris Flower Classification",
+          "source": "16-projects-beginner/project-02-iris-classification/README.md",
+          "path": "modules/16-projects-beginner/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 1: House Price Prediction",
+          "source": "16-projects-beginner/project-01-house-price-prediction/README.md",
+          "path": "modules/16-projects-beginner/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Beginner Projects",
+          "source": "16-projects-beginner/README.md",
+          "path": "modules/16-projects-beginner/readme.json"
+        },
+        {
+          "id": "projects-beginner",
+          "title": "Beginner Projects Complete Guide",
+          "source": "16-projects-beginner/projects-beginner.md",
+          "path": "modules/16-projects-beginner/projects-beginner.json"
+        },
+        {
+          "id": "projects-beginner-advanced-topics",
+          "title": "Advanced Beginner Project Topics",
+          "source": "16-projects-beginner/projects-beginner-advanced-topics.md",
+          "path": "modules/16-projects-beginner/projects-beginner-advanced-topics.json"
+        },
+        {
+          "id": "projects-beginner-project-tutorial",
+          "title": "Complete Beginner Project Tutorial",
+          "source": "16-projects-beginner/projects-beginner-project-tutorial.md",
+          "path": "modules/16-projects-beginner/projects-beginner-project-tutorial.json"
+        },
+        {
+          "id": "projects-beginner-quick-reference",
+          "title": "Beginner Projects Quick Reference Guide",
+          "source": "16-projects-beginner/projects-beginner-quick-reference.md",
+          "path": "modules/16-projects-beginner/projects-beginner-quick-reference.json"
+        }
+      ],
+      "title": "Beginner Projects",
+      "summary": "6 hands-on projects including Iris classification and house prices."
+    },
+    {
+      "slug": "17-projects-intermediate",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Project 8: Ensemble Methods Comparison Project",
+          "source": "17-projects-intermediate/project-08-ensemble-comparison/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 7: Feature Engineering Mastery Project",
+          "source": "17-projects-intermediate/project-07-feature-engineering/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 6: Time Series Forecasting",
+          "source": "17-projects-intermediate/project-06-time-series-forecasting/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 5: Customer Segmentation",
+          "source": "17-projects-intermediate/project-05-customer-segmentation/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 4: Credit Card Fraud Detection",
+          "source": "17-projects-intermediate/project-04-fraud-detection/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 3: Movie Recommendation System",
+          "source": "17-projects-intermediate/project-03-movie-recommendation/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 2: Customer Churn Prediction",
+          "source": "17-projects-intermediate/project-02-customer-churn/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 1: Handwritten Digit Recognition (MNIST)",
+          "source": "17-projects-intermediate/project-01-mnist-digit-recognition/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Intermediate Projects",
+          "source": "17-projects-intermediate/README.md",
+          "path": "modules/17-projects-intermediate/readme.json"
+        }
+      ],
+      "title": "Intermediate Projects",
+      "summary": "8 projects — churn, recommendations, fraud detection, and more."
+    },
+    {
+      "slug": "18-projects-advanced",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Project 9: Model Deployment & Serving Project",
+          "source": "18-projects-advanced/project-09-model-deployment/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 8: Model Explainability & Interpretability Project",
+          "source": "18-projects-advanced/project-08-model-explainability/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 7: Generative Model (GAN/VAE)",
+          "source": "18-projects-advanced/project-07-generative-model/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 6: End-to-End ML Pipeline",
+          "source": "18-projects-advanced/project-06-end-to-end-pipeline/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 5: Object Detection",
+          "source": "18-projects-advanced/project-05-object-detection/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 4: Chatbot Development",
+          "source": "18-projects-advanced/project-04-chatbot/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 3: Time Series Forecasting (Advanced)",
+          "source": "18-projects-advanced/project-03-time-series-forecasting/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 2: Sentiment Analysis on Reviews",
+          "source": "18-projects-advanced/project-02-sentiment-analysis/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Project 1: Image Classification (CIFAR-10)",
+          "source": "18-projects-advanced/project-01-cifar10-classification/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Capstone Blueprints (Industry-Ready, GDPR-Safe)",
+          "source": "18-projects-advanced/capstones/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "readme",
+          "title": "Advanced Projects",
+          "source": "18-projects-advanced/README.md",
+          "path": "modules/18-projects-advanced/readme.json"
+        },
+        {
+          "id": "capstone-data-analytics-sql-ml",
+          "title": "Capstone: Data/Analytics — SQL → Metrics → Dashboard → ML (GDPR-Safe)",
+          "source": "18-projects-advanced/capstones/capstone-data-analytics-sql-ml.md",
+          "path": "modules/18-projects-advanced/capstone-data-analytics-sql-ml.json"
+        },
+        {
+          "id": "capstone-llm-rag-engineer",
+          "title": "Capstone: LLM Engineer — RAG Knowledge Assistant (GDPR-Safe)",
+          "source": "18-projects-advanced/capstones/capstone-llm-rag-engineer.md",
+          "path": "modules/18-projects-advanced/capstone-llm-rag-engineer.json"
+        },
+        {
+          "id": "capstone-ml-engineer",
+          "title": "Capstone: ML Engineer — Real-Time Risk Scoring System (GDPR-Safe)",
+          "source": "18-projects-advanced/capstones/capstone-ml-engineer.md",
+          "path": "modules/18-projects-advanced/capstone-ml-engineer.json"
+        }
+      ],
+      "title": "Advanced Projects",
+      "summary": "9 end-to-end projects spanning CV, NLP, and deployment."
+    },
+    {
+      "slug": "19-sql-database-fundamentals",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 19: SQL and Database Fundamentals",
+          "source": "19-sql-database-fundamentals/README.md",
+          "path": "modules/19-sql-database-fundamentals/readme.json"
+        },
+        {
+          "id": "sql-database",
+          "title": "SQL and Database Fundamentals Complete Guide",
+          "source": "19-sql-database-fundamentals/sql-database.md",
+          "path": "modules/19-sql-database-fundamentals/sql-database.json"
+        },
+        {
+          "id": "sql-database-advanced-topics",
+          "title": "Advanced SQL Topics",
+          "source": "19-sql-database-fundamentals/sql-database-advanced-topics.md",
+          "path": "modules/19-sql-database-fundamentals/sql-database-advanced-topics.json"
+        },
+        {
+          "id": "sql-database-project-tutorial",
+          "title": "SQL Project Tutorial",
+          "source": "19-sql-database-fundamentals/sql-database-project-tutorial.md",
+          "path": "modules/19-sql-database-fundamentals/sql-database-project-tutorial.json"
+        },
+        {
+          "id": "sql-database-quick-reference",
+          "title": "SQL Quick Reference",
+          "source": "19-sql-database-fundamentals/sql-database-quick-reference.md",
+          "path": "modules/19-sql-database-fundamentals/sql-database-quick-reference.json"
+        }
+      ],
+      "title": "SQL & Databases",
+      "summary": "Queries, joins, aggregations, and data access for ML pipelines."
+    },
+    {
+      "slug": "20-handling-imbalanced-data",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 20: Handling Imbalanced Data",
+          "source": "20-handling-imbalanced-data/README.md",
+          "path": "modules/20-handling-imbalanced-data/readme.json"
+        },
+        {
+          "id": "imbalanced-data",
+          "title": "Handling Imbalanced Data Complete Guide",
+          "source": "20-handling-imbalanced-data/imbalanced-data.md",
+          "path": "modules/20-handling-imbalanced-data/imbalanced-data.json"
+        },
+        {
+          "id": "imbalanced-data-advanced-topics",
+          "title": "Advanced Imbalanced Data Topics",
+          "source": "20-handling-imbalanced-data/imbalanced-data-advanced-topics.md",
+          "path": "modules/20-handling-imbalanced-data/imbalanced-data-advanced-topics.json"
+        },
+        {
+          "id": "imbalanced-data-project-tutorial",
+          "title": "Imbalanced Data Project Tutorial",
+          "source": "20-handling-imbalanced-data/imbalanced-data-project-tutorial.md",
+          "path": "modules/20-handling-imbalanced-data/imbalanced-data-project-tutorial.json"
+        },
+        {
+          "id": "imbalanced-data-quick-reference",
+          "title": "Imbalanced Data Quick Reference",
+          "source": "20-handling-imbalanced-data/imbalanced-data-quick-reference.md",
+          "path": "modules/20-handling-imbalanced-data/imbalanced-data-quick-reference.json"
+        }
+      ],
+      "title": "Handling Imbalanced Data",
+      "summary": "Resampling, class weights, and metrics beyond accuracy."
+    },
+    {
+      "slug": "21-model-explainability",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 21: Model Explainability",
+          "source": "21-model-explainability/README.md",
+          "path": "modules/21-model-explainability/readme.json"
+        },
+        {
+          "id": "model-explainability",
+          "title": "Model Explainability Complete Guide",
+          "source": "21-model-explainability/model-explainability.md",
+          "path": "modules/21-model-explainability/model-explainability.json"
+        },
+        {
+          "id": "model-explainability-advanced-topics",
+          "title": "Advanced Model Explainability Topics",
+          "source": "21-model-explainability/model-explainability-advanced-topics.md",
+          "path": "modules/21-model-explainability/model-explainability-advanced-topics.json"
+        },
+        {
+          "id": "model-explainability-project-tutorial",
+          "title": "Model Explainability Project Tutorial",
+          "source": "21-model-explainability/model-explainability-project-tutorial.md",
+          "path": "modules/21-model-explainability/model-explainability-project-tutorial.json"
+        },
+        {
+          "id": "model-explainability-quick-reference",
+          "title": "Model Explainability Quick Reference",
+          "source": "21-model-explainability/model-explainability-quick-reference.md",
+          "path": "modules/21-model-explainability/model-explainability-quick-reference.json"
+        }
+      ],
+      "title": "Model Explainability",
+      "summary": "SHAP, LIME, feature importance, and interpretability."
+    },
+    {
+      "slug": "22-reinforcement-learning",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 22: Reinforcement Learning",
+          "source": "22-reinforcement-learning/README.md",
+          "path": "modules/22-reinforcement-learning/readme.json"
+        },
+        {
+          "id": "reinforcement-learning",
+          "title": "Reinforcement Learning Complete Guide",
+          "source": "22-reinforcement-learning/reinforcement-learning.md",
+          "path": "modules/22-reinforcement-learning/reinforcement-learning.json"
+        },
+        {
+          "id": "reinforcement-learning-advanced-topics",
+          "title": "Reinforcement Learning Advanced Topics",
+          "source": "22-reinforcement-learning/reinforcement-learning-advanced-topics.md",
+          "path": "modules/22-reinforcement-learning/reinforcement-learning-advanced-topics.json"
+        },
+        {
+          "id": "reinforcement-learning-project-tutorial",
+          "title": "Reinforcement Learning Project Tutorial",
+          "source": "22-reinforcement-learning/reinforcement-learning-project-tutorial.md",
+          "path": "modules/22-reinforcement-learning/reinforcement-learning-project-tutorial.json"
+        },
+        {
+          "id": "reinforcement-learning-quick-reference",
+          "title": "Reinforcement Learning Quick Reference",
+          "source": "22-reinforcement-learning/reinforcement-learning-quick-reference.md",
+          "path": "modules/22-reinforcement-learning/reinforcement-learning-quick-reference.json"
+        }
+      ],
+      "title": "Reinforcement Learning",
+      "summary": "Agents, rewards, Q-learning, and policy optimization."
+    },
+    {
+      "slug": "23-graph-neural-networks",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 23: Graph Neural Networks",
+          "source": "23-graph-neural-networks/README.md",
+          "path": "modules/23-graph-neural-networks/readme.json"
+        },
+        {
+          "id": "graph-neural-networks",
+          "title": "Graph Neural Networks Complete Guide",
+          "source": "23-graph-neural-networks/graph-neural-networks.md",
+          "path": "modules/23-graph-neural-networks/graph-neural-networks.json"
+        },
+        {
+          "id": "graph-neural-networks-advanced-topics",
+          "title": "Graph Neural Networks Advanced Topics",
+          "source": "23-graph-neural-networks/graph-neural-networks-advanced-topics.md",
+          "path": "modules/23-graph-neural-networks/graph-neural-networks-advanced-topics.json"
+        },
+        {
+          "id": "graph-neural-networks-project-tutorial",
+          "title": "Graph Neural Networks Project Tutorial",
+          "source": "23-graph-neural-networks/graph-neural-networks-project-tutorial.md",
+          "path": "modules/23-graph-neural-networks/graph-neural-networks-project-tutorial.json"
+        },
+        {
+          "id": "graph-neural-networks-quick-reference",
+          "title": "Graph Neural Networks Quick Reference",
+          "source": "23-graph-neural-networks/graph-neural-networks-quick-reference.md",
+          "path": "modules/23-graph-neural-networks/graph-neural-networks-quick-reference.json"
+        }
+      ],
+      "title": "Graph Neural Networks",
+      "summary": "Graph structures, GNN architectures, and relational data."
+    },
+    {
+      "slug": "24-audio-speech-processing",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 24: Audio and Speech Processing",
+          "source": "24-audio-speech-processing/README.md",
+          "path": "modules/24-audio-speech-processing/readme.json"
+        },
+        {
+          "id": "audio-speech-processing",
+          "title": "Audio and Speech Processing Complete Guide",
+          "source": "24-audio-speech-processing/audio-speech-processing.md",
+          "path": "modules/24-audio-speech-processing/audio-speech-processing.json"
+        },
+        {
+          "id": "audio-speech-processing-advanced-topics",
+          "title": "Audio and Speech Processing Advanced Topics",
+          "source": "24-audio-speech-processing/audio-speech-processing-advanced-topics.md",
+          "path": "modules/24-audio-speech-processing/audio-speech-processing-advanced-topics.json"
+        },
+        {
+          "id": "audio-speech-processing-project-tutorial",
+          "title": "Audio and Speech Processing Project Tutorial",
+          "source": "24-audio-speech-processing/audio-speech-processing-project-tutorial.md",
+          "path": "modules/24-audio-speech-processing/audio-speech-processing-project-tutorial.json"
+        },
+        {
+          "id": "audio-speech-processing-quick-reference",
+          "title": "Audio and Speech Processing Quick Reference",
+          "source": "24-audio-speech-processing/audio-speech-processing-quick-reference.md",
+          "path": "modules/24-audio-speech-processing/audio-speech-processing-quick-reference.json"
+        }
+      ],
+      "title": "Audio & Speech Processing",
+      "summary": "Spectrograms, speech models, and audio classification."
+    },
+    {
+      "slug": "25-generative-ai-llms",
+      "lessons": [
+        {
+          "id": "readme",
+          "title": "Phase 7: Generative AI & Modern LLM Applications",
+          "source": "25-generative-ai-llms/README.md",
+          "path": "modules/25-generative-ai-llms/readme.json"
+        },
+        {
+          "id": "generative-ai-llms",
+          "title": "Generative AI & Modern LLM Applications",
+          "source": "25-generative-ai-llms/generative-ai-llms.md",
+          "path": "modules/25-generative-ai-llms/generative-ai-llms.json"
+        },
+        {
+          "id": "generative-ai-llms-advanced-topics",
+          "title": "Generative AI & LLMs Advanced Topics",
+          "source": "25-generative-ai-llms/generative-ai-llms-advanced-topics.md",
+          "path": "modules/25-generative-ai-llms/generative-ai-llms-advanced-topics.json"
+        },
+        {
+          "id": "generative-ai-llms-project-tutorial",
+          "title": "Generative AI Project Tutorial",
+          "source": "25-generative-ai-llms/generative-ai-llms-project-tutorial.md",
+          "path": "modules/25-generative-ai-llms/generative-ai-llms-project-tutorial.json"
+        },
+        {
+          "id": "generative-ai-llms-quick-reference",
+          "title": "Generative AI & LLMs Quick Reference",
+          "source": "25-generative-ai-llms/generative-ai-llms-quick-reference.md",
+          "path": "modules/25-generative-ai-llms/generative-ai-llms-quick-reference.json"
+        }
+      ],
+      "title": "Generative AI & LLMs",
+      "summary": "Prompt engineering, RAG, vector DBs, and LLM agents."
+    }
+  ],
+  "guides": [
+    {
+      "id": "system-design--00-computer-architecture",
+      "title": "00. Computer Architecture",
+      "source": "system-design/00-computer-architecture.md",
+      "path": "guides/system-design--00-computer-architecture.json"
+    },
+    {
+      "id": "system-design--01-application-architecture",
+      "title": "01. Application Architecture",
+      "source": "system-design/01-application-architecture.md",
+      "path": "guides/system-design--01-application-architecture.json"
+    },
+    {
+      "id": "system-design--02-design-requirements",
+      "title": "02. Design Requirements",
+      "source": "system-design/02-design-requirements.md",
+      "path": "guides/system-design--02-design-requirements.json"
+    },
+    {
+      "id": "system-design--03-networking-basics",
+      "title": "03. Networking Basics",
+      "source": "system-design/03-networking-basics.md",
+      "path": "guides/system-design--03-networking-basics.json"
+    },
+    {
+      "id": "system-design--04-tcp-and-udp",
+      "title": "04. TCP and UDP",
+      "source": "system-design/04-tcp-and-udp.md",
+      "path": "guides/system-design--04-tcp-and-udp.json"
+    },
+    {
+      "id": "system-design--05-dns",
+      "title": "05. DNS",
+      "source": "system-design/05-dns.md",
+      "path": "guides/system-design--05-dns.json"
+    },
+    {
+      "id": "system-design--06-http",
+      "title": "06. HTTP",
+      "source": "system-design/06-http.md",
+      "path": "guides/system-design--06-http.json"
+    },
+    {
+      "id": "system-design--07-websockets",
+      "title": "07. WebSockets",
+      "source": "system-design/07-websockets.md",
+      "path": "guides/system-design--07-websockets.json"
+    },
+    {
+      "id": "system-design--08-api-paradigms",
+      "title": "08. API Paradigms",
+      "source": "system-design/08-api-paradigms.md",
+      "path": "guides/system-design--08-api-paradigms.json"
+    },
+    {
+      "id": "system-design--09-api-design",
+      "title": "09. API Design",
+      "source": "system-design/09-api-design.md",
+      "path": "guides/system-design--09-api-design.json"
+    },
+    {
+      "id": "system-design--10-caching",
+      "title": "10. Caching",
+      "source": "system-design/10-caching.md",
+      "path": "guides/system-design--10-caching.json"
+    },
+    {
+      "id": "system-design--11-cdns",
+      "title": "11. CDNs",
+      "source": "system-design/11-cdns.md",
+      "path": "guides/system-design--11-cdns.json"
+    },
+    {
+      "id": "system-design--12-proxies-and-load-balancing",
+      "title": "12. Proxies and Load Balancing",
+      "source": "system-design/12-proxies-and-load-balancing.md",
+      "path": "guides/system-design--12-proxies-and-load-balancing.json"
+    },
+    {
+      "id": "system-design--13-consistent-hashing",
+      "title": "13. Consistent Hashing",
+      "source": "system-design/13-consistent-hashing.md",
+      "path": "guides/system-design--13-consistent-hashing.json"
+    },
+    {
+      "id": "system-design--14-sql",
+      "title": "14. SQL",
+      "source": "system-design/14-sql.md",
+      "path": "guides/system-design--14-sql.json"
+    },
+    {
+      "id": "system-design--15-nosql",
+      "title": "15. NoSQL",
+      "source": "system-design/15-nosql.md",
+      "path": "guides/system-design--15-nosql.json"
+    },
+    {
+      "id": "system-design--16-replication-and-sharding",
+      "title": "16. Replication and Sharding",
+      "source": "system-design/16-replication-and-sharding.md",
+      "path": "guides/system-design--16-replication-and-sharding.json"
+    },
+    {
+      "id": "system-design--17-cap-theorem",
+      "title": "17. CAP Theorem",
+      "source": "system-design/17-cap-theorem.md",
+      "path": "guides/system-design--17-cap-theorem.json"
+    },
+    {
+      "id": "system-design--18-object-storage",
+      "title": "18. Object Storage",
+      "source": "system-design/18-object-storage.md",
+      "path": "guides/system-design--18-object-storage.json"
+    },
+    {
+      "id": "system-design--19-message-queues",
+      "title": "19. Message Queues",
+      "source": "system-design/19-message-queues.md",
+      "path": "guides/system-design--19-message-queues.json"
+    },
+    {
+      "id": "system-design--20-mapreduce",
+      "title": "20. MapReduce",
+      "source": "system-design/20-mapreduce.md",
+      "path": "guides/system-design--20-mapreduce.json"
+    },
+    {
+      "id": "system-design--21-designing-systems",
+      "title": "21. Designing Systems",
+      "source": "system-design/21-designing-systems.md",
+      "path": "guides/system-design--21-designing-systems.json"
+    },
+    {
+      "id": "system-design--22-design-rate-limiter",
+      "title": "22. Design a Rate Limiter",
+      "source": "system-design/22-design-rate-limiter.md",
+      "path": "guides/system-design--22-design-rate-limiter.json"
+    },
+    {
+      "id": "system-design--23-design-social-feed",
+      "title": "23. Design a Social Feed",
+      "source": "system-design/23-design-social-feed.md",
+      "path": "guides/system-design--23-design-social-feed.json"
+    },
+    {
+      "id": "system-design--24-design-group-chat",
+      "title": "24. Design a Group Chat System",
+      "source": "system-design/24-design-group-chat.md",
+      "path": "guides/system-design--24-design-group-chat.json"
+    },
+    {
+      "id": "system-design--25-design-video-streaming",
+      "title": "25. Design a Video Streaming Platform",
+      "source": "system-design/25-design-video-streaming.md",
+      "path": "guides/system-design--25-design-video-streaming.json"
+    },
+    {
+      "id": "system-design--26-design-cloud-file-storage",
+      "title": "26. Design a Cloud File Storage Service",
+      "source": "system-design/26-design-cloud-file-storage.md",
+      "path": "guides/system-design--26-design-cloud-file-storage.json"
+    },
+    {
+      "id": "system-design--27-design-maps-and-navigation",
+      "title": "27. Design a Maps and Navigation Service",
+      "source": "system-design/27-design-maps-and-navigation.md",
+      "path": "guides/system-design--27-design-maps-and-navigation.json"
+    },
+    {
+      "id": "system-design--28-design-key-value-store",
+      "title": "28. Design a Distributed Key-Value Store",
+      "source": "system-design/28-design-key-value-store.md",
+      "path": "guides/system-design--28-design-key-value-store.json"
+    },
+    {
+      "id": "system-design--29-design-distributed-message-queue",
+      "title": "29. Design a Distributed Message Queue",
+      "source": "system-design/29-design-distributed-message-queue.md",
+      "path": "guides/system-design--29-design-distributed-message-queue.json"
+    },
+    {
+      "id": "system-design--30-design-realtime-feature-store",
+      "title": "30. Design a Real-Time ML Feature Store",
+      "source": "system-design/30-design-realtime-feature-store.md",
+      "path": "guides/system-design--30-design-realtime-feature-store.json"
+    },
+    {
+      "id": "resources--agile_data_science",
+      "title": "Agile Methodologies for Data Science",
+      "source": "resources/agile_data_science.md",
+      "path": "guides/resources--agile_data_science.json"
+    },
+    {
+      "id": "resources--ai_agents_guide",
+      "title": "AI Agents Comprehensive Guide",
+      "source": "resources/ai_agents_guide.md",
+      "path": "guides/resources--ai_agents_guide.json"
+    },
+    {
+      "id": "resources--automl_basics",
+      "title": "AutoML Basics Guide",
+      "source": "resources/automl_basics.md",
+      "path": "guides/resources--automl_basics.json"
+    },
+    {
+      "id": "resources--career_portfolio",
+      "title": "Career & Portfolio Guide for ML/Data Science",
+      "source": "resources/career_portfolio.md",
+      "path": "guides/resources--career_portfolio.json"
+    },
+    {
+      "id": "resources--career_roadmap_guide",
+      "title": "Career Roadmap Guide: Role-Specific Learning Paths",
+      "source": "resources/career_roadmap_guide.md",
+      "path": "guides/resources--career_roadmap_guide.json"
+    },
+    {
+      "id": "resources--causal_inference_guide",
+      "title": "Causal Inference Guide",
+      "source": "resources/causal_inference_guide.md",
+      "path": "guides/resources--causal_inference_guide.json"
+    },
+    {
+      "id": "resources--common_errors",
+      "title": "Common ML Errors & Debugging Guide",
+      "source": "resources/common_errors.md",
+      "path": "guides/resources--common_errors.json"
+    },
+    {
+      "id": "resources--git_guide",
+      "title": "Complete Git & GitHub Guide",
+      "source": "resources/git_guide.md",
+      "path": "guides/resources--git_guide.json"
+    },
+    {
+      "id": "resources--data_validation",
+      "title": "Comprehensive Data Validation Guide",
+      "source": "resources/data_validation.md",
+      "path": "guides/resources--data_validation.json"
+    },
+    {
+      "id": "resources--web_scraping_guide",
+      "title": "Comprehensive Web Scraping Guide",
+      "source": "resources/web_scraping_guide.md",
+      "path": "guides/resources--web_scraping_guide.json"
+    },
+    {
+      "id": "resources--data_products_guide",
+      "title": "Data Products Guide",
+      "source": "resources/data_products_guide.md",
+      "path": "guides/resources--data_products_guide.json"
+    },
+    {
+      "id": "resources--data_science_cheatsheet",
+      "title": "Data Science & Machine Learning Cheatsheet",
+      "source": "resources/data_science_cheatsheet.md",
+      "path": "guides/resources--data_science_cheatsheet.json"
+    },
+    {
+      "id": "resources--dsa_course_python",
+      "title": "Data Structures and Algorithms (DSA) in Python — Beginner to Interview-Ready",
+      "source": "resources/dsa_course_python.md",
+      "path": "guides/resources--dsa_course_python.json"
+    },
+    {
+      "id": "resources--dsa_for_ml_guide",
+      "title": "Data Structures and Algorithms for Machine Learning",
+      "source": "resources/dsa_for_ml_guide.md",
+      "path": "guides/resources--dsa_for_ml_guide.json"
+    },
+    {
+      "id": "resources--docker_tutorial",
+      "title": "Docker Complete Tutorial for Machine Learning",
+      "source": "resources/docker_tutorial.md",
+      "path": "guides/resources--docker_tutorial.json"
+    },
+    {
+      "id": "resources--enterprise_data_tools",
+      "title": "Enterprise Data Tools Guide",
+      "source": "resources/enterprise_data_tools.md",
+      "path": "guides/resources--enterprise_data_tools.json"
+    },
+    {
+      "id": "resources--math_formulas",
+      "title": "Essential Math Formulas for Machine Learning",
+      "source": "resources/math_formulas.md",
+      "path": "guides/resources--math_formulas.json"
+    },
+    {
+      "id": "resources--tools",
+      "title": "Essential Tools for Machine Learning",
+      "source": "resources/tools.md",
+      "path": "guides/resources--tools.json"
+    },
+    {
+      "id": "resources--ethics_in_ml",
+      "title": "Ethics in Machine Learning",
+      "source": "resources/ethics_in_ml.md",
+      "path": "guides/resources--ethics_in_ml.json"
+    },
+    {
+      "id": "resources--full_stack_ai_engineer_roadmap",
+      "title": "Full-Stack AI Engineer Blueprint (Beginner to Advanced)",
+      "source": "resources/full_stack_ai_engineer_roadmap.md",
+      "path": "guides/resources--full_stack_ai_engineer_roadmap.json"
+    },
+    {
+      "id": "resources--full_stack_track--README",
+      "title": "Full-Stack AI Track — In-Repo Lessons",
+      "source": "resources/full_stack_track/README.md",
+      "path": "guides/resources--full_stack_track--README.json"
+    },
+    {
+      "id": "resources--genai_production_deployment",
+      "title": "GenAI Production Deployment Guide",
+      "source": "resources/genai_production_deployment.md",
+      "path": "guides/resources--genai_production_deployment.json"
+    },
+    {
+      "id": "resources--generative_ai_comprehensive_guide",
+      "title": "Generative AI Comprehensive Guide",
+      "source": "resources/generative_ai_comprehensive_guide.md",
+      "path": "guides/resources--generative_ai_comprehensive_guide.json"
+    },
+    {
+      "id": "getting-started",
+      "title": "Getting Started - Your First ML Project",
+      "source": "GETTING_STARTED.md",
+      "path": "guides/getting-started.json"
+    },
+    {
+      "id": "resources--imbalanced_data_cheatsheet",
+      "title": "Imbalanced Data Cheatsheet",
+      "source": "resources/imbalanced_data_cheatsheet.md",
+      "path": "guides/resources--imbalanced_data_cheatsheet.json"
+    },
+    {
+      "id": "resources--introduction_to_ml_cheatsheet",
+      "title": "Introduction to ML Cheatsheet",
+      "source": "resources/introduction_to_ml_cheatsheet.md",
+      "path": "guides/resources--introduction_to_ml_cheatsheet.json"
+    },
+    {
+      "id": "resources--java_for_data_science",
+      "title": "Java for Data Science",
+      "source": "resources/java_for_data_science.md",
+      "path": "guides/resources--java_for_data_science.json"
+    },
+    {
+      "id": "resources--kaggle_competitions",
+      "title": "Kaggle Competitions Complete Guide",
+      "source": "resources/kaggle_competitions.md",
+      "path": "guides/resources--kaggle_competitions.json"
+    },
+    {
+      "id": "resources--langchain_guide",
+      "title": "Langchain Comprehensive Guide",
+      "source": "resources/langchain_guide.md",
+      "path": "guides/resources--langchain_guide.json"
+    },
+    {
+      "id": "learning-roadmap",
+      "title": "Learning Roadmap - Visual Guide",
+      "source": "LEARNING_ROADMAP.md",
+      "path": "guides/learning-roadmap.json"
+    },
+    {
+      "id": "resources--llamaindex_guide",
+      "title": "LlamaIndex Comprehensive Guide",
+      "source": "resources/llamaindex_guide.md",
+      "path": "guides/resources--llamaindex_guide.json"
+    },
+    {
+      "id": "resources--ml_glossary",
+      "title": "Machine Learning Glossary",
+      "source": "resources/ml_glossary.md",
+      "path": "guides/resources--ml_glossary.json"
+    },
+    {
+      "id": "resources--excel_data_analysis_guide",
+      "title": "Microsoft Excel for Data Analysis Complete Guide",
+      "source": "resources/excel_data_analysis_guide.md",
+      "path": "guides/resources--excel_data_analysis_guide.json"
+    },
+    {
+      "id": "resources--ml_model_testing",
+      "title": "ML Model Testing Guide",
+      "source": "resources/ml_model_testing.md",
+      "path": "guides/resources--ml_model_testing.json"
+    },
+    {
+      "id": "resources--ml_system_design_guide",
+      "title": "ML System Design Comprehensive Guide",
+      "source": "resources/ml_system_design_guide.md",
+      "path": "guides/resources--ml_system_design_guide.json"
+    },
+    {
+      "id": "resources--interview_prep",
+      "title": "ML/Data Science Interview Preparation Guide",
+      "source": "resources/interview_prep.md",
+      "path": "guides/resources--interview_prep.json"
+    },
+    {
+      "id": "resources--mlflow_comprehensive_guide",
+      "title": "MLFlow Comprehensive Guide",
+      "source": "resources/mlflow_comprehensive_guide.md",
+      "path": "guides/resources--mlflow_comprehensive_guide.json"
+    },
+    {
+      "id": "resources--mlops_cheatsheet",
+      "title": "MLOps Cheatsheet",
+      "source": "resources/mlops_cheatsheet.md",
+      "path": "guides/resources--mlops_cheatsheet.json"
+    },
+    {
+      "id": "resources--model_deployment_cheatsheet",
+      "title": "Model Deployment Cheatsheet",
+      "source": "resources/model_deployment_cheatsheet.md",
+      "path": "guides/resources--model_deployment_cheatsheet.json"
+    },
+    {
+      "id": "resources--model_explainability_cheatsheet",
+      "title": "Model Explainability Cheatsheet",
+      "source": "resources/model_explainability_cheatsheet.md",
+      "path": "guides/resources--model_explainability_cheatsheet.json"
+    },
+    {
+      "id": "resources--model_interpretability",
+      "title": "Model Interpretability & Explainability",
+      "source": "resources/model_interpretability.md",
+      "path": "guides/resources--model_interpretability.json"
+    },
+    {
+      "id": "resources--open_source_contribution",
+      "title": "Open Source Contribution Guide",
+      "source": "resources/open_source_contribution.md",
+      "path": "guides/resources--open_source_contribution.json"
+    },
+    {
+      "id": "resources--full_stack_track--phase-a-typescript-foundations",
+      "title": "Phase A — TypeScript Foundations (In-Repo Lessons)",
+      "source": "resources/full_stack_track/phase-a-typescript-foundations.md",
+      "path": "guides/resources--full_stack_track--phase-a-typescript-foundations.json"
+    },
+    {
+      "id": "resources--full_stack_track--phase-b-node-apis",
+      "title": "Phase B — Node.js, HTTP, and API Core (In-Repo Lessons)",
+      "source": "resources/full_stack_track/phase-b-node-apis.md",
+      "path": "guides/resources--full_stack_track--phase-b-node-apis.json"
+    },
+    {
+      "id": "resources--full_stack_track--phase-c-sql-databases",
+      "title": "Phase C — SQL and Relational Design (In-Repo Lessons)",
+      "source": "resources/full_stack_track/phase-c-sql-databases.md",
+      "path": "guides/resources--full_stack_track--phase-c-sql-databases.json"
+    },
+    {
+      "id": "resources--full_stack_track--phase-d-prisma-nextjs",
+      "title": "Phase D — Prisma and Next.js (In-Repo Lessons)",
+      "source": "resources/full_stack_track/phase-d-prisma-nextjs.md",
+      "path": "guides/resources--full_stack_track--phase-d-prisma-nextjs.json"
+    },
+    {
+      "id": "resources--full_stack_track--phase-e-backend-advanced",
+      "title": "Phase E — Advanced Backend Engineering (In-Repo Lessons)",
+      "source": "resources/full_stack_track/phase-e-backend-advanced.md",
+      "path": "guides/resources--full_stack_track--phase-e-backend-advanced.json"
+    },
+    {
+      "id": "resources--full_stack_track--phase-f-frontend-advanced",
+      "title": "Phase F — Advanced Frontend Engineering (In-Repo Lessons)",
+      "source": "resources/full_stack_track/phase-f-frontend-advanced.md",
+      "path": "guides/resources--full_stack_track--phase-f-frontend-advanced.json"
+    },
+    {
+      "id": "resources--full_stack_track--phase-g-containers-cloud",
+      "title": "Phase G — Containers, Networking, and Delivery (In-Repo Lessons)",
+      "source": "resources/full_stack_track/phase-g-containers-cloud.md",
+      "path": "guides/resources--full_stack_track--phase-g-containers-cloud.json"
+    },
+    {
+      "id": "resources--full_stack_track--phase-h-ai-integration",
+      "title": "Phase H — AI Integration for Full-Stack Products (In-Repo Lessons)",
+      "source": "resources/full_stack_track/phase-h-ai-integration.md",
+      "path": "guides/resources--full_stack_track--phase-h-ai-integration.json"
+    },
+    {
+      "id": "resources--powerbi_guide",
+      "title": "Power BI Complete Guide for Data Analysis",
+      "source": "resources/powerbi_guide.md",
+      "path": "guides/resources--powerbi_guide.json"
+    },
+    {
+      "id": "resources--practice_platforms",
+      "title": "Practice Platforms for Machine Learning",
+      "source": "resources/practice_platforms.md",
+      "path": "guides/resources--practice_platforms.json"
+    },
+    {
+      "id": "resources--prerequisites_cheatsheet",
+      "title": "Prerequisites Cheatsheet",
+      "source": "resources/prerequisites_cheatsheet.md",
+      "path": "guides/resources--prerequisites_cheatsheet.json"
+    },
+    {
+      "id": "quick-start",
+      "title": "Quick Start Guide",
+      "source": "QUICK_START.md",
+      "path": "guides/quick-start.json"
+    },
+    {
+      "id": "resources--rag_comprehensive_guide",
+      "title": "RAG (Retrieval Augmented Generation) Comprehensive Guide",
+      "source": "resources/rag_comprehensive_guide.md",
+      "path": "guides/resources--rag_comprehensive_guide.json"
+    },
+    {
+      "id": "resources--blogs_websites",
+      "title": "Recommended Blogs & Websites for Machine Learning",
+      "source": "resources/blogs_websites.md",
+      "path": "guides/resources--blogs_websites.json"
+    },
+    {
+      "id": "resources--books",
+      "title": "Recommended Books for Machine Learning",
+      "source": "resources/books.md",
+      "path": "guides/resources--books.json"
+    },
+    {
+      "id": "resources--datasets",
+      "title": "Recommended Datasets for Practice",
+      "source": "resources/datasets.md",
+      "path": "guides/resources--datasets.json"
+    },
+    {
+      "id": "resources--courses",
+      "title": "Recommended Online Courses",
+      "source": "resources/courses.md",
+      "path": "guides/resources--courses.json"
+    },
+    {
+      "id": "resources--youtube_channels",
+      "title": "Recommended YouTube Channels for Machine Learning",
+      "source": "resources/youtube_channels.md",
+      "path": "guides/resources--youtube_channels.json"
+    },
+    {
+      "id": "resources--recommender_systems",
+      "title": "Recommender Systems Guide",
+      "source": "resources/recommender_systems.md",
+      "path": "guides/resources--recommender_systems.json"
+    },
+    {
+      "id": "resources--reinforcement_learning",
+      "title": "Reinforcement Learning Basics",
+      "source": "resources/reinforcement_learning.md",
+      "path": "guides/resources--reinforcement_learning.json"
+    },
+    {
+      "id": "readme",
+      "title": "Road to ML: From Zero to Hero",
+      "source": "README.md",
+      "path": "guides/readme.json"
+    },
+    {
+      "id": "resources--stakeholder_communication",
+      "title": "Stakeholder Communication Guide for ML Projects",
+      "source": "resources/stakeholder_communication.md",
+      "path": "guides/resources--stakeholder_communication.json"
+    },
+    {
+      "id": "system-design--README",
+      "title": "System Design for Beginners",
+      "source": "system-design/README.md",
+      "path": "guides/system-design--README.json"
+    },
+    {
+      "id": "resources--transformer_fine_tuning_guide",
+      "title": "Transformer Fine-Tuning Comprehensive Guide",
+      "source": "resources/transformer_fine_tuning_guide.md",
+      "path": "guides/resources--transformer_fine_tuning_guide.json"
+    }
+  ],
+  "legal": {
+    "termsVersion": "2026-06-21",
+    "termsUrl": "nutzungsbedingungen.html",
+    "termsUrlEn": "terms.html",
+    "contentSyncedAt": "2026-06-21T15:01:47.311Z",
+    "sourceCommit": "75268cd6f17f75f2332cffedf4275178a5fd1c24",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/75268cd6f17f75f2332cffedf4275178a5fd1c24",
+    "sourceCommitDate": "2026-06-21T16:51:14+02:00",
+    "sourceCommitMessage": "Fix study hub repo name in notify workflow",
+    "license": "MIT",
+    "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
+  }
+}

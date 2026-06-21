@@ -1,0 +1,28 @@
+{
+  "name": "nabidinmotion",
+  "version": "1.0.0",
+  "description": "Nabid In Motion study hub — static site synced from road-to-machine-learning.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "banner": "node render_banner.js",
+    "banner:v2": "node render_banner_v2.js",
+    "facebook": "node render_facebook.js",
+    "logo": "node render_logo.js",
+    "site": "node scripts/serve-site.js",
+    "sync:curriculum": "node scripts/sync-curriculum.js",
+    "curriculum:init": "git submodule update --init --recursive",
+    "curriculum:pull": "git submodule update --remote road-to-machine-learning",
+    "curriculum:sync": "git submodule update --remote road-to-machine-learning && node scripts/sync-curriculum.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "marked": "^15.0.6",
+    "puppeteer": "^23.11.1",
+    "sanitize-html": "^2.14.0",
+    "sharp": "^0.35.1",
+    "shiki": "^4.2.0"
+  }
+}

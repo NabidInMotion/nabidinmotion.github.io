@@ -1,0 +1,4 @@
+Contact: mailto:privacy@nabidinmotion.com
+Preferred-Languages: en, de, bn
+Policy: https://nabidinmotion.com/datenschutz.html
+Acknowledgments: https://nabidinmotion.com/security-acknowledgments.html
