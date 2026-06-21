@@ -4,6 +4,7 @@
 import {
   buildLearnUrl,
   exportProgress,
+  importProgress,
   getModuleProgress,
   getStats,
   guideKey,
@@ -248,7 +249,7 @@ function renderLessonLegal(content) {
       "p",
       "lesson-legal-text",
       `Source: ${content.source}. Synced ${synced}${commit ? ` (GitHub ${commit})` : ""}. ` +
-        "This lesson may differ from versions you saw before. Educational use only — no warranty. " +
+        "This lesson may differ from versions you saw before. Educational use only. No warranty. " +
         "See Nutzungsbedingungen for change and liability terms."
     )
   );
@@ -371,6 +372,9 @@ function bindChrome() {
   document.getElementById("footer-year").textContent = String(new Date().getFullYear());
 
   document.getElementById("export-progress").addEventListener("click", exportProgress);
+  document.getElementById("import-progress").addEventListener("click", () => {
+    importProgress(() => window.location.reload());
+  });
   document.getElementById("reset-progress").addEventListener("click", () => {
     if (resetProgress()) window.location.reload();
   });

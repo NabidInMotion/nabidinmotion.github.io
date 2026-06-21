@@ -5,6 +5,7 @@
 import {
   buildLearnUrl,
   exportProgress,
+  importProgress,
   findContinueLesson,
   getModuleProgress,
   getStats,
@@ -93,8 +94,8 @@ function renderProgressHero(container, manifest, roleId, careerData) {
   const metaText =
     stats.completedCount === 0
       ? role
-        ? `${stats.total} lessons in the ${role.title} path. Start reading — progress saves in your browser.`
-        : `${manifest.totalLessons} lessons available. Start reading on site — progress saves in your browser. No account needed.`
+        ? `${stats.total} lessons in the ${role.title} path. Start reading. Progress saves in your browser.`
+        : `${manifest.totalLessons} lessons available. Start reading on site. Progress saves in your browser. No account needed.`
       : role
         ? `${stats.completedCount} of ${stats.total} lessons read for ${role.title} (${stats.percent}%).`
         : stats.guidesCompleted > 0
@@ -127,13 +128,19 @@ function renderProgressHero(container, manifest, roleId, careerData) {
     exportBtn.type = "button";
     exportBtn.textContent = "Export progress";
     exportBtn.addEventListener("click", exportProgress);
+    const importBtn = el("button", "link-btn");
+    importBtn.type = "button";
+    importBtn.textContent = "Import progress";
+    importBtn.addEventListener("click", () => {
+      importProgress(() => refreshProgress(manifest, roleId, careerData));
+    });
     const resetBtn = el("button", "link-btn link-btn-danger");
     resetBtn.type = "button";
     resetBtn.textContent = "Reset progress";
     resetBtn.addEventListener("click", () => {
       if (resetProgress()) refreshProgress(manifest, roleId, careerData);
     });
-    util.append(exportBtn, el("span", "sep", "·"), resetBtn);
+    util.append(exportBtn, el("span", "sep", "·"), importBtn, el("span", "sep", "·"), resetBtn);
     actions.append(util);
   }
 

@@ -91,7 +91,7 @@
     { "slug": "14-mlops-basics", "title": "MLOps Basics", "summary": "MLflow, experiment tracking, CI/CD, and monitoring." },
     { "slug": "15-time-series-analysis", "title": "Time Series Analysis", "summary": "ARIMA, seasonality, deep sequences, and temporal evaluation." },
     { "slug": "16-projects-beginner", "title": "Beginner Projects", "summary": "6 hands-on projects including Iris classification and house prices." },
-    { "slug": "17-projects-intermediate", "title": "Intermediate Projects", "summary": "8 projects — churn, recommendations, fraud detection, and more." },
+    { "slug": "17-projects-intermediate", "title": "Intermediate Projects", "summary": "8 projects: churn, recommendations, fraud detection, and more." },
     { "slug": "18-projects-advanced", "title": "Advanced Projects", "summary": "9 end-to-end projects spanning CV, NLP, and deployment." },
     { "slug": "19-sql-database-fundamentals", "title": "SQL & Databases", "summary": "Queries, joins, aggregations, and data access for ML pipelines." },
     { "slug": "20-handling-imbalanced-data", "title": "Handling Imbalanced Data", "summary": "Resampling, class weights, and metrics beyond accuracy." },

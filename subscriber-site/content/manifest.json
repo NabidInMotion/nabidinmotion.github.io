@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-06-21T21:47:12.321Z",
+  "syncedAt": "2026-06-21T22:21:35.792Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 265,
   "modules": [
@@ -842,7 +842,7 @@
         }
       ],
       "title": "Intermediate Projects",
-      "summary": "8 projects — churn, recommendations, fraud detection, and more."
+      "summary": "8 projects: churn, recommendations, fraud detection, and more."
     },
     {
       "slug": "18-projects-advanced",
@@ -1783,7 +1783,7 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-06-21T21:47:12.321Z",
+    "contentSyncedAt": "2026-06-21T22:21:35.792Z",
     "sourceCommit": "864b0738cf1c0bdc21df566f44d24198fa067429",
     "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/864b0738cf1c0bdc21df566f44d24198fa067429",
     "sourceCommitDate": "2026-06-21T23:46:12+02:00",

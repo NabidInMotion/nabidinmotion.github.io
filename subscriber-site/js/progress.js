@@ -3,6 +3,34 @@
  */
 const STORAGE_KEY = "nim-study-progress";
 const SCHEMA_VERSION = 1;
+const MAX_IMPORT_BYTES = 256 * 1024;
+const PROGRESS_KEY_RE = /^(guide\/[\w-]+|[\w-]+\/[\w-]+)$/;
+
+function isValidProgressKey(key) {
+  return typeof key === "string" && key.length > 0 && key.length <= 120 && PROGRESS_KEY_RE.test(key);
+}
+
+function normalizeImportState(data) {
+  if (!data || typeof data !== "object" || Array.isArray(data)) return null;
+
+  const completedLessons = Array.isArray(data.completedLessons)
+    ? [...new Set(data.completedLessons.filter(isValidProgressKey))].slice(0, 500)
+    : [];
+
+  let lastLesson = typeof data.lastLesson === "string" && isValidProgressKey(data.lastLesson)
+    ? data.lastLesson
+    : null;
+  if (lastLesson && !completedLessons.includes(lastLesson)) {
+    lastLesson = completedLessons.at(-1) ?? null;
+  }
+
+  return {
+    v: SCHEMA_VERSION,
+    completedLessons,
+    lastLesson,
+    updatedAt: null,
+  };
+}
 
 function defaultState() {
   return {
@@ -175,6 +203,60 @@ export function exportProgress() {
   a.download = `nim-study-progress-${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+/**
+ * Import progress from a user-selected JSON export. Local device only; requires confirmation.
+ */
+export function importProgress(onComplete) {
+  if (!storageAvailable()) {
+    window.alert("Progress storage is not available in this browser.");
+    return;
+  }
+
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "application/json,.json";
+  input.hidden = true;
+
+  input.addEventListener("change", async () => {
+    const file = input.files?.[0];
+    input.remove();
+    if (!file) return;
+
+    if (file.size > MAX_IMPORT_BYTES) {
+      window.alert("That file is too large. Choose a progress export downloaded from this Study Hub.");
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(await file.text());
+      const normalized = normalizeImportState(parsed);
+      if (!normalized) {
+        window.alert("Invalid progress file. Choose a JSON file exported from this Study Hub.");
+        return;
+      }
+
+      const count = normalized.completedLessons.length;
+      const message = count === 0
+        ? "Import this progress file? It will replace progress saved on this device."
+        : `Import ${count} completed item${count === 1 ? "" : "s"}? This replaces progress on this device.`;
+
+      if (!window.confirm(message)) return;
+
+      if (!save(normalized)) {
+        window.alert("Could not save imported progress. Check that browser storage is available.");
+        return;
+      }
+
+      if (typeof onComplete === "function") onComplete(normalized);
+    } catch {
+      window.alert("Could not read that file. Choose a JSON export from this Study Hub.");
+    }
+  });
+
+  document.body.append(input);
+  input.click();
 }
 
 export function resetProgress() {
