@@ -40,6 +40,7 @@ import {
 } from "./security.js";
 
 const REPO_BASE = "https://github.com/NabidAlam/road-to-machine-learning/tree/main";
+const PLAYLIST_INITIAL = 6;
 
 const GUIDE_LOCAL = {
   "Getting Started": "getting-started",
@@ -316,21 +317,48 @@ function renderVideoCard(item, fallbackChannel) {
   return card;
 }
 
-function renderVideos(container, config) {
-  clearChildren(container);
+function renderVideos(grid, actions, config) {
+  clearChildren(grid);
+  clearChildren(actions);
+  grid.classList.remove("is-expanded");
+
   const { youtube, links } = config;
   const fallback = links.youtubeChannel;
-
-  const playlists = (youtube.featuredPlaylists || []).slice(0, 6);
+  const playlists = youtube.featuredPlaylists || [];
   const videos = (youtube.featuredVideos || []).slice(0, 12);
+  const hiddenCount = Math.max(0, playlists.length - PLAYLIST_INITIAL);
 
-  for (const p of playlists) {
-    container.append(renderVideoCard({ ...p, tag: p.tag || "Playlist" }, fallback));
+  for (let i = 0; i < playlists.length; i++) {
+    const card = renderVideoCard({ ...playlists[i], tag: playlists[i].tag || "Playlist" }, fallback);
+    if (i >= PLAYLIST_INITIAL) card.dataset.beyondInitial = "true";
+    grid.append(card);
   }
+
   for (const v of videos) {
     if (!sanitizeVideoId(v.videoId)) continue;
-    container.append(renderVideoCard(v, fallback));
+    grid.append(renderVideoCard(v, fallback));
   }
+
+  if (hiddenCount <= 0) return;
+
+  const showMore = el(
+    "button",
+    "btn btn-ghost btn-sm",
+    `Show ${hiddenCount} more playlist${hiddenCount === 1 ? "" : "s"} ::`,
+  );
+  showMore.type = "button";
+  showMore.addEventListener("click", () => {
+    const expanded = grid.classList.toggle("is-expanded");
+    showMore.textContent = expanded ? "Show fewer ::" : `Show ${hiddenCount} more playlist${hiddenCount === 1 ? "" : "s"} ::`;
+  });
+
+  const browseAll = externalLink(
+    `${fallback.replace(/\/$/, "")}/playlists`,
+    "btn btn-ghost btn-sm link-muted",
+    "Browse all on YouTube ::",
+  );
+
+  actions.append(showMore, browseAll);
 }
 
 function renderModules(container, modulesData, activePhase, manifest, roleId, careerData) {
@@ -486,7 +514,11 @@ async function init() {
     renderCareerRoles(document.getElementById("career-role-grid"), careerData, selectedRoleId, onRoleSelect);
 
     renderStudyGuides(document.getElementById("study-guides"), config.studyGuides, config.links.githubRepo);
-    renderVideos(document.getElementById("video-grid"), config);
+    renderVideos(
+      document.getElementById("video-grid"),
+      document.getElementById("video-library-actions"),
+      config,
+    );
     updateModulesSection(selectedRoleId, careerData, manifest);
 
     onCareerChange((roleId) => {

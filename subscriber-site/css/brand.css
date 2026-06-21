@@ -427,6 +427,20 @@ section { padding: 3.5rem 0; }
   gap: 1.25rem;
 }
 
+.video-grid:not(.is-expanded) .video-card[data-beyond-initial] {
+  display: none;
+}
+
+.video-library-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.video-library-actions .btn { cursor: pointer; font-family: inherit; }
+
 .video-card {
   background: var(--card);
   border: 1px solid var(--border);

@@ -139,7 +139,7 @@ export function validateSiteConfig(raw) {
     },
     youtube: {
       channelId: typeof raw.youtube?.channelId === "string" ? raw.youtube.channelId.slice(0, 30) : "",
-      featuredPlaylists: Array.isArray(raw.youtube?.featuredPlaylists) ? raw.youtube.featuredPlaylists.slice(0, 12) : [],
+      featuredPlaylists: Array.isArray(raw.youtube?.featuredPlaylists) ? raw.youtube.featuredPlaylists.slice(0, 24) : [],
       featuredVideos: Array.isArray(raw.youtube?.featuredVideos) ? raw.youtube.featuredVideos.slice(0, 24) : [],
     },
     studyGuides: Array.isArray(raw.studyGuides) ? raw.studyGuides.slice(0, 24) : [],
