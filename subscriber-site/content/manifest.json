@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-06-21T22:21:35.792Z",
+  "syncedAt": "2026-06-22T11:36:49.187Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 265,
   "modules": [
@@ -1783,11 +1783,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-06-21T22:21:35.792Z",
-    "sourceCommit": "864b0738cf1c0bdc21df566f44d24198fa067429",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/864b0738cf1c0bdc21df566f44d24198fa067429",
-    "sourceCommitDate": "2026-06-21T23:46:12+02:00",
-    "sourceCommitMessage": "Waves 2-4: facts, links, voice pass, and tutorial fixes.",
+    "contentSyncedAt": "2026-06-22T11:36:49.187Z",
+    "sourceCommit": "3b4319beaf516f74da1925946525dfba64cced13",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/3b4319beaf516f74da1925946525dfba64cced13",
+    "sourceCommitDate": "2026-06-22T00:23:17+02:00",
+    "sourceCommitMessage": "Replace em-dash clause glue in body prose for a more natural voice.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
