@@ -198,7 +198,7 @@ GitHub Pages deploys automatically from `subscriber-site/` via `.github/workflow
 
 One-time setup on [NabidInMotion/nabidinmotion.github.io](https://github.com/NabidInMotion/nabidinmotion.github.io):
 
-1. **Settings → Pages → Build and deployment → Source:** **GitHub Actions**
+1. **Settings → Pages → Build and deployment → Source:** Deploy from branch → **gh-pages** → **/ (root)**
 2. Run **Actions → Deploy Study Hub → Run workflow** once after the first push
 
 Curriculum sync (`.github/workflows/sync-curriculum.yml`) rebuilds `content/`; deploy runs after sync or when `subscriber-site/` changes.

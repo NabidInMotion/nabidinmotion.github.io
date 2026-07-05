@@ -2,8 +2,7 @@
 #
 # Setup (one time, on NabidInMotion/nabidinmotion.github.io):
 #   1. Settings → Actions → General → Workflow permissions → Read and write
-#   2. Settings → Pages → Source: GitHub Actions
-#   3. Actions → Deploy Study Hub → Run workflow
+#   2. Settings → Pages → Source: Deploy from branch → gh-pages / / (root) → Save
 #
 # Triggers:
 #   - Push to main that touches subscriber-site/
@@ -24,9 +23,7 @@ on:
     types: [completed]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -36,24 +33,23 @@ jobs:
   deploy:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Prepare static site
-        run: touch subscriber-site/.nojekyll
+        run: |
+          test -f subscriber-site/index.html
+          touch subscriber-site/.nojekyll
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: subscriber-site
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: subscriber-site
+          clean: true
+          single-commit: true
+          commit-message: "Deploy Study Hub (${{ github.sha }})."
