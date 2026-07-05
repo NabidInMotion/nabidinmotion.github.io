@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-05T08:41:46.142Z",
+  "syncedAt": "2026-07-05T10:42:24.562Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 265,
   "modules": [
@@ -1783,11 +1783,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-05T08:41:46.142Z",
-    "sourceCommit": "3b4319beaf516f74da1925946525dfba64cced13",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/3b4319beaf516f74da1925946525dfba64cced13",
-    "sourceCommitDate": "2026-06-22T00:23:17+02:00",
-    "sourceCommitMessage": "Replace em-dash clause glue in body prose for a more natural voice.",
+    "contentSyncedAt": "2026-07-05T10:42:24.562Z",
+    "sourceCommit": "152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
+    "sourceCommitDate": "2026-07-05T12:05:58+02:00",
+    "sourceCommitMessage": "Point study hub dispatch docs to NabidInMotion Pages repo.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
