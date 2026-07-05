@@ -36,25 +36,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      - name: Publish to gh-pages branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare static site
         run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          test -f subscriber-site/index.html
+          touch subscriber-site/.nojekyll
 
-          site_dir=$(mktemp -d)
-          cp -a subscriber-site/. "$site_dir/"
-          touch "$site_dir/.nojekyll"
-          test -f "$site_dir/index.html"
-
-          cd "$site_dir"
-          git init -b gh-pages
-          git add -A
-          git commit -m "Deploy Study Hub (${GITHUB_SHA::7})"
-
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --force origin gh-pages
-          echo "Published gh-pages branch for ${GITHUB_REPOSITORY}"
+      - name: Deploy to gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: subscriber-site
+          clean: true
+          single-commit: true
+          commit-message: "Deploy Study Hub (${{ github.sha }})."
