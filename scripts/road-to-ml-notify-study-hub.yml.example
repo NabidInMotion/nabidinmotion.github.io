@@ -8,7 +8,7 @@
 # 3. In road-to-machine-learning → Settings → Secrets → Actions, add:
 #      STUDY_HUB_DISPATCH_TOKEN = <PAT>
 # 4. In road-to-machine-learning → Settings → Variables → Actions, add:
-#      STUDY_HUB_REPO = NabidAlam/nabidinmotion
+#      STUDY_HUB_REPO = NabidInMotion/nabidinmotion.github.io
 # 5. Commit and push to road-to-machine-learning main.
 #
 # After that, every push to main that changes *.md triggers a sync in the study hub.

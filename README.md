@@ -26,7 +26,7 @@ When you push markdown to the curriculum repo, a GitHub Action can notify this r
 Requires Node.js 18 or newer.
 
 ```bash
-git clone --recurse-submodules https://github.com/NabidAlam/nabidinmotion.git
+git clone --recurse-submodules https://github.com/NabidInMotion/nabidinmotion.github.io.git
 cd nabidinmotion
 npm install
 npm run curriculum:init    # first time only
@@ -92,6 +92,6 @@ For architecture, auto-sync setup, security headers, and GDPR launch checklist, 
 
 | Resource | URL |
 |----------|-----|
-| Study hub repo | [NabidAlam/nabidinmotion](https://github.com/NabidAlam/nabidinmotion) |
+| Study hub repo | [NabidInMotion/nabidinmotion.github.io](https://github.com/NabidInMotion/nabidinmotion.github.io) |
 | Curriculum repo | [NabidAlam/road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning) |
 | YouTube | [@NabidInMotion](https://www.youtube.com/@NabidInMotion) |

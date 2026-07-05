@@ -1,0 +1,51 @@
+# Deploy subscriber-site/ to GitHub Pages (https://nabidinmotion.github.io)
+#
+# Setup (one time, on NabidInMotion/nabidinmotion.github.io):
+#   Settings → Pages → Build and deployment → Source: GitHub Actions
+#
+# Triggers:
+#   - Push to main that touches subscriber-site/
+#   - After "Sync curriculum" completes (content rebuild)
+#   - Manual: Actions → Deploy Study Hub → Run workflow
+
+name: Deploy Study Hub
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "subscriber-site/**"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Sync curriculum"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: subscriber-site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

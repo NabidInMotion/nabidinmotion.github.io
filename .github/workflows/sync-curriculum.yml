@@ -12,7 +12,7 @@
 #   3. In road-to-machine-learning → Settings → Secrets → Actions:
 #        STUDY_HUB_DISPATCH_TOKEN = <PAT>
 #   4. In road-to-machine-learning → Settings → Variables → Actions:
-#        STUDY_HUB_REPO = NabidAlam/nabidinmotion
+#        STUDY_HUB_REPO = NabidInMotion/nabidinmotion.github.io
 
 name: Sync curriculum
 

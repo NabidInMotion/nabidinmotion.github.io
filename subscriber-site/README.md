@@ -4,7 +4,7 @@ This is the on-site home for the [Road to Machine Learning](https://github.com/N
 
 **Brand colors:** Deep Obsidian `#0b0f19`, Electric Blue `#3b82f6`  
 **Curriculum:** [NabidAlam/road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning)  
-**This site lives in:** [NabidAlam/nabidinmotion](https://github.com/NabidAlam/nabidinmotion) under `subscriber-site/`
+**This site lives in:** [NabidInMotion/nabidinmotion.github.io](https://github.com/NabidInMotion/nabidinmotion.github.io) under `subscriber-site/`
 
 ## Contents
 
@@ -146,7 +146,7 @@ Under **Settings → Secrets and variables → Actions**:
 | Type | Name | Value |
 |------|------|--------|
 | Secret | `STUDY_HUB_DISPATCH_TOKEN` | Personal access token (see below) |
-| Variable | `STUDY_HUB_REPO` | `NabidAlam/nabidinmotion` |
+| Variable | `STUDY_HUB_REPO` | `NabidInMotion/nabidinmotion.github.io` |
 
 **Create the token**
 
@@ -192,15 +192,23 @@ Typical loop: edit markdown → `npm run curriculum:sync` → refresh the browse
 
 ## Going live
 
-Deploy the `subscriber-site/` folder as a static site. Use HTTPS.
+**Production URL:** [https://nabidinmotion.github.io](https://nabidinmotion.github.io)
+
+GitHub Pages deploys automatically from `subscriber-site/` via `.github/workflows/deploy-pages.yml`.
+
+One-time setup on [NabidInMotion/nabidinmotion.github.io](https://github.com/NabidInMotion/nabidinmotion.github.io):
+
+1. **Settings → Pages → Build and deployment → Source:** GitHub Actions
+2. Run **Actions → Deploy Study Hub → Run workflow** once after the first push
+
+Curriculum sync (`.github/workflows/sync-curriculum.yml`) rebuilds `content/`; deploy runs after sync or when `subscriber-site/` changes.
 
 | Host | Config |
 |------|--------|
+| GitHub Pages | `.github/workflows/deploy-pages.yml` (default) |
 | Netlify | `_headers` |
 | Vercel | `vercel.json` |
 | Azure Static Web Apps | `staticwebapp.config.json` |
-
-Run `npm run curriculum:sync` before deploy, or let GitHub Actions commit fresh `content/`. Point your host at the `subscriber-site` directory. A CDN in front (Cloudflare, etc.) helps with traffic spikes.
 
 ## Security and privacy
 
@@ -254,7 +262,7 @@ Run from the repo root:
 | Link | Role |
 |------|------|
 | [road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning) | Curriculum source |
-| [nabidinmotion](https://github.com/NabidAlam/nabidinmotion) | Study hub and sync pipeline |
+| [nabidinmotion.github.io](https://github.com/NabidInMotion/nabidinmotion.github.io) | Study hub and sync pipeline |
 | [Nabid In Motion on YouTube](https://www.youtube.com/@NabidInMotion) | Video companions |
 
 ## License
