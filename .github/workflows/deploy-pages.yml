@@ -1,7 +1,8 @@
 # Deploy subscriber-site/ to GitHub Pages (https://nabidinmotion.github.io)
 #
 # Setup (one time, on NabidInMotion/nabidinmotion.github.io):
-#   Settings → Pages → Build and deployment → Source: GitHub Actions
+#   Settings → Pages → Build and deployment → Source: Deploy from branch
+#   Branch: gh-pages / / (root) → Save
 #
 # Triggers:
 #   - Push to main that touches subscriber-site/
@@ -22,9 +23,7 @@ on:
     types: [completed]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -34,18 +33,25 @@ jobs:
   deploy:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: subscriber-site
+      - name: Publish to gh-pages branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          site_dir=$(mktemp -d)
+          cp -a subscriber-site/. "$site_dir/"
+          touch "$site_dir/.nojekyll"
+
+          cd "$site_dir"
+          git init -b gh-pages
+          git add -A
+          git commit -m "Deploy Study Hub (${GITHUB_SHA::7})"
+
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin gh-pages

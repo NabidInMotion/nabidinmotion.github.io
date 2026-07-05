@@ -15,7 +15,7 @@ NabidInMotion/nabidinmotion.github.io  ← sync + deploy → nabidinmotion.githu
 
 1. Log into **NabidInMotion** GitHub account.
 2. Repo must exist: **nabidinmotion.github.io** (public).
-3. **Settings → Pages → Source:** GitHub Actions (not “Deploy from branch”).
+3. **Settings → Pages → Source:** Deploy from branch → **gh-pages** → **/ (root)** → Save.
 
 ## Step 2 — Push code from this IDE (automated below)
 
