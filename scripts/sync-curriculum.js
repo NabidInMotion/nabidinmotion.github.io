@@ -214,36 +214,42 @@ function toGuideHref(guideId) {
 
 function rewriteLinks(html, contextPath) {
   const dir = path.posix.dirname(contextPath);
-  const moduleMatch = contextPath.match(/^(\d{2}-[a-z0-9-]+)\//);
-  const moduleSlug = moduleMatch ? moduleMatch[1] : "";
 
   return html.replace(/href="([^"]+)"/g, (full, href) => {
     if (!href || href.startsWith("#") || href.startsWith("mailto:")) return full;
 
+    let hash = "";
     let target = href;
-    if (href.startsWith("./")) target = href.slice(2);
+    const hashIdx = target.indexOf("#");
+    if (hashIdx !== -1) {
+      hash = target.slice(hashIdx);
+      target = target.slice(0, hashIdx);
+    }
+    if (!target) return `href="${hash}"`;
+
+    if (target.startsWith("./")) target = target.slice(2);
 
     const blobMatch = target.match(
-      new RegExp(`github\\.com/${REPO.replace("/", "\\/")}/blob/${BRANCH}/(.+?)(?:#.*)?$`)
+      new RegExp(`github\\.com/${REPO.replace("/", "\\/")}/blob/${BRANCH}/(.+)$`)
     );
     if (blobMatch) {
-      const repoPath = decodeURIComponent(blobMatch[1]).replace(/#.*$/, "");
-      return rewriteRepoPath(repoPath, full);
+      const repoPath = decodeURIComponent(blobMatch[1]);
+      return rewriteRepoPath(repoPath, full, hash);
     }
 
     const treeMatch = target.match(
-      new RegExp(`github\\.com/${REPO.replace("/", "\\/")}/tree/${BRANCH}/(.+?)(?:#.*)?$`)
+      new RegExp(`github\\.com/${REPO.replace("/", "\\/")}/tree/${BRANCH}/(.+)$`)
     );
     if (treeMatch) {
-      const repoPath = decodeURIComponent(treeMatch[1]).replace(/#.*$/, "");
+      const repoPath = decodeURIComponent(treeMatch[1]);
       if (MODULE_RE.test(repoPath.split("/")[0])) {
-        return `href="${toLearnHref(repoPath.split("/")[0], "readme")}"`;
+        return `href="${toLearnHref(repoPath.split("/")[0], "readme")}${hash}"`;
       }
     }
 
     if (target.endsWith(".md") && !target.startsWith("http")) {
       const resolved = path.posix.normalize(path.posix.join(dir === "." ? "" : dir, target));
-      return rewriteRepoPath(resolved, full);
+      return rewriteRepoPath(resolved, full, hash);
     }
 
     if (target.startsWith("http") && !target.includes("github.com")) {
@@ -257,15 +263,15 @@ function rewriteLinks(html, contextPath) {
     return full;
   });
 
-  function rewriteRepoPath(repoPath, original) {
+  function rewriteRepoPath(repoPath, original, hash = "") {
     const parts = repoPath.split("/");
     if (MODULE_RE.test(parts[0])) {
       const slug = parts[0];
       const file = parts[parts.length - 1];
       if (file.endsWith(".md")) {
-        return `href="${toLearnHref(slug, lessonIdFromFile(file))}"`;
+        return `href="${toLearnHref(slug, lessonIdFromFile(file))}${hash}"`;
       }
-      return `href="${toLearnHref(slug, "readme")}"`;
+      return `href="${toLearnHref(slug, "readme")}${hash}"`;
     }
     if (parts[0] === "resources" || parts[0] === "system-design") {
       const guideId = repoPath.replace(/\.md$/i, "").replace(/\//g, "--");
