@@ -7,6 +7,8 @@ import {
   exportProgress,
   importProgress,
   findContinueLesson,
+  findNextInPath,
+  formatReadingMinutes,
   getModuleProgress,
   getStats,
   onProgressChange,
@@ -25,6 +27,8 @@ import {
   roleSummary,
   setSelectedRoleId,
 } from "./career-path.js";
+import { bindProjectsRefresh, loadProjects, renderProjectsSection } from "./projects.js";
+import { initWhatsNew } from "./visit.js";
 import {
   clearChildren,
   el,
@@ -68,6 +72,11 @@ function guideLocalHref(title) {
   return id ? buildLearnUrl({ guideId: id }) : null;
 }
 
+function lessonHref(item) {
+  if (item.type === "guide") return buildLearnUrl({ guideId: item.guideId });
+  return buildLearnUrl({ module: item.module, lessonId: item.lessonId });
+}
+
 function renderProgressHero(container, manifest, roleId, careerData) {
   clearChildren(container);
   if (!manifest) return;
@@ -75,6 +84,7 @@ function renderProgressHero(container, manifest, roleId, careerData) {
   const roleSlugs = moduleSlugsForRole(roleId, careerData);
   const stats = getStats(manifest, roleSlugs);
   const cont = findContinueLesson(manifest, roleSlugs);
+  const upNext = cont ? findNextInPath(manifest, roleSlugs, cont) : null;
   const role = getRoleById(roleId, careerData);
 
   const card = el("div", "progress-hero");
@@ -104,15 +114,38 @@ function renderProgressHero(container, manifest, roleId, careerData) {
 
   card.append(el("p", "progress-hero-meta", metaText));
 
+  if (cont || upNext) {
+    const recs = el("div", "progress-hero-recs");
+    if (cont) {
+      const contRow = el("div", "progress-rec-row");
+      const contLabel = el("span", "progress-rec-label", cont.kind === "continue" ? "Continue" : "Start");
+      const contLink = el("a", "progress-rec-link");
+      contLink.href = lessonHref(cont);
+      contLink.textContent = cont.title;
+      contRow.append(contLabel, contLink);
+      const mins = formatReadingMinutes(cont.readingMinutes);
+      if (mins) contRow.append(el("span", "progress-rec-time", mins));
+      recs.append(contRow);
+    }
+    if (upNext && (!cont || upNext.key !== cont.key)) {
+      const nextRow = el("div", "progress-rec-row");
+      nextRow.append(el("span", "progress-rec-label", "Up next"));
+      const nextLink = el("a", "progress-rec-link");
+      nextLink.href = lessonHref(upNext);
+      nextLink.textContent = upNext.title;
+      nextRow.append(nextLink);
+      const mins = formatReadingMinutes(upNext.readingMinutes);
+      if (mins) nextRow.append(el("span", "progress-rec-time", mins));
+      recs.append(nextRow);
+    }
+    card.append(recs);
+  }
+
   const actions = el("div", "progress-hero-actions");
   const primary = el("div", "progress-hero-actions-primary");
   if (cont) {
-    const href =
-      cont.type === "guide"
-        ? buildLearnUrl({ guideId: cont.guideId })
-        : buildLearnUrl({ module: cont.module, lessonId: cont.lessonId });
     const btn = el("a", "btn btn-primary");
-    btn.href = href;
+    btn.href = lessonHref(cont);
     btn.textContent = stats.completedCount === 0 ? "Start Learning ::" : "Continue Learning ::";
     primary.append(btn);
   }
@@ -152,6 +185,8 @@ function refreshProgress(manifest, roleId, careerData) {
   renderProgressHero(document.getElementById("progress-hero"), manifest, roleId, careerData);
   updateModulesSection(roleId, careerData, manifest);
 }
+
+let projectsCache = null;
 
 let modulesCache = null;
 let careerCache = null;
@@ -514,8 +549,17 @@ async function init() {
     modulesCache = modulesData;
 
     applyConfig(config);
+    initWhatsNew(document.getElementById("whats-new"));
     renderStats(document.getElementById("stats"), config.repo);
     if (manifest) renderProgressHero(document.getElementById("progress-hero"), manifest, selectedRoleId, careerData);
+
+    try {
+      projectsCache = await loadProjects();
+      renderProjectsSection(document.getElementById("projects-grid"), projectsCache);
+      bindProjectsRefresh(document.getElementById("projects-grid"), projectsCache);
+    } catch {
+      /* projects optional */
+    }
 
     const onRoleSelect = (roleId) => setSelectedRoleId(roleId);
     renderCareerRoles(document.getElementById("career-role-grid"), careerData, selectedRoleId, onRoleSelect);

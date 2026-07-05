@@ -4,15 +4,17 @@
 import {
   buildLearnUrl,
   exportProgress,
-  importProgress,
+  getConfidence,
   getModuleProgress,
   getStats,
   guideKey,
+  importProgress,
   isLessonComplete,
   lessonKey,
   markLessonComplete,
   onProgressChange,
   resetProgress,
+  setConfidence,
   setLastLesson,
   storageAvailable,
 } from "./progress.js";
@@ -25,6 +27,7 @@ import {
   moduleSlugsForRole,
   onCareerChange,
 } from "./career-path.js";
+import { mountSearch } from "./search.js";
 import { formatSyncDate } from "./site-meta.js";
 import { clearChildren, el } from "./security.js";
 
@@ -300,6 +303,40 @@ function updateProgressUI() {
   fill.parentElement.setAttribute("aria-valuenow", String(stats.percent));
 }
 
+function updateConfidenceUI(route) {
+  const wrap = document.getElementById("confidence-checkin");
+  if (!wrap) return;
+  const key = currentKey(route);
+  if (!key) {
+    wrap.hidden = true;
+    return;
+  }
+  wrap.hidden = false;
+  const current = getConfidence(key);
+  wrap.querySelectorAll("[data-confidence]").forEach((btn) => {
+    const level = btn.dataset.confidence === "" ? null : Number(btn.dataset.confidence);
+    btn.classList.toggle("active", current === level);
+    btn.setAttribute("aria-pressed", current === level ? "true" : "false");
+  });
+}
+
+function bindConfidenceCheckin() {
+  const wrap = document.getElementById("confidence-checkin");
+  if (!wrap || !storageAvailable()) return;
+
+  wrap.querySelectorAll("[data-confidence]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!current) return;
+      const key = currentKey(current);
+      if (!key) return;
+      const raw = btn.dataset.confidence;
+      const level = raw === "" ? null : Number(raw);
+      setConfidence(key, level);
+      updateConfidenceUI(current);
+    });
+  });
+}
+
 function updateMarkRead(route) {
   const checkbox = document.getElementById("mark-read");
   const key = currentKey(route);
@@ -353,6 +390,7 @@ async function showLesson(route) {
   renderBreadcrumb({ ...route, mod: resolved.mod }, content);
   renderPager({ ...route, mod: resolved.mod });
   updateMarkRead(route);
+  updateConfidenceUI(route);
 
   const key = currentKey(route);
   if (key) setLastLesson(key);
@@ -402,8 +440,24 @@ function bindChrome() {
     updateProgressUI();
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
-    if (current) updateMarkRead(current);
+    if (current) {
+      updateMarkRead(current);
+      updateConfidenceUI(current);
+    }
   });
+}
+
+function bindSearch() {
+  const input = document.getElementById("sidebar-search");
+  const results = document.getElementById("sidebar-search-results");
+  if (!input || !results) return;
+
+  const slugs =
+    selectedRoleId !== "all"
+      ? filterSlugs(manifest.modules.map((m) => m.slug), selectedRoleId, careerData)
+      : null;
+
+  mountSearch(input, results, { moduleSlugs: slugs });
 }
 
 async function init() {
@@ -411,7 +465,9 @@ async function init() {
     [manifest, careerData] = await Promise.all([loadManifest(), loadCareerPaths()]);
     selectedRoleId = getSelectedRoleId();
     bindChrome();
+    bindConfidenceCheckin();
     bindContentAnchors(document.getElementById("reader-content"));
+    bindSearch();
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
     updateProgressUI();

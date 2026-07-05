@@ -17,12 +17,12 @@ Complete these steps before pointing your domain to production. The codebase is 
 - [x] Progress export, import, and reset (local device only)
 - [x] Footer links on all pages
 - [x] Security headers for Netlify, Vercel, Azure, GitHub Pages
-- [x] Contact email `nabidinmotion@gmail.com` in legal pages and `security.txt`
+- [x] Contact email `nabidinmotionofficial@gmail.com` in legal pages and `security.txt`
 
 ## Tier 1 — Before go live (required)
 
 - [ ] **Verify Impressum facts** — name, address, Gewerbe registration, Kleinunternehmer status must match reality
-- [ ] **Monitor `nabidinmotion@gmail.com`** — privacy, legal, and security reports
+- [ ] **Monitor `nabidinmotionofficial@gmail.com`** — privacy, legal, and security reports
 - [ ] **Hosting AVV (DPA)** — sign Article 28 GDPR agreement with host (GitHub, Cloudflare, Netlify, Vercel, etc.)
 - [ ] **HTTPS only** — deploy with valid TLS (GitHub Pages provides this)
 - [ ] **Set production URL** — after deploy, add canonical domain to `security.txt` `Canonical:` line and Impressum if desired

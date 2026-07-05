@@ -108,6 +108,24 @@ function decodeHtmlEntities(text) {
     .replace(/&#39;/g, "'");
 }
 
+function readingMinutesFromMarkdown(md) {
+  const words = md.replace(/```[\s\S]*?```/g, " ").split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+function plainExcerpt(md, maxLen = 180) {
+  const text = md
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]+`/g, " ")
+    .replace(/!\[[^\]]*]\([^)]+\)/g, " ")
+    .replace(/\[[^\]]+]\([^)]+\)/g, " ")
+    .replace(/[#>*_~-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (text.length <= maxLen) return text;
+  return `${text.slice(0, maxLen - 1).trim()}…`;
+}
+
 function highlightCodeInHtml(html, highlighter) {
   const pattern = /<pre><code(?: class="language-([^"]+)")?>([\s\S]*?)<\/code><\/pre>/g;
   const parts = [];
@@ -440,12 +458,19 @@ async function processFile(repoPath, highlighter, readMarkdown) {
     lessonId: cat.lessonId || null,
     guideId: cat.guideId || null,
     type: cat.type,
+    readingMinutes: readingMinutesFromMarkdown(md),
   };
 
   const outFile = path.join(OUT, cat.outPath);
   await fs.mkdir(path.dirname(outFile), { recursive: true });
   await fs.writeFile(outFile, JSON.stringify(payload), "utf8");
-  return { repoPath, ...cat, title };
+  return {
+    repoPath,
+    ...cat,
+    title,
+    readingMinutes: payload.readingMinutes,
+    excerpt: plainExcerpt(md),
+  };
 }
 
 async function main() {
@@ -491,6 +516,7 @@ async function main() {
       title: e.title,
       source: e.repoPath,
       path: `modules/${e.module}/${e.lessonId}.json`,
+      readingMinutes: e.readingMinutes || null,
     });
   }
 
@@ -509,6 +535,7 @@ async function main() {
       title: e.title,
       source: e.repoPath,
       path: `guides/${e.guideId}.json`,
+      readingMinutes: e.readingMinutes || null,
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
 
@@ -518,6 +545,28 @@ async function main() {
   );
   const { modules: moduleMeta } = JSON.parse(modulesJson);
   const metaBySlug = Object.fromEntries(moduleMeta.map((m) => [m.slug, m]));
+
+  const searchEntries = entries.map((e) => {
+    if (e.type === "guide") {
+      return {
+        type: "guide",
+        guideId: e.guideId,
+        title: e.title,
+        excerpt: e.excerpt,
+        text: e.excerpt,
+      };
+    }
+    return {
+      type: "module",
+      module: e.module,
+      lessonId: e.lessonId,
+      title: e.title,
+      moduleTitle: metaBySlug[e.module]?.title || e.module,
+      excerpt: e.excerpt,
+      text: e.excerpt,
+      readingMinutes: e.readingMinutes || null,
+    };
+  });
 
   const modules = [...modulesMap.values()]
     .sort((a, b) => a.slug.localeCompare(b.slug))
@@ -566,7 +615,13 @@ async function main() {
 
   await fs.writeFile(path.join(OUT, "manifest.json"), JSON.stringify(manifest, null, 2), "utf8");
   await fs.writeFile(path.join(OUT, "changelog.json"), JSON.stringify(changelog, null, 2), "utf8");
+  await fs.writeFile(
+    path.join(OUT, "search-index.json"),
+    JSON.stringify({ version: 1, syncedAt, entries: searchEntries }, null, 0),
+    "utf8"
+  );
   console.log(`Manifest: ${manifest.totalLessons} lessons, ${modules.length} modules, ${guides.length} guides.`);
+  console.log(`Search index: ${searchEntries.length} entries.`);
   if (commit?.sha) console.log(`Source commit: ${commit.sha.slice(0, 7)}`);
 }
 

@@ -10,6 +10,8 @@
   --text: #f8fafc;
   --text-muted: #9aa6b8;
   --card: rgba(15, 23, 42, 0.72);
+  --bg: #0b0f19;
+  --surface: #0f172a;
   --border: #1f2a3d;
   --font-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Consolas', monospace;
@@ -322,6 +324,200 @@ a:hover { text-decoration: underline; }
   font-size: 0.75rem;
   user-select: none;
 }
+
+.progress-hero-recs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.progress-rec-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  font-size: 0.88rem;
+}
+
+.progress-rec-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--slate-dim);
+  min-width: 4.5rem;
+}
+
+.progress-rec-link {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.progress-rec-link:hover { text-decoration: underline; }
+
+.progress-rec-time {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--slate-dim);
+}
+
+/* ── What's new banner ── */
+.whats-new-banner {
+  background: rgba(59, 130, 246, 0.1);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.25);
+  padding: 0.75rem 0;
+}
+
+.whats-new-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+.whats-new-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.whats-new-link {
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+/* ── Project tracker ── */
+.project-summary {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 1.25rem;
+}
+
+.project-tier-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.project-tier-tab {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.project-tier-tab:hover { border-color: var(--blue); color: var(--text); }
+.project-tier-tab.active {
+  border-color: var(--blue);
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--blue);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.project-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.project-card--in-progress { border-color: rgba(59, 130, 246, 0.35); }
+.project-card--done { border-color: rgba(34, 197, 94, 0.35); }
+
+.project-card-head { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.project-tier {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate-dim);
+}
+
+.project-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.project-skills {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.project-status-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.project-status-btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.project-status-btn:hover:not(:disabled) {
+  border-color: var(--blue);
+  color: var(--text);
+}
+
+.project-status-btn.active {
+  border-color: var(--blue);
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--blue);
+}
+
+.project-status-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.project-module-link {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--blue);
+  text-decoration: none;
+  margin-top: auto;
+}
+
+.project-module-link:hover { text-decoration: underline; }
 
 /* ── Stats ── */
 .stats {

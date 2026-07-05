@@ -36,6 +36,11 @@
 
   <div class="reader-shell">
     <aside class="reader-sidebar" id="reader-sidebar" aria-label="Curriculum navigation">
+      <div class="sidebar-section sidebar-search-section">
+        <label class="sidebar-search-label" for="sidebar-search">Search lessons</label>
+        <input type="search" class="sidebar-search-input" id="sidebar-search" placeholder="Search curriculum…" autocomplete="off" spellcheck="false" />
+        <div class="sidebar-search-results" id="sidebar-search-results" hidden></div>
+      </div>
       <div class="sidebar-section">
         <div class="prompt">:: Guides</div>
         <nav class="sidebar-nav" id="sidebar-guides"></nav>
@@ -50,6 +55,15 @@
       <div class="reader-toolbar">
         <nav class="reader-breadcrumb" id="reader-breadcrumb" aria-label="Breadcrumb"></nav>
         <div class="reader-actions">
+          <div class="confidence-checkin" id="confidence-checkin" hidden>
+            <span class="confidence-label">How confident?</span>
+            <div class="confidence-buttons" role="group" aria-label="Confidence check-in">
+              <button type="button" class="confidence-btn" data-confidence="0" aria-pressed="false">Not yet</button>
+              <button type="button" class="confidence-btn" data-confidence="1" aria-pressed="false">Partly</button>
+              <button type="button" class="confidence-btn" data-confidence="2" aria-pressed="false">Yes</button>
+              <button type="button" class="confidence-btn confidence-btn-clear" data-confidence="" aria-pressed="false" title="Clear">×</button>
+            </div>
+          </div>
           <label class="mark-read">
             <input type="checkbox" id="mark-read" />
             <span>Mark as read</span>
