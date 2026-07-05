@@ -413,10 +413,20 @@ export function importProgress(onComplete) {
 }
 
 export function resetProgress() {
-  if (!window.confirm("Reset all learning progress on this device? This cannot be undone.")) return false;
-  localStorage.removeItem(STORAGE_KEY);
-  window.dispatchEvent(new CustomEvent("nim-progress-change", { detail: defaultState() }));
-  return true;
+  const message =
+    "Reset all learning progress on this device?\n\n" +
+    "This clears: lessons read, continue position, confidence ratings, and project status.\n" +
+    "Your career path filter and visit history are kept.\n\n" +
+    "This cannot be undone.";
+  if (!window.confirm(message)) return false;
+
+  const prior = loadRaw();
+  const next = {
+    ...defaultState(),
+    lastSeenCommit: prior.lastSeenCommit,
+    lastVisitAt: prior.lastVisitAt,
+  };
+  return save(next);
 }
 
 export function buildLearnUrl({ module, lessonId, guideId }) {

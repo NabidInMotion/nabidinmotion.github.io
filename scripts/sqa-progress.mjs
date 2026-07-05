@@ -135,11 +135,21 @@ async function run() {
   });
   await delay(400);
   const afterReset = await page.evaluate(() => {
-    const raw = localStorage.getItem("nim-study-progress");
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
     const percent = document.querySelector(".progress-hero-percent")?.textContent?.trim();
-    return { cleared: !raw, percent };
+    return {
+      lessonsCleared: (raw.completedLessons?.length ?? 0) === 0,
+      confidenceCleared: Object.keys(raw.confidence || {}).length === 0,
+      projectsCleared: Object.keys(raw.projects || {}).length === 0,
+      hasVisitData: !!(raw.lastSeenCommit || raw.lastVisitAt),
+      percent,
+    };
   });
-  record("PT-15", "Reset progress clears localStorage", afterReset.cleared, afterReset.cleared ? "cleared" : "still has data");
+  record(
+    "PT-15",
+    "Reset clears learning fields (lessons, confidence, projects)",
+    afterReset.lessonsCleared && afterReset.confidenceCleared && afterReset.projectsCleared
+  );
   record("PT-16", "Reset returns hero to 0%", afterReset.percent === "0%", afterReset.percent);
 
   // PT-17: lastLesson tracked when visiting lesson
