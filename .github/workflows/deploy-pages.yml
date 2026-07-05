@@ -1,8 +1,8 @@
 # Deploy subscriber-site/ to GitHub Pages (https://nabidinmotion.github.io)
 #
 # Setup (one time, on NabidInMotion/nabidinmotion.github.io):
-#   Settings → Pages → Build and deployment → Source: Deploy from branch
-#   Branch: gh-pages / / (root) → Save
+#   1. Settings → Actions → General → Workflow permissions → Read and write
+#   2. Settings → Pages → Source: Deploy from branch → gh-pages / / (root) → Save
 #
 # Triggers:
 #   - Push to main that touches subscriber-site/
@@ -41,12 +41,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           site_dir=$(mktemp -d)
           cp -a subscriber-site/. "$site_dir/"
           touch "$site_dir/.nojekyll"
+          test -f "$site_dir/index.html"
 
           cd "$site_dir"
           git init -b gh-pages
@@ -55,3 +57,4 @@ jobs:
 
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin gh-pages
+          echo "Published gh-pages branch for ${GITHUB_REPOSITORY}"
