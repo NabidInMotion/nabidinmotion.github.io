@@ -2,8 +2,9 @@
 
 Static study hub for the [Road to Machine Learning](https://github.com/NabidAlam/road-to-machine-learning) curriculum. Subscribers read 265+ lessons in the browser, track progress locally, and filter modules by career path. No accounts, no cookies, no third-party tracking.
 
-**Live site:** deploy `subscriber-site/` (GitHub Pages or similar)  
-**Curriculum source:** [NabidAlam/road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning) (git submodule)
+**Live site:** [https://nabidinmotion.github.io](https://nabidinmotion.github.io)  
+**Repo:** [NabidInMotion/nabidinmotion.github.io](https://github.com/NabidInMotion/nabidinmotion.github.io)  
+**Curriculum source:** [NabidAlam/road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning) (git submodule, maintainer-only)
 
 Full site documentation: [subscriber-site/README.md](subscriber-site/README.md)  
 Submodule notes: [CURRICULUM.md](CURRICULUM.md)
@@ -15,11 +16,13 @@ Two Git repos work as a pair:
 ```text
 road-to-machine-learning          nabidinmotion (this repo)
   markdown lessons (.md)     →      subscriber-site/ (static HTML/JS/CSS)
-  own git history                   subscriber-site/content/ (built JSON)
+  maintainer-authored only          subscriber-site/content/ (built JSON)
   submodule checked out here        scripts/sync-curriculum.js
 ```
 
-When you push markdown to the curriculum repo, a GitHub Action can notify this repo, rebuild `content/`, and redeploy the site.
+The live site at `nabidinmotion.github.io` serves pre-built JSON from `content/`. The browser never calls GitHub at runtime.
+
+**Publishing:** edit curriculum → sync locally → open a PR to `main` → Squash merge → GitHub Actions deploys `subscriber-site/` to `gh-pages`. Branch protection on `main` requires this PR step for all site changes.
 
 ## Quick start
 
@@ -36,19 +39,25 @@ npm run site               # http://localhost:3080
 
 ## Working with the curriculum
 
-Edit lessons in `road-to-machine-learning/` — it is a full git clone of the curriculum repo, not a copy. Commit and push from inside that folder, then sync the site:
+Edit lessons in `road-to-machine-learning/` — it is a full git clone of the curriculum repo. Only the maintainer publishes content. Commit and push from inside that folder, then sync and publish the study hub:
 
 ```bash
 cd road-to-machine-learning
-git checkout main
 # edit markdown
 git add .
-git commit -m "Update lesson"
+git commit -m "Update lesson X"
 git push origin main
 cd ..
 
 npm run curriculum:sync
-npm run site
+npm run site    # preview locally
+
+# publish to nabidinmotion.github.io
+git checkout -b sync/curriculum
+git add subscriber-site/content/ road-to-machine-learning
+git commit -m "Sync curriculum from road-to-machine-learning."
+git push -u origin sync/curriculum
+# Open PR on GitHub → Squash merge → Deploy Study Hub runs
 ```
 
 | Command | What it does |
@@ -72,7 +81,7 @@ nabidinmotion/
 ├── scripts/
 │   ├── sync-curriculum.js       # Markdown → sanitized HTML + Shiki
 │   └── serve-site.js            # Local dev server
-├── .github/workflows/           # Auto-sync when curriculum changes
+├── .github/workflows/           # Deploy + optional curriculum sync
 ├── package.json
 ├── CURRICULUM.md
 └── README.md
@@ -84,14 +93,17 @@ Place the site logo at `subscriber-site/assets/logo.png`. It appears in the head
 
 ## Going live
 
-Run `npm run curriculum:sync` before deploy, or let GitHub Actions commit fresh `content/` after a curriculum push. Point your host at the `subscriber-site` directory.
+Production is **GitHub Pages only** at [https://nabidinmotion.github.io](https://nabidinmotion.github.io).
 
-For architecture, auto-sync setup, security headers, and GDPR launch checklist, see [subscriber-site/README.md](subscriber-site/README.md).
+Deploy runs automatically when `subscriber-site/` changes on `main` (via `.github/workflows/deploy-pages.yml` → `gh-pages` branch).
+
+For architecture, security, publishing workflow, and GDPR checklist, see [subscriber-site/README.md](subscriber-site/README.md).
 
 ## Links
 
 | Resource | URL |
 |----------|-----|
+| Live study hub | [nabidinmotion.github.io](https://nabidinmotion.github.io) |
 | Study hub repo | [NabidInMotion/nabidinmotion.github.io](https://github.com/NabidInMotion/nabidinmotion.github.io) |
 | Curriculum repo | [NabidAlam/road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning) |
 | YouTube | [@NabidInMotion](https://www.youtube.com/@NabidInMotion) |
