@@ -4,6 +4,10 @@
 #   1. Settings → Actions → General → Workflow permissions → Read and write
 #   2. Settings → Pages → Build and deployment → Source: GitHub Actions
 #
+# If deploy fails with "Deployment failed, try again later":
+#   - Re-run the failed workflow (often a transient Pages API issue)
+#   - Confirm Pages source is GitHub Actions, not gh-pages branch
+#
 # Triggers:
 #   - Push to main that touches subscriber-site/
 #   - After "Sync curriculum" completes (content rebuild)
@@ -33,18 +37,18 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
       - name: Prepare static site
         run: |
@@ -52,10 +56,20 @@ jobs:
           touch subscriber-site/.nojekyll
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: subscriber-site
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          error_count: 20
+          reporting_interval: 10000
