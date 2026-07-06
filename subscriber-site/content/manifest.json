@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-06T00:29:49.024Z",
+  "syncedAt": "2026-07-06T00:41:18.372Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 265,
   "modules": [
@@ -2048,7 +2048,7 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-06T00:29:49.024Z",
+    "contentSyncedAt": "2026-07-06T00:41:18.372Z",
     "sourceCommit": "152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
     "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
     "sourceCommitDate": "2026-07-05T12:05:58+02:00",
