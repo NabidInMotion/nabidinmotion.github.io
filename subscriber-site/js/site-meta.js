@@ -6,7 +6,7 @@ const TERMS_VERSION = "2026-06-22";
 
 export async function fetchManifest() {
   try {
-    const res = await fetch("content/manifest.json", { credentials: "same-origin" });
+    const res = await fetch("content/manifest.json", { credentials: "same-origin", cache: "no-cache" });
     if (!res.ok) return null;
     const text = await res.text();
     if (text.trimStart().startsWith("<")) return null;

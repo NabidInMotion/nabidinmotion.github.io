@@ -5,7 +5,7 @@ import { getLastSeenCommit, markVisitSeen, storageAvailable } from "./progress.j
 import { clearChildren, el } from "./security.js";
 
 export async function loadChangelog() {
-  const res = await fetch("content/changelog.json", { credentials: "same-origin" });
+  const res = await fetch("content/changelog.json", { credentials: "same-origin", cache: "no-cache" });
   if (!res.ok) return null;
   return res.json();
 }

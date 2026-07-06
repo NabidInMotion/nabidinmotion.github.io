@@ -8,7 +8,7 @@ let indexCache = null;
 
 export async function loadSearchIndex() {
   if (indexCache) return indexCache;
-  const res = await fetch("content/search-index.json", { credentials: "same-origin" });
+  const res = await fetch("content/search-index.json", { credentials: "same-origin", cache: "no-cache" });
   if (!res.ok) throw new Error("Search index not available");
   indexCache = await res.json();
   return indexCache;

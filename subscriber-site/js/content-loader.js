@@ -16,7 +16,7 @@ export async function loadContentJSON(path) {
     );
   }
 
-  const res = await fetch(path, { credentials: "same-origin", cache: "default" });
+  const res = await fetch(path, { credentials: "same-origin", cache: "no-cache" });
   const text = await res.text();
 
   if (!res.ok) {
@@ -37,7 +37,14 @@ export async function loadContentJSON(path) {
   try {
     return JSON.parse(text);
   } catch {
-    throw new ContentLoadError("invalid", `Could not parse curriculum data from ${path}.`);
+    const hint =
+      window.location.hostname.endsWith("github.io")
+        ? " If you opened this page before a recent deploy, hard-refresh (Ctrl+Shift+R) to clear cached curriculum files."
+        : "";
+    throw new ContentLoadError(
+      "invalid",
+      `Could not parse curriculum data from ${path}.${hint}`
+    );
   }
 }
 
@@ -59,12 +66,19 @@ export function renderContentError(container, error) {
   box.append(p);
 
   const ol = document.createElement("ol");
-  const steps = [
-    "Run npm run sync:curriculum in the project folder",
-    "Run npm run site",
-    "Open http://localhost:3080",
-    "Click Read Roadmap or Learn",
-  ];
+  const steps =
+    error?.code === "invalid" && window.location.hostname.endsWith("github.io")
+      ? [
+          "Hard-refresh this page (Ctrl+Shift+R or Cmd+Shift+R)",
+          "If it still fails, wait one minute and try again (GitHub Pages cache)",
+          "Open the study hub homepage and pick the lesson from the sidebar",
+        ]
+      : [
+          "Run npm run sync:curriculum in the project folder",
+          "Run npm run site",
+          "Open http://localhost:3080",
+          "Click Read Roadmap or Learn",
+        ];
   for (const step of steps) {
     const li = document.createElement("li");
     li.textContent = step;
