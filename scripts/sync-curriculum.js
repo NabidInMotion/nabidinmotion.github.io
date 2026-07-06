@@ -203,9 +203,49 @@ function titleFromFilename(filename) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+function stripBom(text) {
+  return text.replace(/^\uFEFF/, "");
+}
+
+function stripCodeFences(md) {
+  return md.replace(/```[\s\S]*?```/g, "");
+}
+
 function titleFromMarkdown(md, fallback) {
-  const m = md.match(/^#\s+(.+)$/m);
+  const body = stripCodeFences(stripBom(md));
+  const m = body.match(/^#\s+(.+)$/m);
   return m ? m[1].replace(/[#*`]/g, "").trim().slice(0, 160) : fallback;
+}
+
+/** Study Hub CSP allows img-src 'self' data: only — replace external images with text links. */
+function replaceExternalImages(html) {
+  const linkedImg =
+    /<a\s+([^>]*?)>\s*<img\s+([^>]*?)\/?>\s*<\/a>/gi;
+  let out = html.replace(linkedImg, (match, aAttrs, imgAttrs) => {
+    const hrefMatch = aAttrs.match(/\bhref="([^"]+)"/i);
+    const altMatch = imgAttrs.match(/\balt="([^"]*)"/i);
+    if (!hrefMatch) return match;
+    const href = hrefMatch[1];
+    const label = (altMatch?.[1] || "Open link").trim() || "Open link";
+    const extraAttrs = aAttrs
+      .replace(/\bhref="[^"]*"/i, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const attrs = extraAttrs ? ` ${extraAttrs}` : "";
+    return `<a href="${href}" class="curriculum-media-link"${attrs}>${label}</a>`;
+  });
+
+  out = out.replace(/<img\s+([^>]*?)\/?>/gi, (match, imgAttrs) => {
+    const srcMatch = imgAttrs.match(/\bsrc="([^"]+)"/i);
+    if (!srcMatch) return match;
+    const src = srcMatch[1];
+    if (src.startsWith("data:")) return match;
+    const altMatch = imgAttrs.match(/\balt="([^"]*)"/i);
+    const label = (altMatch?.[1] || "Image").trim() || "Image";
+    return `<span class="curriculum-media-fallback">${label}</span>`;
+  });
+
+  return out;
 }
 
 function toLearnHref(moduleSlug, lessonId) {
@@ -288,7 +328,8 @@ function rewriteLinks(html, contextPath) {
       const guideId = rootFile.replace(/\.md$/i, "").replace(/_/g, "-").toLowerCase();
       return `href="${toGuideHref(guideId)}"`;
     }
-    return `${original.slice(0, -1)} target="_blank" rel="noopener noreferrer"`;
+    const href = `${GITHUB_BLOB}/${repoPath}${hash}`;
+    return `href="${href}" target="_blank" rel="noopener noreferrer"`;
   }
 }
 
@@ -451,13 +492,21 @@ async function loadChangelog() {
 }
 
 async function processFile(repoPath, highlighter, readMarkdown) {
-  const md = await readMarkdown(repoPath);
+  const md = stripBom(await readMarkdown(repoPath));
   const cat = categorize(repoPath);
   const fallbackTitle = titleFromFilename(path.basename(repoPath));
   const title = titleFromMarkdown(md, fallbackTitle);
   let html = marked.parse(md);
   html = rewriteLinks(html, repoPath);
-  html = sanitizeHtml(html, SANITIZE);
+  html = replaceExternalImages(html);
+  html = sanitizeHtml(html, {
+    ...SANITIZE,
+    allowedAttributes: {
+      ...SANITIZE.allowedAttributes,
+      a: [...(SANITIZE.allowedAttributes.a || []), "class"],
+      span: ["class", "title"],
+    },
+  });
   html = addHeadingIds(html);
   html = highlightCodeInHtml(html, highlighter);
 
