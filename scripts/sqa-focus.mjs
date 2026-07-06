@@ -87,7 +87,25 @@ async function run() {
     lessonPreset.text
   );
 
-  // End screen + weekly total
+  await page.click(".focus-session-trigger");
+  await delay(200);
+  await page.click("#focus-preset-lesson");
+  await delay(400);
+
+  const lessonStart = await page.evaluate(() => ({
+    focusActive: document.body.classList.contains("focus-active"),
+    timer: document.getElementById("focus-timer")?.textContent?.trim(),
+    duration: JSON.parse(sessionStorage.getItem("nim-focus-active") || "{}").durationMinutes,
+  }));
+  record(
+    "FS-07b",
+    "This lesson preset starts focus session",
+    lessonStart.focusActive && lessonStart.duration === Number(lessonPreset.minutes),
+    `timer=${lessonStart.timer}, duration=${lessonStart.duration}`
+  );
+
+  await page.click("#focus-exit");
+  await delay(400);
   await page.evaluate(async () => {
     const mod = await import("./js/focus-session.js");
     mod.__testStartFocusSession(1);

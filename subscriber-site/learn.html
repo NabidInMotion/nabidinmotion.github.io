@@ -59,6 +59,15 @@
         <input type="search" class="sidebar-search-input" id="sidebar-search" placeholder="Search curriculum…" autocomplete="off" spellcheck="false" />
         <div class="sidebar-search-results" id="sidebar-search-results" hidden></div>
       </div>
+      <div class="sidebar-section" id="sidebar-bookmarks-section" hidden>
+        <details class="sidebar-bookmarks-panel" id="sidebar-bookmarks-panel">
+          <summary class="sidebar-bookmarks-summary">
+            <span class="prompt">:: Bookmarks</span>
+            <span class="sidebar-bookmarks-count" id="sidebar-bookmarks-count"></span>
+          </summary>
+          <nav class="sidebar-bookmarks-nav" id="sidebar-bookmarks-nav" aria-label="Bookmarked lessons"></nav>
+        </details>
+      </div>
       <div class="sidebar-section">
         <div class="prompt">:: Guides</div>
         <nav class="sidebar-nav" id="sidebar-guides"></nav>
@@ -92,6 +101,7 @@
           <a class="btn btn-ghost btn-sm" id="github-source" href="#" target="_blank" rel="noopener noreferrer">GitHub ::</a>
         </div>
       </div>
+      <p class="bookmark-notice" id="bookmark-notice" hidden role="status" aria-live="polite"></p>
       <div id="module-checkpoint" class="module-checkpoint-host" hidden></div>
       <details class="study-assistant-panel" id="study-assistant-panel">
         <summary class="study-assistant-summary">Study assistant ::</summary>
@@ -167,10 +177,7 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initSiteMeta } from "./js/site-meta.js";
-    initSiteMeta();
-  </script>
+  <script src="js/learn-init.js" type="module"></script>
   <script src="js/reader.js" type="module"></script>
 </body>
 </html>

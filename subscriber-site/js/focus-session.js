@@ -174,6 +174,13 @@ function startTick() {
   tickTimer = setInterval(tick, TICK_MS);
 }
 
+function closeFocusPicker() {
+  const picker = document.getElementById("focus-session-picker");
+  if (!picker) return;
+  picker.open = false;
+  picker.removeAttribute("open");
+}
+
 function startSession(minutes) {
   const duration = Math.min(Math.max(Math.round(minutes), 1), 180);
   const now = Date.now();
@@ -189,7 +196,7 @@ function startSession(minutes) {
   hideEndOverlay();
   setFocusMode(true);
   showPicker(false);
-  document.getElementById("focus-session-picker")?.removeAttribute("open");
+  closeFocusPicker();
   startTick();
   return true;
 }
@@ -223,7 +230,8 @@ function extendSession() {
 }
 
 export function setLessonReadingMinutes(minutes) {
-  lessonReadingMinutes = Number.isFinite(minutes) && minutes > 0 ? Math.round(minutes) : null;
+  const n = Number(minutes);
+  lessonReadingMinutes = Number.isFinite(n) && n > 0 ? Math.round(n) : null;
   const btn = document.getElementById("focus-preset-lesson");
   if (!btn) return;
   if (lessonReadingMinutes) {
@@ -234,6 +242,21 @@ export function setLessonReadingMinutes(minutes) {
     btn.hidden = true;
     btn.removeAttribute("data-focus-minutes");
   }
+}
+
+function handlePresetClick(event) {
+  const presets = event.currentTarget;
+  const btn = event.target.closest(".focus-preset-btn");
+  if (!btn || !presets.contains(btn)) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const mins =
+    btn.id === "focus-preset-lesson"
+      ? lessonReadingMinutes
+      : Number(btn.dataset.focusMinutes);
+  if (mins > 0) startSession(mins);
 }
 
 export function mountFocusSession(options = {}) {
@@ -247,12 +270,7 @@ export function mountFocusSession(options = {}) {
 
   if (!picker || !presets) return;
 
-  presets.querySelectorAll("[data-focus-minutes]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const mins = Number(btn.dataset.focusMinutes);
-      if (mins > 0) startSession(mins);
-    });
-  });
+  presets.addEventListener("click", handlePresetClick, true);
 
   exitBtn?.addEventListener("click", exitSessionEarly);
 

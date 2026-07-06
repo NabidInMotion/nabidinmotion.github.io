@@ -21,7 +21,6 @@ import {
   getWeeklyLessonGoal,
   getWeeklyLessonProgress,
   HOME_BOOKMARK_PREVIEW,
-  MAX_BOOKMARKS,
   onProgressChange,
   resetProgress,
   setWeeklyFocusGoal,
@@ -182,34 +181,32 @@ function renderPathGaps(container, manifest, roleId, careerData) {
   container.append(section);
 }
 
-function renderBookmarks(container, manifest, roleId, careerData) {
+function renderBookmarks(container, manifest) {
   if (!storageAvailable() || !manifest) return;
-  const slugs = moduleSlugsForRole(roleId, careerData);
-  const all = findBookmarks(manifest, slugs?.length ? slugs : null);
+  const all = findBookmarks(manifest);
   if (!all.length) return;
 
+  const preview = all.slice(0, HOME_BOOKMARK_PREVIEW);
+  const extra = all.length - preview.length;
+
   const section = el("div", "learning-panel learning-panel-bookmarks");
-  const countLabel =
-    all.length === 1 ? "1 lesson saved" : `${all.length} lessons saved`;
+  const title =
+    all.length > HOME_BOOKMARK_PREVIEW
+      ? `Bookmarked (${all.length})`
+      : "Bookmarked";
   section.append(
-    el("h3", "learning-panel-title", "Bookmarked"),
+    el("h3", "learning-panel-title", title),
     el(
       "p",
       "learning-panel-desc",
-      `Lessons you saved to revisit from the reader toolbar. Most recent first. Up to ${MAX_BOOKMARKS} on this device (${countLabel}).`
+      extra > 0
+        ? `Recent saves from the reader. ${extra} more in Learn.`
+        : "Lessons you saved to revisit from the reader toolbar."
     )
   );
 
-  const showAll = bookmarksExpanded || all.length <= HOME_BOOKMARK_PREVIEW;
-  const visible = showAll ? all : all.slice(0, HOME_BOOKMARK_PREVIEW);
-
-  const list = el(
-    "ul",
-    showAll && all.length > HOME_BOOKMARK_PREVIEW
-      ? "learning-panel-list learning-panel-list--scroll"
-      : "learning-panel-list"
-  );
-  for (const item of visible) {
+  const list = el("ul", "learning-panel-list");
+  for (const item of preview) {
     const row = el("li", "learning-panel-item");
     const link = el("a", "learning-panel-link");
     link.href = lessonHref(item);
@@ -222,26 +219,22 @@ function renderBookmarks(container, manifest, roleId, careerData) {
   }
   section.append(list);
 
-  if (all.length > HOME_BOOKMARK_PREVIEW) {
-    const toggle = el("button", "learning-panel-more link-btn");
-    toggle.type = "button";
-    toggle.textContent = bookmarksExpanded
-      ? "Show fewer"
-      : `Show all ${all.length} bookmarks`;
-    toggle.addEventListener("click", () => {
-      bookmarksExpanded = !bookmarksExpanded;
-      refreshProgress(manifestRef, roleRef, careerRef);
-    });
-    section.append(toggle);
+  if (extra > 0) {
+    const viewAll = el("a", "learning-panel-more btn btn-ghost btn-sm");
+    viewAll.href = "learn.html#bookmarks";
+    viewAll.textContent = `View all ${all.length} in Learn ::`;
+    section.append(viewAll);
   }
 
   container.append(section);
 }
 
-function renderRefreshSuggestions(container, manifest, roleId, careerData) {
+function renderRefreshSuggestions(container, manifest, roleId, careerData, skipKeys = null) {
   if (!storageAvailable() || !manifest) return;
   const slugs = moduleSlugsForRole(roleId, careerData);
-  const items = findRefreshSuggestions(manifest, slugs?.length ? slugs : null);
+  const items = findRefreshSuggestions(manifest, slugs?.length ? slugs : null).filter(
+    (item) => !skipKeys?.has(item.key)
+  );
   if (!items.length) return;
 
   const section = el("div", "learning-panel learning-panel-refresh");
@@ -302,12 +295,13 @@ function renderWeeklyGoal(container) {
 let manifestRef = null;
 let roleRef = "all";
 let careerRef = null;
-let bookmarksExpanded = false;
 
-function renderReviewQueue(container, manifest, roleId, careerData) {
+function renderReviewQueue(container, manifest, roleId, careerData, skipKeys = null) {
   if (!storageAvailable() || !manifest) return;
   const slugs = moduleSlugsForRole(roleId, careerData);
-  const items = findReviewQueue(manifest, slugs?.length ? slugs : null);
+  const items = findReviewQueue(manifest, slugs?.length ? slugs : null).filter(
+    (item) => !skipKeys?.has(item.key)
+  );
   if (!items.length) return;
 
   const section = el("div", "review-queue-panel");
@@ -336,15 +330,20 @@ function renderReviewQueue(container, manifest, roleId, careerData) {
   container.append(section);
 }
 
+function bookmarkKeysForHome(manifest) {
+  return new Set(findBookmarks(manifest).map((item) => item.key));
+}
+
 function renderLearningExtras(container, manifest, roleId, careerData) {
   clearChildren(container);
   renderWeeklyGoal(container);
   renderWeeklyFocusGoal(container);
+  renderBookmarks(container, manifest);
+  const skipKeys = bookmarkKeysForHome(manifest);
   renderModuleMilestones(container, manifest, roleId, careerData);
   renderPathGaps(container, manifest, roleId, careerData);
-  renderBookmarks(container, manifest, roleId, careerData);
-  renderReviewQueue(container, manifest, roleId, careerData);
-  renderRefreshSuggestions(container, manifest, roleId, careerData);
+  renderReviewQueue(container, manifest, roleId, careerData, skipKeys);
+  renderRefreshSuggestions(container, manifest, roleId, careerData, skipKeys);
 }
 
 function renderProgressHero(container, manifest, roleId, careerData) {

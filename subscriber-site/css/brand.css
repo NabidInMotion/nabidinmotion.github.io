@@ -548,8 +548,10 @@ a:hover { text-decoration: underline; }
 }
 
 .learning-panel-more {
+  display: inline-flex;
   margin-top: 0.75rem;
   font-size: 0.82rem;
+  text-decoration: none;
 }
 
 .project-lesson-bridge {
