@@ -8,6 +8,31 @@ export class ContentLoadError extends Error {
   }
 }
 
+const MAX_JSON_BYTES = 2 * 1024 * 1024;
+const META_PATHS = new Set([
+  "content/manifest.json",
+  "content/search-index.json",
+  "content/changelog.json",
+]);
+
+let contentVersion = null;
+
+/** Cache-bust lesson JSON after manifest load (syncedAt or commit). */
+export function setContentVersion(version) {
+  if (typeof version === "string" && version.length > 0 && version.length <= 64) {
+    contentVersion = version;
+  }
+}
+
+function versionedPath(path) {
+  if (META_PATHS.has(path) || path.includes("?") || !contentVersion) return path;
+  return `${path}?v=${encodeURIComponent(contentVersion)}`;
+}
+
+function fetchCacheMode(path) {
+  return META_PATHS.has(path) ? "no-cache" : "default";
+}
+
 export async function loadContentJSON(path) {
   if (window.location.protocol === "file:") {
     throw new ContentLoadError(
@@ -16,7 +41,10 @@ export async function loadContentJSON(path) {
     );
   }
 
-  const res = await fetch(path, { credentials: "same-origin", cache: "no-cache" });
+  const res = await fetch(versionedPath(path), {
+    credentials: "same-origin",
+    cache: fetchCacheMode(path),
+  });
   const text = await res.text();
 
   if (!res.ok) {
@@ -24,6 +52,10 @@ export async function loadContentJSON(path) {
       "missing",
       `Curriculum file not found (${path}). Run npm run sync:curriculum, then npm run site.`
     );
+  }
+
+  if (text.length > MAX_JSON_BYTES) {
+    throw new ContentLoadError("invalid", `Curriculum file too large (${path}).`);
   }
 
   const trimmed = text.trimStart();
@@ -49,7 +81,14 @@ export async function loadContentJSON(path) {
 }
 
 export async function loadManifest() {
-  return loadContentJSON("content/manifest.json");
+  const manifest = await loadContentJSON("content/manifest.json");
+  const version =
+    manifest?.syncedAt ||
+    manifest?.legal?.sourceCommit ||
+    manifest?.legal?.contentSyncedAt ||
+    null;
+  if (version) setContentVersion(String(version));
+  return manifest;
 }
 
 export function renderContentError(container, error) {

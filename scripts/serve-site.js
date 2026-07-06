@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const PORT = Number(process.env.SITE_PORT || 3080);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "subscriber-site");
+const MAX_BODY_BYTES = 1024;
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -27,8 +28,30 @@ function safePath(urlPath) {
   return resolved;
 }
 
+function cacheControlFor(filePath) {
+  const rel = path.relative(ROOT, filePath).replace(/\\/g, "/");
+  if (rel.startsWith("assets/")) return "public, max-age=31536000, immutable";
+  if (rel.startsWith("content/")) return "public, max-age=86400";
+  if (rel.startsWith("css/") || rel.startsWith("js/")) return "public, max-age=604800";
+  if (rel.startsWith("data/")) return "public, max-age=3600";
+  return "no-cache";
+}
+
 const server = createServer(async (req, res) => {
   try {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      res.writeHead(405, { Allow: "GET, HEAD", "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Method not allowed");
+      return;
+    }
+
+    const contentLength = Number(req.headers["content-length"] || 0);
+    if (contentLength > MAX_BODY_BYTES) {
+      res.writeHead(413, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Payload too large");
+      return;
+    }
+
     let filePath = safePath(req.url === "/" ? "/index.html" : req.url);
     if (!filePath) {
       res.writeHead(403);
@@ -39,9 +62,27 @@ const server = createServer(async (req, res) => {
     let st = await stat(filePath).catch(() => null);
     if (st?.isDirectory()) filePath = path.join(filePath, "index.html");
 
-    const body = await readFile(filePath);
     const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream", "Cache-Control": "no-cache" });
+    const headers = {
+      "Content-Type": MIME[ext] || "application/octet-stream",
+      "Cache-Control": cacheControlFor(filePath),
+      "X-Content-Type-Options": "nosniff",
+    };
+
+    if (req.method === "HEAD") {
+      st = await stat(filePath).catch(() => null);
+      if (!st) {
+        res.writeHead(404, headers);
+        res.end();
+        return;
+      }
+      res.writeHead(200, { ...headers, "Content-Length": st.size });
+      res.end();
+      return;
+    }
+
+    const body = await readFile(filePath);
+    res.writeHead(200, headers);
     res.end(body);
   } catch {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });

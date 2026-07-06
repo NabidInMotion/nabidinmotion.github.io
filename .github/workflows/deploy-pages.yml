@@ -11,6 +11,10 @@
 #
 # If the site shows stale content after a green deploy, open Actions →
 # "pages build and deployment" → Re-run failed jobs on the latest gh-pages run.
+#
+# Scale / abuse: static site — see subscriber-site/docs/SCALE.md.
+# GitHub Pages does not apply _headers; use Cloudflare (or similar) in front
+# of the custom domain for WAF + cache rules at 100k+ concurrent readers.
 
 name: Deploy Study Hub
 

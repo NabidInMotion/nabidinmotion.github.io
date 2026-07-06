@@ -4,6 +4,7 @@
 const STORAGE_KEY = "nim-study-progress";
 const SCHEMA_VERSION = 2;
 const MAX_IMPORT_BYTES = 256 * 1024;
+const MAX_STORAGE_BYTES = 512 * 1024;
 const PROGRESS_KEY_RE = /^(guide\/[\w-]+|[\w-]+\/[\w-]+)$/;
 const PROJECT_ID_RE = /^(beginner|intermediate|advanced)-\d{2}$/;
 const CONFIDENCE_LEVELS = new Set([0, 1, 2]);
@@ -141,40 +142,12 @@ function loadRaw() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultState();
+    if (raw.length > MAX_STORAGE_BYTES) return defaultState();
     const data = JSON.parse(raw);
-    if (!data || typeof data !== "object") return defaultState();
+    const normalized = normalizeImportState(data);
+    if (!normalized) return defaultState();
     return {
-      v: SCHEMA_VERSION,
-      completedLessons: Array.isArray(data.completedLessons)
-        ? data.completedLessons.filter((k) => typeof k === "string").slice(0, 500)
-        : [],
-      lastLesson: typeof data.lastLesson === "string" ? data.lastLesson : null,
-      confidence: normalizeConfidence(data.confidence),
-      projects: normalizeProjects(data.projects),
-      focusMinutesThisWeek:
-        typeof data.focusMinutesThisWeek === "number" && data.focusMinutesThisWeek >= 0
-          ? Math.min(Math.round(data.focusMinutesThisWeek), 10000)
-          : 0,
-      focusWeekStart:
-        typeof data.focusWeekStart === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.focusWeekStart)
-          ? data.focusWeekStart
-          : weekStartIso(),
-      confidenceAt: normalizeConfidenceAt(data.confidenceAt),
-      reflections: normalizeReflections(data.reflections),
-      weeklyLessonGoal:
-        typeof data.weeklyLessonGoal === "number" && data.weeklyLessonGoal >= 0
-          ? Math.min(Math.round(data.weeklyLessonGoal), 50)
-          : 3,
-      lessonsReadThisWeek:
-        typeof data.lessonsReadThisWeek === "number" && data.lessonsReadThisWeek >= 0
-          ? Math.min(Math.round(data.lessonsReadThisWeek), 500)
-          : 0,
-      lessonWeekStart:
-        typeof data.lessonWeekStart === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.lessonWeekStart)
-          ? data.lessonWeekStart
-          : weekStartIso(),
-      lastSeenCommit: typeof data.lastSeenCommit === "string" ? data.lastSeenCommit : null,
-      lastVisitAt: typeof data.lastVisitAt === "string" ? data.lastVisitAt : null,
+      ...normalized,
       updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : null,
     };
   } catch {
@@ -185,7 +158,9 @@ function loadRaw() {
 function save(state) {
   const next = { ...state, v: SCHEMA_VERSION, updatedAt: new Date().toISOString() };
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    const serialized = JSON.stringify(next);
+    if (serialized.length > MAX_STORAGE_BYTES) return false;
+    localStorage.setItem(STORAGE_KEY, serialized);
     window.dispatchEvent(new CustomEvent("nim-progress-change", { detail: next }));
     return true;
   } catch {

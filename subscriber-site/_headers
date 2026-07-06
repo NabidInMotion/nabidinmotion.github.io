@@ -17,3 +17,6 @@
 
 /data/*
   Cache-Control: public, max-age=3600
+
+/content/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

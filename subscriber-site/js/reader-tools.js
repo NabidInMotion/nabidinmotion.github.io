@@ -12,8 +12,10 @@ function loadReaderPrefs() {
 }
 
 function saveReaderPrefs(prefs) {
+  const safe = {};
+  if (typeof prefs?.narrow === "boolean") safe.narrow = prefs.narrow;
   try {
-    localStorage.setItem(READER_PREFS_KEY, JSON.stringify(prefs));
+    localStorage.setItem(READER_PREFS_KEY, JSON.stringify(safe));
   } catch {
     /* ignore */
   }

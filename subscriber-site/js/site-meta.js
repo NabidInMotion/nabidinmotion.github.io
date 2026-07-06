@@ -1,16 +1,14 @@
 /**
  * Site-wide legal meta: content sync stamp, terms acknowledgment banner.
  */
+import { loadManifest } from "./content-loader.js";
+
 const TERMS_STORAGE_KEY = "nim-terms-v1";
 const TERMS_VERSION = "2026-06-22";
 
 export async function fetchManifest() {
   try {
-    const res = await fetch("content/manifest.json", { credentials: "same-origin", cache: "no-cache" });
-    if (!res.ok) return null;
-    const text = await res.text();
-    if (text.trimStart().startsWith("<")) return null;
-    return JSON.parse(text);
+    return await loadManifest();
   } catch {
     return null;
   }

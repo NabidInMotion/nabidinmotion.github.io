@@ -10,12 +10,16 @@ export async function loadSearchIndex() {
   if (indexCache) return indexCache;
   const res = await fetch("content/search-index.json", { credentials: "same-origin", cache: "no-cache" });
   if (!res.ok) throw new Error("Search index not available");
-  indexCache = await res.json();
+  const data = await res.json();
+  indexCache = data;
   return indexCache;
 }
 
+const MAX_QUERY_LENGTH = 120;
+
 function tokenize(query) {
-  return query
+  const trimmed = String(query || "").slice(0, MAX_QUERY_LENGTH);
+  return trimmed
     .toLowerCase()
     .split(/\s+/)
     .map((t) => t.trim())
@@ -85,6 +89,7 @@ export function mountSearch(inputEl, resultsEl, options = {}) {
     resultsEl.append(list);
   }
 
+  inputEl.maxLength = MAX_QUERY_LENGTH;
   inputEl.addEventListener("input", () => {
     clearTimeout(debounce);
     debounce = setTimeout(async () => {

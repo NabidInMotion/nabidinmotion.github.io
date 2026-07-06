@@ -2,6 +2,7 @@
  * Career path selection — filters modules by target role (from GitHub README table).
  */
 const STORAGE_KEY = "nim-career-role";
+const ROLE_ID_RE = /^[a-z0-9-]{1,40}$/;
 
 let pathsData = null;
 
@@ -14,14 +15,26 @@ function loadRoleId() {
   }
 }
 
+function isValidRoleId(roleId, data = pathsData) {
+  if (!roleId || roleId === "all") return true;
+  if (!ROLE_ID_RE.test(roleId)) return false;
+  if (data && !data.roles.some((r) => r.id === roleId)) return false;
+  return true;
+}
+
 export function getSelectedRoleId() {
-  return loadRoleId();
+  const id = loadRoleId();
+  return isValidRoleId(id) ? id : "all";
 }
 
 export function setSelectedRoleId(roleId) {
   try {
-    if (!roleId || roleId === "all") localStorage.removeItem(STORAGE_KEY);
-    else localStorage.setItem(STORAGE_KEY, roleId);
+    if (!roleId || roleId === "all") {
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      if (!isValidRoleId(roleId)) return false;
+      localStorage.setItem(STORAGE_KEY, roleId);
+    }
     window.dispatchEvent(new CustomEvent("nim-career-change", { detail: { roleId: roleId || "all" } }));
     return true;
   } catch {
