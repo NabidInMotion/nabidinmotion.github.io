@@ -8,6 +8,9 @@
 #   - Push to main that touches subscriber-site/
 #   - After "Sync curriculum" completes (content rebuild)
 #   - Manual: Actions → Deploy Study Hub → Run workflow
+#
+# If the site shows stale content after a green deploy, open Actions →
+# "pages build and deployment" → Re-run failed jobs on the latest gh-pages run.
 
 name: Deploy Study Hub
 
@@ -40,7 +43,9 @@ jobs:
           persist-credentials: false
 
       - name: Prepare static site
-        run: test -f subscriber-site/index.html
+        run: |
+          test -f subscriber-site/index.html
+          touch subscriber-site/.nojekyll
 
       - name: Deploy to gh-pages branch
         uses: JamesIves/github-pages-deploy-action@v4
