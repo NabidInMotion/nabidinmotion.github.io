@@ -4,19 +4,24 @@
 import {
   buildLearnUrl,
   exportProgress,
+  findBookmarks,
   getConfidence,
   getModuleProgress,
   getStats,
   guideKey,
   importProgress,
+  isBookmarked,
   isLessonComplete,
   lessonKey,
   markLessonComplete,
+  MAX_BOOKMARKS,
   onProgressChange,
+  parseLessonKey,
   resetProgress,
   setConfidence,
   setLastLesson,
   storageAvailable,
+  toggleBookmark,
 } from "./progress.js";
 import { loadContentJSON, loadManifest, renderContentError } from "./content-loader.js";
 import {
@@ -27,7 +32,7 @@ import {
   moduleSlugsForRole,
   onCareerChange,
 } from "./career-path.js";
-import { mountFocusSession, setLessonReadingMinutes } from "./focus-session.js";
+import { mountFocusSession, setFocusLessonKey, setLessonReadingMinutes } from "./focus-session.js";
 import { maybeExplainPrompt, mountExplainPrompt } from "./explain-prompt.js";
 import {
   applyReaderMeasurePref,
@@ -46,6 +51,7 @@ import { clearChildren, el } from "./security.js";
 const SLUG_RE = /^[0-9]{2}-[a-z0-9-]+$/;
 const LESSON_RE = /^[a-z0-9][a-z0-9.-]{0,80}$/i;
 const GUIDE_RE = /^[a-z0-9][a-z0-9-]{0,120}$/i;
+const BOOKMARKS_HASH = "#bookmarks";
 
 let manifest = null;
 let current = null;
@@ -95,12 +101,36 @@ function setSanitizedHtml(container, html) {
 
 function scrollToHash() {
   const hash = window.location.hash;
-  if (!hash) return;
+  if (!hash || hash === BOOKMARKS_HASH) return;
   const id = decodeURIComponent(hash.slice(1));
   requestAnimationFrame(() => {
     const target = document.getElementById(id);
     if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+}
+
+function lessonUrlHash() {
+  const hash = window.location.hash;
+  return hash === BOOKMARKS_HASH ? "" : hash;
+}
+
+function stripBookmarksHash() {
+  if (window.location.hash === BOOKMARKS_HASH) {
+    history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  }
+}
+
+let bookmarkNoticeTimer = null;
+
+function showBookmarkNotice(message) {
+  const node = document.getElementById("bookmark-notice");
+  if (!node) return;
+  node.textContent = message;
+  node.hidden = false;
+  clearTimeout(bookmarkNoticeTimer);
+  bookmarkNoticeTimer = setTimeout(() => {
+    node.hidden = true;
+  }, 5000);
 }
 
 function bindContentAnchors(container) {
@@ -146,6 +176,87 @@ function appendGuideGroup(container, label, guides, collapsible = false) {
   appendGuideLinks(list, guides);
   group.append(list);
   container.append(group);
+}
+
+function removeSidebarBookmark(item) {
+  if (!storageAvailable() || !item?.key || !isBookmarked(item.key)) return;
+  const label = item.title.length > 60 ? `${item.title.slice(0, 57)}…` : item.title;
+  toggleBookmark(item.key);
+  showBookmarkNotice(`Removed “${label}” from bookmarks.`);
+}
+
+function renderSidebarBookmarks() {
+  const section = document.getElementById("sidebar-bookmarks-section");
+  const nav = document.getElementById("sidebar-bookmarks-nav");
+  const countEl = document.getElementById("sidebar-bookmarks-count");
+  if (!section || !nav || !manifest) return;
+
+  if (!storageAvailable()) {
+    section.hidden = true;
+    return;
+  }
+
+  const items = findBookmarks(manifest);
+  if (!items.length) {
+    section.hidden = true;
+    clearChildren(nav);
+    return;
+  }
+
+  section.hidden = false;
+  if (countEl) countEl.textContent = `(${items.length})`;
+
+  const activeKey = current ? currentKey(current) : null;
+
+  clearChildren(nav);
+  for (const item of items) {
+    const row = el("div", "sidebar-bookmark-row");
+    const link = el(
+      "a",
+      item.key === activeKey ? "sidebar-bookmark-link active" : "sidebar-bookmark-link"
+    );
+    link.href =
+      item.type === "guide"
+        ? buildLearnUrl({ guideId: item.guideId })
+        : buildLearnUrl({ module: item.module, lessonId: item.lessonId });
+    const title =
+      item.title.length > 48 ? `${item.title.slice(0, 45)}…` : item.title;
+    link.append(el("span", "sidebar-bookmark-title", title));
+    if (item.moduleTitle) {
+      link.append(el("span", "sidebar-bookmark-meta", item.moduleTitle));
+    } else {
+      link.title = item.title;
+    }
+    row.append(link);
+
+    const removeBtn = el("button", "sidebar-bookmark-remove");
+    removeBtn.type = "button";
+    removeBtn.textContent = "×";
+    removeBtn.setAttribute("aria-label", `Remove “${item.title}” from bookmarks`);
+    removeBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      removeSidebarBookmark(item);
+    });
+    row.append(removeBtn);
+
+    nav.append(row);
+  }
+}
+
+function focusBookmarksSidebar() {
+  const section = document.getElementById("sidebar-bookmarks-section");
+  const panel = document.getElementById("sidebar-bookmarks-panel");
+  const sidebar = document.getElementById("reader-sidebar");
+  const toggle = document.getElementById("sidebar-toggle");
+  if (section?.hidden) return;
+  if (panel) panel.open = true;
+  if (sidebar && window.matchMedia("(max-width: 900px)").matches) {
+    sidebar.classList.add("open");
+    toggle?.setAttribute("aria-expanded", "true");
+  }
+  section?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  stripBookmarksHash();
 }
 
 function renderSidebarGuides(container) {
@@ -350,6 +461,42 @@ function promptExplainIfNeeded(route) {
   maybeExplainPrompt({ lessonKey: key, lessonTitle: currentTitle });
 }
 
+function updateBookmarkUI(route) {
+  const btn = document.getElementById("lesson-bookmark");
+  if (!btn) return;
+  const key = currentKey(route);
+  if (!key || !storageAvailable()) {
+    btn.hidden = true;
+    return;
+  }
+  btn.hidden = false;
+  const saved = isBookmarked(key);
+  btn.classList.toggle("active", saved);
+  btn.setAttribute("aria-pressed", saved ? "true" : "false");
+  btn.textContent = saved ? "Bookmarked ::" : "Bookmark ::";
+}
+
+function bindBookmarkButton() {
+  const btn = document.getElementById("lesson-bookmark");
+  if (!btn || !storageAvailable()) return;
+  btn.addEventListener("click", () => {
+    if (!current) return;
+    const key = currentKey(current);
+    if (!key) return;
+    const wasSaved = isBookmarked(key);
+    const { evicted } = toggleBookmark(key);
+    updateBookmarkUI(current);
+    renderSidebarBookmarks();
+    if (!wasSaved && evicted) {
+      const parsed = parseLessonKey(evicted, manifest);
+      const removed = parsed?.title || "Oldest bookmark";
+      showBookmarkNotice(
+        `Bookmark saved. Removed oldest to stay within ${MAX_BOOKMARKS}: “${removed}”.`
+      );
+    }
+  });
+}
+
 function updateMarkRead(route) {
   const checkbox = document.getElementById("mark-read");
   const key = currentKey(route);
@@ -357,9 +504,10 @@ function updateMarkRead(route) {
   checkbox.checked = isLessonComplete(key);
   checkbox.onchange = () => {
     const wasComplete = isLessonComplete(key);
-    markLessonComplete(key, checkbox.checked);
+    markLessonComplete(key, checkbox.checked, manifest);
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
+    renderSidebarBookmarks();
     updateProgressUI();
     if (checkbox.checked && !wasComplete) promptExplainIfNeeded(route);
   };
@@ -425,12 +573,19 @@ async function showLesson(route) {
   renderPager({ ...route, mod: resolved.mod });
   updateMarkRead(route);
   updateConfidenceUI(route);
+  updateBookmarkUI(route);
+  renderSidebarBookmarks();
 
   const readingMinutes = resolved.meta.readingMinutes || content.readingMinutes || null;
   setLessonReadingMinutes(readingMinutes);
 
   const key = currentKey(route);
-  if (key) setLastLesson(key);
+  if (key) {
+    setLastLesson(key);
+    setFocusLessonKey(key);
+  } else {
+    setFocusLessonKey(null);
+  }
 
   history.replaceState(
     null,
@@ -439,7 +594,7 @@ async function showLesson(route) {
       route.type === "guide"
         ? { guideId: route.guideId }
         : { module: route.module, lessonId: route.lessonId }
-    ) + window.location.hash
+    ) + lessonUrlHash()
   );
 }
 
@@ -477,9 +632,11 @@ function bindChrome() {
     updateProgressUI();
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
+    renderSidebarBookmarks();
     if (current) {
       updateMarkRead(current);
       updateConfidenceUI(current);
+      updateBookmarkUI(current);
     }
   });
 }
@@ -513,6 +670,7 @@ async function init() {
     selectedRoleId = getSelectedRoleId();
     bindChrome();
     bindConfidenceCheckin();
+    bindBookmarkButton();
     bindContentAnchors(document.getElementById("reader-content"));
     mountFocusSession({
       onMarkRead: () => {
@@ -521,9 +679,10 @@ async function init() {
         const wasComplete = checkbox.checked;
         checkbox.checked = true;
         const key = currentKey(current);
-        if (key) markLessonComplete(key, true);
+        if (key) markLessonComplete(key, true, manifest);
         renderSidebarGuides(document.getElementById("sidebar-guides"));
         renderSidebarModules(document.getElementById("sidebar-modules"));
+        renderSidebarBookmarks();
         updateProgressUI();
         if (!wasComplete) promptExplainIfNeeded(current);
       },
@@ -540,11 +699,13 @@ async function init() {
     bindStudyAssistant();
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
+    renderSidebarBookmarks();
     updateProgressUI();
 
     onCareerChange((roleId) => {
       selectedRoleId = roleId;
       renderSidebarModules(document.getElementById("sidebar-modules"));
+      renderSidebarBookmarks();
       updateProgressUI();
     });
 
@@ -552,7 +713,12 @@ async function init() {
     if (route.type === "default") {
       route = { type: "guide", guideId: "learning-roadmap" };
     }
+    const openBookmarks = window.location.hash === BOOKMARKS_HASH;
     await showLesson(route);
+
+    if (openBookmarks) {
+      focusBookmarksSidebar();
+    }
   } catch (err) {
     const contentEl = document.getElementById("reader-content");
     renderContentError(contentEl, err);

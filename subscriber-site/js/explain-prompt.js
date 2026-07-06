@@ -1,7 +1,13 @@
 /**
  * Optional "explain it back" retrieval prompt — local only, exported with progress.
  */
-import { getReflection, setReflection, storageAvailable } from "./progress.js";
+import {
+  getReflection,
+  pickReflectionPrompt,
+  REFLECTION_PROMPTS,
+  setReflection,
+  storageAvailable,
+} from "./progress.js";
 
 let pending = null;
 
@@ -19,13 +25,21 @@ export function maybeExplainPrompt({ lessonKey, lessonTitle }) {
   if (!storageAvailable() || !lessonKey || !lessonTitle) return;
   if (getReflection(lessonKey)) return;
 
-  pending = { lessonKey, lessonTitle };
+  const promptId = pickReflectionPrompt(lessonKey);
+  const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+
+  pending = { lessonKey, lessonTitle, promptId };
   const overlay = overlayEl();
   const title = document.getElementById("explain-prompt-title");
+  const desc = document.getElementById("explain-prompt-desc");
   const input = document.getElementById("explain-prompt-input");
   if (!overlay || !title || !input) return;
 
-  title.textContent = `What did you learn from “${lessonTitle.length > 60 ? `${lessonTitle.slice(0, 57)}…` : lessonTitle}”?`;
+  const shortTitle =
+    lessonTitle.length > 60 ? `${lessonTitle.slice(0, 57)}…` : lessonTitle;
+  title.textContent = `${prompt.title} — “${shortTitle}”`;
+  if (desc) desc.textContent = prompt.desc;
+  input.placeholder = prompt.placeholder;
   input.value = "";
   overlay.hidden = false;
   input.focus();
@@ -41,7 +55,7 @@ export function mountExplainPrompt() {
   saveBtn?.addEventListener("click", () => {
     if (!pending) return hideExplainPrompt();
     const text = input.value.trim();
-    if (text) setReflection(pending.lessonKey, text);
+    if (text) setReflection(pending.lessonKey, text, pending.promptId);
     hideExplainPrompt();
   });
 

@@ -59,6 +59,15 @@
         <input type="search" class="sidebar-search-input" id="sidebar-search" placeholder="Search curriculum…" autocomplete="off" spellcheck="false" />
         <div class="sidebar-search-results" id="sidebar-search-results" hidden></div>
       </div>
+      <div class="sidebar-section" id="sidebar-bookmarks-section" hidden>
+        <details class="sidebar-bookmarks-panel" id="sidebar-bookmarks-panel">
+          <summary class="sidebar-bookmarks-summary">
+            <span class="prompt">:: Bookmarks</span>
+            <span class="sidebar-bookmarks-count" id="sidebar-bookmarks-count"></span>
+          </summary>
+          <nav class="sidebar-bookmarks-nav" id="sidebar-bookmarks-nav" aria-label="Bookmarked lessons"></nav>
+        </details>
+      </div>
       <div class="sidebar-section">
         <div class="prompt">:: Guides</div>
         <nav class="sidebar-nav" id="sidebar-guides"></nav>
@@ -75,6 +84,7 @@
         <div class="reader-actions">
           <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="reader-measure-toggle" aria-pressed="false">Narrow ::</button>
           <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="reader-print">Print ::</button>
+          <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="lesson-bookmark" hidden>Bookmark ::</button>
           <div class="confidence-checkin" id="confidence-checkin" hidden>
             <span class="confidence-label">How confident?</span>
             <div class="confidence-buttons" role="group" aria-label="Confidence check-in">
@@ -91,6 +101,7 @@
           <a class="btn btn-ghost btn-sm" id="github-source" href="#" target="_blank" rel="noopener noreferrer">GitHub ::</a>
         </div>
       </div>
+      <p class="bookmark-notice" id="bookmark-notice" hidden role="status" aria-live="polite"></p>
       <div id="module-checkpoint" class="module-checkpoint-host" hidden></div>
       <details class="study-assistant-panel" id="study-assistant-panel">
         <summary class="study-assistant-summary">Study assistant ::</summary>
@@ -157,7 +168,7 @@
   <div class="explain-prompt-overlay" id="explain-prompt-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="explain-prompt-title">
     <div class="explain-prompt-card">
       <h2 class="explain-prompt-title" id="explain-prompt-title">What did you learn?</h2>
-      <p class="explain-prompt-desc">Optional — one sentence helps memory. Saved on this device only.</p>
+      <p class="explain-prompt-desc" id="explain-prompt-desc">Optional — one sentence helps memory. Saved on this device only.</p>
       <textarea id="explain-prompt-input" class="explain-prompt-input" rows="3" maxlength="500" placeholder="In one sentence…"></textarea>
       <div class="explain-prompt-actions">
         <button type="button" class="btn btn-primary btn-sm" id="explain-prompt-save">Save</button>
@@ -166,10 +177,7 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initSiteMeta } from "./js/site-meta.js";
-    initSiteMeta();
-  </script>
+  <script src="js/learn-init.js" type="module"></script>
   <script src="js/reader.js" type="module"></script>
 </body>
 </html>
