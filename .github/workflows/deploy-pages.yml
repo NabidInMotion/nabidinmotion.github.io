@@ -1,8 +1,12 @@
 # Deploy subscriber-site/ to GitHub Pages (https://nabidinmotion.github.io)
 #
-# Setup (one time, on NabidInMotion/nabidinmotion.github.io):
-#   1. Settings → Actions → General → Workflow permissions → Read and write
-#   2. Settings → Pages → Build and deployment → Source: GitHub Actions
+# REQUIRED — one-time repo settings (or deploy fails with "only allowed from gh-pages"):
+#   1. Settings → Pages → Build and deployment → Source: GitHub Actions
+#      (NOT "Deploy from a branch" / gh-pages)
+#   2. Settings → Actions → General → Workflow permissions → Read and write
+#
+# If you see: "Invalid deployment branch … Deployments are only allowed from gh-pages"
+# → Pages source is still on gh-pages branch mode. Switch to GitHub Actions (step 1).
 #
 # Triggers:
 #   - Push to main that touches subscriber-site/
