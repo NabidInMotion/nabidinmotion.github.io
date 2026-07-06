@@ -33,6 +33,7 @@ This is the on-site home for the [Road to Machine Learning](https://github.com/N
 | Career paths | 12 roles from the GitHub README; filters modules and the reader sidebar |
 | Progress | Saved in `localStorage` on the device. Mark lessons read, continue where you left off, export or reset |
 | Content sync | Markdown becomes sanitized HTML with Shiki syntax highlighting (`dark-plus`) |
+| Study assistant | Retrieval-only RAG: finds excerpts from synced lessons with source links (no LLM, no network) |
 | Legal pages | Datenschutz, Impressum, Nutzungsbedingungen, plus English privacy and terms |
 | Privacy by design | Self-hosted fonts, no analytics, no embeds, CSP via meta tag on all HTML pages |
 

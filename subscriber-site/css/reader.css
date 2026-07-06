@@ -1,5 +1,53 @@
 /* Reader layout and prose typography */
-.reader-page { overflow-x: hidden; }
+.reader-page {
+  overflow-x: hidden;
+  color-scheme: dark;
+}
+
+/* Scrollbars — match obsidian theme (sidebar search, modules, study assistant) */
+.reader-sidebar,
+.sidebar-search-results,
+.study-assistant-results {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.65) rgba(15, 23, 42, 0.45);
+}
+
+.reader-sidebar::-webkit-scrollbar,
+.sidebar-search-results::-webkit-scrollbar,
+.study-assistant-results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.reader-sidebar::-webkit-scrollbar-track,
+.sidebar-search-results::-webkit-scrollbar-track,
+.study-assistant-results::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: 999px;
+}
+
+.reader-sidebar::-webkit-scrollbar-thumb,
+.sidebar-search-results::-webkit-scrollbar-thumb,
+.study-assistant-results::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.55);
+  border-radius: 999px;
+  border: 2px solid rgba(15, 23, 42, 0.45);
+  background-clip: padding-box;
+}
+
+.reader-sidebar::-webkit-scrollbar-thumb:hover,
+.sidebar-search-results::-webkit-scrollbar-thumb:hover,
+.study-assistant-results::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.75);
+  background-clip: padding-box;
+}
+
+.reader-sidebar::-webkit-scrollbar-button,
+.sidebar-search-results::-webkit-scrollbar-button,
+.study-assistant-results::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
 
 .reader-header .nav {
   flex-wrap: wrap;
@@ -399,8 +447,9 @@
 
 .sidebar-search-results {
   margin-top: 0.5rem;
-  max-height: 240px;
+  max-height: 280px;
   overflow-y: auto;
+  padding-right: 0.15rem;
 }
 
 .search-results-list {
@@ -409,29 +458,34 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
 }
 
-.search-result-link {
+.search-result-card {
+  padding: 0.5rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: rgba(15, 23, 42, 0.35);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.search-result-card:hover {
+  border-color: rgba(59, 130, 246, 0.25);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.search-result-title {
   display: block;
-  padding: 0.45rem 0.5rem;
-  border-radius: 6px;
-  text-decoration: none;
-  color: var(--text-muted);
-  font-size: 0.82rem;
-  line-height: 1.4;
-}
-
-.search-result-link:hover {
-  background: rgba(59, 130, 246, 0.1);
-  color: var(--text);
-}
-
-.search-result-link strong {
-  display: block;
-  color: var(--text);
   font-size: 0.85rem;
   font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.search-result-title:hover {
+  color: var(--blue);
+  text-decoration: underline;
 }
 
 .search-result-meta {
@@ -439,14 +493,18 @@
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--slate-dim);
-  margin-top: 0.15rem;
+  margin-top: 0.2rem;
 }
 
 .search-result-excerpt {
-  display: block;
+  margin: 0.35rem 0 0;
   font-size: 0.75rem;
+  line-height: 1.45;
   color: var(--slate-dim);
-  margin-top: 0.2rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .search-empty {
@@ -717,6 +775,121 @@
 .module-checkpoint-banner a {
   color: var(--blue);
   font-weight: 600;
+}
+
+.study-assistant-panel {
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.study-assistant-summary {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--blue);
+  list-style: none;
+}
+
+.study-assistant-summary::-webkit-details-marker {
+  display: none;
+}
+
+.study-assistant-body {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid rgba(31, 42, 61, 0.5);
+}
+
+.study-assistant-disclaimer {
+  margin: 0.75rem 0 1rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.study-assistant-disclaimer a {
+  color: var(--blue);
+}
+
+.study-assistant-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--slate-dim);
+  margin-bottom: 0.35rem;
+}
+
+.study-assistant-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.study-assistant-input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.study-assistant-input:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+
+.study-assistant-status {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--slate-dim);
+}
+
+.study-assistant-results {
+  margin-top: 0.75rem;
+}
+
+.study-assistant-results-intro {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.study-assistant-results-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.study-assistant-result-link {
+  font-weight: 600;
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.study-assistant-result-link:hover {
+  text-decoration: underline;
+}
+
+.study-assistant-snippet {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.study-assistant-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .code-block-wrap {

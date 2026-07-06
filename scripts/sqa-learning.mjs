@@ -196,6 +196,42 @@ async function run() {
   });
   record("LR-20", "Progress export schema includes reflections", exportHasReflection);
 
+  // Study assistant (retrieval-only RAG)
+  await page.goto(`${BASE}/learn.html?m=02-introduction-to-ml&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(600);
+
+  const assistantDom = await page.evaluate(() => ({
+    panel: !!document.getElementById("study-assistant-panel"),
+    disclaimer: document.querySelector(".study-assistant-disclaimer")?.textContent?.includes("Not AI-generated"),
+  }));
+  record("LR-21", "Study assistant panel in reader", assistantDom.panel);
+  record("LR-22", "Study assistant disclaimer shown", assistantDom.disclaimer === true);
+
+  await page.evaluate(() => {
+    const panel = document.getElementById("study-assistant-panel");
+    if (panel) panel.open = true;
+  });
+  await page.type("#study-assistant-query", "supervised learning");
+  await page.click("#study-assistant-form button[type=submit]");
+  await delay(1200);
+
+  const assistantResults = await page.evaluate(() => ({
+    visible: document.getElementById("study-assistant-results")?.hidden === false,
+    items: document.querySelectorAll(".study-assistant-result").length,
+    hasLink: !!document.querySelector(".study-assistant-result-link"),
+    snippet: !!document.querySelector(".study-assistant-snippet"),
+  }));
+  record(
+    "LR-23",
+    "Study assistant returns curriculum excerpts",
+    assistantResults.visible && assistantResults.items > 0,
+    `${assistantResults.items} sources`
+  );
+  record("LR-24", "Study assistant links to lessons", assistantResults.hasLink);
+  record("LR-25", "Study assistant shows snippet text", assistantResults.snippet);
+
   await browser.close();
 
   const failed = results.filter((r) => !r.pass).length;
