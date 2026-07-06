@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Security acknowledgments for Nabid In Motion." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; upgrade-insecure-requests" />
+  <title>Security Acknowledgments · Nabid In Motion</title>
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/brand.css" />
+</head>
+<body class="legal-page">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand-lockup" href="index.html">
+        <img src="assets/logo.png" alt="Nabid In Motion" width="44" height="44" />
+        <span class="brand-name">Nabid <span>In Motion</span></span>
+      </a>
+      <ul class="nav-links" id="site-nav">
+        <li><a href="index.html">Study Hub</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+        <li><a href="privacy.html">Privacy (EN)</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="legal-card">
+      <h1>Security Acknowledgments</h1>
+      <p class="legal-meta">Responsible disclosure · Nabid In Motion Study Hub</p>
+
+      <p>
+        If you believe you have found a security issue affecting the Nabid In Motion Study Hub
+        (nabidinmotion.com), please report it responsibly. We appreciate researchers who help keep
+        learners safe.
+      </p>
+
+      <h2>Report a vulnerability</h2>
+      <p>
+        Email <a href="mailto:nabidinmotionofficial@gmail.com">nabidinmotionofficial@gmail.com</a> with a clear
+        description, steps to reproduce, and impact assessment. Please do not publish details before
+        we have had a reasonable time to investigate.
+      </p>
+
+      <h2>Scope</h2>
+      <ul>
+        <li>This static study hub site and its hosted content</li>
+        <li>Configuration or deployment issues that affect user safety or privacy</li>
+      </ul>
+      <p>
+        Out of scope: third-party services (GitHub, YouTube), social engineering, denial-of-service
+        tests against production without prior agreement, and issues in the open curriculum repository
+        unless they directly compromise this hosted site.
+      </p>
+
+      <h2>What to expect</h2>
+      <p>
+        We aim to acknowledge valid reports within a few business days. We may ask for clarification.
+        With your permission, we will credit researchers on this page after a fix or accepted mitigation.
+      </p>
+
+      <h2>Researchers thanked</h2>
+      <p>No public reports have been published yet.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="footer-year"></span> Nabid In Motion. No cookies. No tracking.</p>
+      <ul class="footer-links">
+        <li><a href="index.html">Study Hub</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+        <li><a href="privacy.html">Privacy (EN)</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initSiteMeta } from "./js/site-meta.js";
+    initSiteMeta({ showBanner: false });
+  </script>
+</body>
+</html>

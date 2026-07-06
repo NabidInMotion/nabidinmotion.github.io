@@ -1,0 +1,4 @@
+Contact: mailto:nabidinmotionofficial@gmail.com
+Preferred-Languages: en, de
+Canonical: https://nabidinmotion.github.io/
+Policy: https://nabidinmotion.github.io/security-acknowledgments.html

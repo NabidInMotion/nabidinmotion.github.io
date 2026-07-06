@@ -1,0 +1,122 @@
+{
+  "brand": {
+    "name": "Nabid In Motion",
+    "tagline": "AI Engineering · Tech Architecture · Life Adventures",
+    "skills": "System Design // LLM Orchestration // Distributed Systems",
+    "logo": "assets/logo.png"
+  },
+  "links": {
+    "youtubeChannel": "https://www.youtube.com/@NabidInMotion",
+    "youtubeSubscribe": "https://www.youtube.com/@NabidInMotion?sub_confirmation=1",
+    "githubRepo": "https://github.com/NabidAlam/road-to-machine-learning",
+    "githubProfile": "https://github.com/NabidAlam"
+  },
+  "repo": {
+    "title": "Road to ML: From Zero to Hero",
+    "description": "Read the full curriculum here. 265 lessons synced from GitHub. Track progress in your browser. No account required.",
+    "stars": "1.1k+",
+    "modules": 26,
+    "projects": 23
+  },
+  "youtube": {
+    "channelId": "",
+    "featuredPlaylists": [
+      {
+        "title": "Advanced AI Engineering & Architecture Masterclass (Concept Over Code)",
+        "description": "Deep architecture lessons focused on concepts before code. Ideal for engineers moving toward AI architect roles.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zIhdfVRWfUc8FUhTWKROb4p",
+        "playlistId": "PLCAuWzdnX8zIhdfVRWfUc8FUhTWKROb4p",
+        "tag": "Featured Playlist"
+      },
+      {
+        "title": "Road to Machine Learning",
+        "description": "ML fundamentals and full curriculum playlist aligned with the GitHub modules.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zJZhdnHPYMTE5g-CRtgD44X",
+        "playlistId": "PLCAuWzdnX8zJZhdnHPYMTE5g-CRtgD44X",
+        "tag": "Core Track"
+      },
+      {
+        "title": "System Design Unplugged",
+        "description": "System design foundations for ML engineers and architects.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zKep-RKc-j1PNQyderg-cGO",
+        "playlistId": "PLCAuWzdnX8zKep-RKc-j1PNQyderg-cGO",
+        "tag": "Architecture"
+      },
+      {
+        "title": "Python for AI & Data Science: Complete Roadmap",
+        "description": "Python roadmap for AI, data science, and production workflows.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zL9f0Zuyx6sNtlGjX04rKzx",
+        "playlistId": "PLCAuWzdnX8zL9f0Zuyx6sNtlGjX04rKzx",
+        "tag": "Python"
+      },
+      {
+        "title": "কোডার থেকে আর্কিটেক্ট: System Design & AI Career Blueprint (আর্কিটেক্টের ডায়েরি)",
+        "description": "Bengali series on system design and the path from coder to AI architect.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zJAUU7l0OFCpXp2bfUWbctP",
+        "playlistId": "PLCAuWzdnX8zJAUU7l0OFCpXp2bfUWbctP",
+        "tag": "Career Blueprint"
+      },
+      {
+        "title": "LLM & AI Architecture Masterclass (বাংলা)",
+        "description": "Bengali masterclass on LLM systems, AI architecture, and production design patterns.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zLf1AmJR2vDPtkrrghqpWSH",
+        "playlistId": "PLCAuWzdnX8zLf1AmJR2vDPtkrrghqpWSH",
+        "tag": "Masterclass"
+      },
+      {
+        "title": "এআই এজেন্টের যুগে ক্যারিয়ার রোডম্যাপ: Beyond Coding (CSE & Non-Tech)",
+        "description": "Career roadmap for the AI agent era, for CS grads and non-tech backgrounds alike.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zLcge8NcPBjrGMq8gMSii6X",
+        "playlistId": "PLCAuWzdnX8zLcge8NcPBjrGMq8gMSii6X",
+        "tag": "Career Roadmap"
+      },
+      {
+        "title": "GitHub Unplugged: কোডিং ছাড়া গিটহাব",
+        "description": "Use GitHub without heavy coding. Repos, collaboration, and workflows explained in Bengali.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zKoTkECb2-8S-EPIGjTJvOK",
+        "playlistId": "PLCAuWzdnX8zKoTkECb2-8S-EPIGjTJvOK",
+        "tag": "GitHub"
+      },
+      {
+        "title": "সহজ কথায় এআই: ৩০ দিনের মাস্টারক্লাস",
+        "description": "30-day Bengali AI masterclass. Core concepts explained in plain language.",
+        "url": "https://www.youtube.com/playlist?list=PLCAuWzdnX8zJnfpvl2UXBkTStjDpr_X-F",
+        "playlistId": "PLCAuWzdnX8zJnfpvl2UXBkTStjDpr_X-F",
+        "tag": "Masterclass"
+      }
+    ],
+    "featuredVideos": []
+  },
+  "studyGuides": [
+    {
+      "title": "Getting Started",
+      "description": "Complete your first ML project in about 30 minutes with the Iris classification walkthrough.",
+      "href": "https://github.com/NabidAlam/road-to-machine-learning/blob/main/GETTING_STARTED.md"
+    },
+    {
+      "title": "Learning Roadmap",
+      "description": "Visual phase guide from Foundation through Advanced Specialization.",
+      "href": "https://github.com/NabidAlam/road-to-machine-learning/blob/main/LEARNING_ROADMAP.md"
+    },
+    {
+      "title": "Quick Start",
+      "description": "Fast track setup and environment configuration.",
+      "href": "https://github.com/NabidAlam/road-to-machine-learning/blob/main/QUICK_START.md"
+    },
+    {
+      "title": "Career Roadmap Guide",
+      "description": "Paths for ML Engineer, MLOps, Data Engineer, and Full Stack AI roles.",
+      "href": "https://github.com/NabidAlam/road-to-machine-learning/blob/main/resources/career_roadmap_guide.md"
+    },
+    {
+      "title": "System Design Track",
+      "description": "31 lessons covering HTTP, caching, CAP, sharding, and ML feature stores.",
+      "href": "https://github.com/NabidAlam/road-to-machine-learning/tree/main/system-design"
+    },
+    {
+      "title": "Full Stack AI Blueprint",
+      "description": "TypeScript through deployment and AI integration across phases A to H.",
+      "href": "https://github.com/NabidAlam/road-to-machine-learning/blob/main/resources/full_stack_ai_engineer_roadmap.md"
+    }
+  ]
+}

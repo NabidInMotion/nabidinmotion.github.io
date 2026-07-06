@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Read the Road to Machine Learning curriculum on Nabid In Motion." />
+  <!-- deploy: 2026-07-06 -->
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; upgrade-insecure-requests" />
+  <title>Study · Nabid In Motion</title>
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/brand.css" />
+  <link rel="stylesheet" href="css/reader.css" />
+</head>
+<body class="reader-page">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="site-header reader-header">
+    <div class="container nav">
+      <a class="brand-lockup" href="index.html">
+        <img src="assets/logo.png" alt="Nabid In Motion" width="44" height="44" />
+        <span class="brand-name">Nabid <span>In Motion</span></span>
+      </a>
+      <div class="reader-header-meta">
+        <div class="reader-progress-wrap" id="reader-progress-wrap" hidden>
+          <span class="reader-progress-label" id="reader-progress-label">0% read</span>
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar-fill" id="reader-progress-fill"></div>
+          </div>
+        </div>
+        <div class="focus-session-wrap" id="focus-session-wrap">
+          <details class="focus-session-picker" id="focus-session-picker">
+            <summary class="btn btn-ghost btn-sm focus-session-trigger">Focus ::</summary>
+            <div class="focus-session-presets" role="menu">
+              <button type="button" class="focus-preset-btn" data-focus-minutes="15" role="menuitem">15 min</button>
+              <button type="button" class="focus-preset-btn" data-focus-minutes="25" role="menuitem">25 min</button>
+              <button type="button" class="focus-preset-btn" data-focus-minutes="45" role="menuitem">45 min</button>
+              <button type="button" class="focus-preset-btn" id="focus-preset-lesson" role="menuitem" hidden>This lesson</button>
+            </div>
+          </details>
+          <div class="focus-session-active" id="focus-session-active" hidden>
+            <span class="focus-timer" id="focus-timer" aria-live="off">25:00</span>
+            <button type="button" class="btn btn-ghost btn-sm" id="focus-exit">Exit focus</button>
+          </div>
+          <p class="focus-weekly-hint" id="focus-weekly-hint" hidden></p>
+        </div>
+        <button type="button" class="sidebar-toggle btn btn-ghost" id="sidebar-toggle" aria-expanded="false" aria-controls="reader-sidebar">Menu ::</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="reader-shell">
+    <aside class="reader-sidebar" id="reader-sidebar" aria-label="Curriculum navigation">
+      <div class="sidebar-section sidebar-search-section">
+        <label class="sidebar-search-label" for="sidebar-search">Search lessons</label>
+        <input type="search" class="sidebar-search-input" id="sidebar-search" placeholder="Search curriculum…" autocomplete="off" spellcheck="false" />
+        <div class="sidebar-search-results" id="sidebar-search-results" hidden></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="prompt">:: Guides</div>
+        <nav class="sidebar-nav" id="sidebar-guides"></nav>
+      </div>
+      <div class="sidebar-section">
+        <div class="prompt">:: Modules</div>
+        <nav class="sidebar-nav sidebar-modules" id="sidebar-modules"></nav>
+      </div>
+    </aside>
+
+    <main class="reader-main" id="reader-main">
+      <div class="reader-toolbar">
+        <nav class="reader-breadcrumb" id="reader-breadcrumb" aria-label="Breadcrumb"></nav>
+        <div class="reader-actions">
+          <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="reader-measure-toggle" aria-pressed="false">Narrow ::</button>
+          <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="reader-print">Print ::</button>
+          <div class="confidence-checkin" id="confidence-checkin" hidden>
+            <span class="confidence-label">How confident?</span>
+            <div class="confidence-buttons" role="group" aria-label="Confidence check-in">
+              <button type="button" class="confidence-btn" data-confidence="0" aria-pressed="false">Not yet</button>
+              <button type="button" class="confidence-btn" data-confidence="1" aria-pressed="false">Partly</button>
+              <button type="button" class="confidence-btn" data-confidence="2" aria-pressed="false">Yes</button>
+              <button type="button" class="confidence-btn confidence-btn-clear" data-confidence="" aria-pressed="false" title="Clear">×</button>
+            </div>
+          </div>
+          <label class="mark-read">
+            <input type="checkbox" id="mark-read" />
+            <span>Mark as read</span>
+          </label>
+          <a class="btn btn-ghost btn-sm" id="github-source" href="#" target="_blank" rel="noopener noreferrer">GitHub ::</a>
+        </div>
+      </div>
+      <div id="module-checkpoint" class="module-checkpoint-host" hidden></div>
+      <details class="study-assistant-panel" id="study-assistant-panel">
+        <summary class="study-assistant-summary">Study assistant ::</summary>
+        <div class="study-assistant-body">
+          <p class="study-assistant-disclaimer">
+            Retrieval only — excerpts from synced lessons on this site. Not AI-generated.
+            May be incomplete. Verify in the linked lesson. Educational use only.
+            <a href="nutzungsbedingungen.html">Terms</a>
+          </p>
+          <form class="study-assistant-form" id="study-assistant-form">
+            <label class="study-assistant-label" for="study-assistant-query">Ask about the curriculum</label>
+            <div class="study-assistant-row">
+              <input
+                type="search"
+                class="study-assistant-input"
+                id="study-assistant-query"
+                placeholder="e.g. gradient descent, confusion matrix…"
+                autocomplete="off"
+                spellcheck="true"
+              />
+              <button type="submit" class="btn btn-primary btn-sm">Find in course</button>
+            </div>
+          </form>
+          <p class="study-assistant-status" id="study-assistant-status" hidden aria-live="polite">Searching…</p>
+          <div class="study-assistant-results" id="study-assistant-results" hidden></div>
+        </div>
+      </details>
+      <article class="reader-content prose" id="reader-content">
+        <p class="reader-loading">Loading lesson…</p>
+      </article>
+      <nav class="reader-pager" id="reader-pager" aria-label="Lesson navigation"></nav>
+      <p class="reader-kbd-hint" id="reader-kbd-hint"><kbd>j</kbd>/<kbd>k</kbd> prev/next · <kbd>/</kbd> search · <kbd>f</kbd> focus</p>
+      <aside class="lesson-legal" id="lesson-legal" hidden></aside>
+    </main>
+  </div>
+
+  <footer class="site-footer reader-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="footer-year"></span> Nabid In Motion. Progress saved on your device only.</p>
+      <ul class="footer-links">
+        <li><a href="index.html">Study Hub</a></li>
+        <li><button type="button" class="link-btn" id="export-progress">Export progress</button></li>
+        <li><button type="button" class="link-btn" id="import-progress">Import progress</button></li>
+        <li><button type="button" class="link-btn" id="reset-progress">Reset progress</button></li>
+        <li><a href="nutzungsbedingungen.html">Terms</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div class="container content-stamp-wrap" id="content-stamp"></div>
+  </footer>
+
+  <div class="focus-end-overlay" id="focus-end-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="focus-end-title">
+    <div class="focus-end-card">
+      <h2 class="focus-end-title" id="focus-end-title">Focus session complete</h2>
+      <p class="focus-end-body" id="focus-end-body"></p>
+      <div class="focus-end-actions">
+        <button type="button" class="btn btn-primary btn-sm" id="focus-end-mark">Mark lesson read</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="focus-end-extend">+5 min</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="focus-end-continue">Continue reading</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="explain-prompt-overlay" id="explain-prompt-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="explain-prompt-title">
+    <div class="explain-prompt-card">
+      <h2 class="explain-prompt-title" id="explain-prompt-title">What did you learn?</h2>
+      <p class="explain-prompt-desc">Optional — one sentence helps memory. Saved on this device only.</p>
+      <textarea id="explain-prompt-input" class="explain-prompt-input" rows="3" maxlength="500" placeholder="In one sentence…"></textarea>
+      <div class="explain-prompt-actions">
+        <button type="button" class="btn btn-primary btn-sm" id="explain-prompt-save">Save</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="explain-prompt-skip">Skip</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initSiteMeta } from "./js/site-meta.js";
+    initSiteMeta();
+  </script>
+  <script src="js/reader.js" type="module"></script>
+</body>
+</html>

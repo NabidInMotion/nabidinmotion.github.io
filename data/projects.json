@@ -1,0 +1,189 @@
+{
+  "version": 1,
+  "projects": [
+    {
+      "id": "beginner-01",
+      "tier": "beginner",
+      "title": "House Price Prediction",
+      "module": "16-projects-beginner",
+      "lessonId": "project-01-house-price-prediction",
+      "skills": "Regression, EDA"
+    },
+    {
+      "id": "beginner-02",
+      "tier": "beginner",
+      "title": "Iris Flower Classification",
+      "module": "16-projects-beginner",
+      "lessonId": "project-02-iris-classification",
+      "skills": "Classification, EDA"
+    },
+    {
+      "id": "beginner-03",
+      "tier": "beginner",
+      "title": "Titanic Survival Prediction",
+      "module": "16-projects-beginner",
+      "lessonId": "project-03-titanic-survival",
+      "skills": "Classification, cleaning"
+    },
+    {
+      "id": "beginner-04",
+      "tier": "beginner",
+      "title": "Spam Email Detection",
+      "module": "16-projects-beginner",
+      "lessonId": "project-04-spam-detection",
+      "skills": "Text classification"
+    },
+    {
+      "id": "beginner-05",
+      "tier": "beginner",
+      "title": "Wine Quality Prediction",
+      "module": "16-projects-beginner",
+      "lessonId": "project-05-wine-quality",
+      "skills": "Regression"
+    },
+    {
+      "id": "beginner-06",
+      "tier": "beginner",
+      "title": "Customer Data Dashboard",
+      "module": "16-projects-beginner",
+      "lessonId": "project-06-customer-dashboard",
+      "skills": "Streamlit, visualization"
+    },
+    {
+      "id": "intermediate-01",
+      "tier": "intermediate",
+      "title": "Handwritten Digit Recognition (MNIST)",
+      "module": "17-projects-intermediate",
+      "lessonId": "project-01-mnist-digit-recognition",
+      "skills": "Neural networks"
+    },
+    {
+      "id": "intermediate-02",
+      "tier": "intermediate",
+      "title": "Customer Churn Prediction",
+      "module": "17-projects-intermediate",
+      "lessonId": "project-02-customer-churn",
+      "skills": "Classification, imbalanced data"
+    },
+    {
+      "id": "intermediate-03",
+      "tier": "intermediate",
+      "title": "Movie Recommendation System",
+      "module": "17-projects-intermediate",
+      "lessonId": "project-03-movie-recommendation",
+      "skills": "Collaborative filtering"
+    },
+    {
+      "id": "intermediate-04",
+      "tier": "intermediate",
+      "title": "Credit Card Fraud Detection",
+      "module": "17-projects-intermediate",
+      "lessonId": "project-04-fraud-detection",
+      "skills": "Anomaly detection"
+    },
+    {
+      "id": "intermediate-05",
+      "tier": "intermediate",
+      "title": "Customer Segmentation",
+      "module": "17-projects-intermediate",
+      "lessonId": "project-05-customer-segmentation",
+      "skills": "Clustering"
+    },
+    {
+      "id": "intermediate-06",
+      "tier": "intermediate",
+      "title": "Time Series Forecasting",
+      "module": "17-projects-intermediate",
+      "lessonId": "project-06-time-series-forecasting",
+      "skills": "ARIMA, LSTM"
+    },
+    {
+      "id": "intermediate-07",
+      "tier": "intermediate",
+      "title": "Feature Engineering Mastery",
+      "module": "17-projects-intermediate",
+      "lessonId": "project-07-feature-engineering",
+      "skills": "Feature engineering"
+    },
+    {
+      "id": "intermediate-08",
+      "tier": "intermediate",
+      "title": "Ensemble Methods Comparison",
+      "module": "17-projects-intermediate",
+      "lessonId": "project-08-ensemble-comparison",
+      "skills": "Ensembles"
+    },
+    {
+      "id": "advanced-01",
+      "tier": "advanced",
+      "title": "Image Classification (CIFAR-10)",
+      "module": "18-projects-advanced",
+      "lessonId": "project-01-cifar10-classification",
+      "skills": "CNNs, transfer learning"
+    },
+    {
+      "id": "advanced-02",
+      "tier": "advanced",
+      "title": "Sentiment Analysis on Reviews",
+      "module": "18-projects-advanced",
+      "lessonId": "project-02-sentiment-analysis",
+      "skills": "NLP, transformers"
+    },
+    {
+      "id": "advanced-03",
+      "tier": "advanced",
+      "title": "Time Series Forecasting (Advanced)",
+      "module": "18-projects-advanced",
+      "lessonId": "project-03-time-series-forecasting",
+      "skills": "Deep time series"
+    },
+    {
+      "id": "advanced-04",
+      "tier": "advanced",
+      "title": "LLM Chatbot & RAG System",
+      "module": "18-projects-advanced",
+      "lessonId": "project-04-chatbot",
+      "skills": "RAG, LangChain"
+    },
+    {
+      "id": "advanced-05",
+      "tier": "advanced",
+      "title": "Object Detection",
+      "module": "18-projects-advanced",
+      "lessonId": "project-05-object-detection",
+      "skills": "YOLO, detection"
+    },
+    {
+      "id": "advanced-06",
+      "tier": "advanced",
+      "title": "End-to-End ML Pipeline",
+      "module": "18-projects-advanced",
+      "lessonId": "project-06-end-to-end-pipeline",
+      "skills": "MLOps pipeline"
+    },
+    {
+      "id": "advanced-07",
+      "tier": "advanced",
+      "title": "Generative Model (GAN/VAE)",
+      "module": "18-projects-advanced",
+      "lessonId": "project-07-generative-model",
+      "skills": "Generative models"
+    },
+    {
+      "id": "advanced-08",
+      "tier": "advanced",
+      "title": "Model Explainability",
+      "module": "18-projects-advanced",
+      "lessonId": "project-08-model-explainability",
+      "skills": "SHAP, LIME"
+    },
+    {
+      "id": "advanced-09",
+      "tier": "advanced",
+      "title": "Model Deployment & Serving",
+      "module": "18-projects-advanced",
+      "lessonId": "project-09-model-deployment",
+      "skills": "APIs, cloud deploy"
+    }
+  ]
+}
