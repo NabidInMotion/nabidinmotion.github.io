@@ -99,6 +99,19 @@ Deploy runs automatically when `subscriber-site/` changes on `main` (via `.githu
 
 For architecture, security, publishing workflow, and GDPR checklist, see [subscriber-site/README.md](subscriber-site/README.md).
 
+## License and copyright
+
+**Do not use the MIT License for this repository.** The Study Hub is not open source for copying.
+
+| Component | License |
+|-----------|---------|
+| **Study Hub** (this repo: code, design, JS/CSS, curated site) | **All rights reserved** — see [LICENSE](LICENSE) |
+| **Curriculum markdown** (`road-to-machine-learning/`) | [MIT](https://github.com/NabidAlam/road-to-machine-learning/blob/main/LICENSE) in the curriculum repo only |
+
+Visitors may use the live site for personal learning. Copying, cloning, or republishing the Study Hub without written permission is prohibited. See [Nutzungsbedingungen](subscriber-site/nutzungsbedingungen.html) (DE) and [Terms](subscriber-site/terms.html) (EN).
+
+*This notice is not legal advice. For full protection under German law (UrhG), consult a qualified lawyer.*
+
 ## Links
 
 | Resource | URL |

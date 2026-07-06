@@ -270,6 +270,11 @@ Run from the repo root:
 | [nabidinmotion.github.io repo](https://github.com/NabidInMotion/nabidinmotion.github.io) | Study hub code and deploy |
 | [Nabid In Motion on YouTube](https://www.youtube.com/@NabidInMotion) | Video companions |
 
-## License
+## License and copyright
 
-Curriculum content follows the license in [road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning). Study hub code is part of the Nabid In Motion project.
+| Component | License |
+|-----------|---------|
+| **Study Hub** (code, design, site) | **All rights reserved** — [../LICENSE](../LICENSE) |
+| **Curriculum markdown** (submodule) | MIT in [road-to-machine-learning](https://github.com/NabidAlam/road-to-machine-learning) only |
+
+The public GitHub repo is visible for transparency; it does **not** grant permission to copy or clone the Study Hub. See [nutzungsbedingungen.html](nutzungsbedingungen.html) and [terms.html](terms.html).
