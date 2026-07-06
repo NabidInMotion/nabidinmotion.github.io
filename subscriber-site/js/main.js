@@ -196,7 +196,7 @@ function renderBookmarks(container, manifest, roleId, careerData) {
     el(
       "p",
       "learning-panel-desc",
-      `Pinned from the reader — most recent first. Up to ${MAX_BOOKMARKS} on this device (${countLabel}).`
+      `Lessons you saved to revisit from the reader toolbar. Most recent first. Up to ${MAX_BOOKMARKS} on this device (${countLabel}).`
     )
   );
 
