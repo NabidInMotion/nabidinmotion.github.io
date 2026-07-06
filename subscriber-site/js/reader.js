@@ -39,6 +39,7 @@ import {
   renderCheckpointBanner,
 } from "./reader-tools.js";
 import { mountSearch } from "./search.js";
+import { mountStudyAssistant } from "./study-assistant.js";
 import { formatSyncDate } from "./site-meta.js";
 import { clearChildren, el } from "./security.js";
 
@@ -493,7 +494,17 @@ function bindSearch() {
       ? filterSlugs(manifest.modules.map((m) => m.slug), selectedRoleId, careerData)
       : null;
 
-  mountSearch(input, results, { moduleSlugs: slugs });
+  mountSearch(input, results, { moduleSlugs: slugs, limit: 8 });
+}
+
+function bindStudyAssistant() {
+  mountStudyAssistant({
+    manifest,
+    getModuleSlugs: () =>
+      selectedRoleId !== "all"
+        ? filterSlugs(manifest.modules.map((m) => m.slug), selectedRoleId, careerData)
+        : null,
+  });
 }
 
 async function init() {
@@ -526,6 +537,7 @@ async function init() {
     applyReaderMeasurePref();
     mountReaderKeyboard();
     bindSearch();
+    bindStudyAssistant();
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
     updateProgressUI();

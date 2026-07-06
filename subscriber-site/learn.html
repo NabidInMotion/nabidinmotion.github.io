@@ -92,6 +92,32 @@
         </div>
       </div>
       <div id="module-checkpoint" class="module-checkpoint-host" hidden></div>
+      <details class="study-assistant-panel" id="study-assistant-panel">
+        <summary class="study-assistant-summary">Study assistant ::</summary>
+        <div class="study-assistant-body">
+          <p class="study-assistant-disclaimer">
+            Retrieval only — excerpts from synced lessons on this site. Not AI-generated.
+            May be incomplete. Verify in the linked lesson. Educational use only.
+            <a href="nutzungsbedingungen.html">Terms</a>
+          </p>
+          <form class="study-assistant-form" id="study-assistant-form">
+            <label class="study-assistant-label" for="study-assistant-query">Ask about the curriculum</label>
+            <div class="study-assistant-row">
+              <input
+                type="search"
+                class="study-assistant-input"
+                id="study-assistant-query"
+                placeholder="e.g. gradient descent, confusion matrix…"
+                autocomplete="off"
+                spellcheck="true"
+              />
+              <button type="submit" class="btn btn-primary btn-sm">Find in course</button>
+            </div>
+          </form>
+          <p class="study-assistant-status" id="study-assistant-status" hidden aria-live="polite">Searching…</p>
+          <div class="study-assistant-results" id="study-assistant-results" hidden></div>
+        </div>
+      </details>
       <article class="reader-content prose" id="reader-content">
         <p class="reader-loading">Loading lesson…</p>
       </article>

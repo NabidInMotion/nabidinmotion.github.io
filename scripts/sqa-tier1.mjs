@@ -136,7 +136,7 @@ async function run() {
   const searchResults = await page.evaluate(() => ({
     visible: !document.getElementById("sidebar-search-results")?.hidden,
     count: document.querySelectorAll(".search-result-item").length,
-    hasTitle: !!document.querySelector(".search-result-link strong"),
+    hasTitle: !!document.querySelector(".search-result-title"),
   }));
   record("TC-10b", "Search returns results for 'python'", searchResults.count > 0, `${searchResults.count} hits`);
   record("TC-10c", "Search results panel opens", searchResults.visible && searchResults.hasTitle);

@@ -3,7 +3,7 @@
  */
 import { loadContentJSON } from "./content-loader.js";
 import { buildLearnUrl } from "./progress.js";
-import { clearChildren, el, escapeHtml } from "./security.js";
+import { clearChildren, el } from "./security.js";
 
 let indexCache = null;
 
@@ -35,7 +35,7 @@ function scoreEntry(entry, tokens) {
   return score;
 }
 
-export function searchLessons(index, query, limit = 12) {
+export function searchRanked(index, query, limit = 12) {
   const tokens = tokenize(query);
   if (!tokens.length) return [];
   const results = [];
@@ -44,7 +44,11 @@ export function searchLessons(index, query, limit = 12) {
     if (score > 0) results.push({ entry, score });
   }
   results.sort((a, b) => b.score - a.score || a.entry.title.localeCompare(b.entry.title));
-  return results.slice(0, limit).map((r) => r.entry);
+  return results.slice(0, limit);
+}
+
+export function searchLessons(index, query, limit = 12) {
+  return searchRanked(index, query, limit).map((r) => r.entry);
 }
 
 function entryHref(entry) {
@@ -72,16 +76,22 @@ export function mountSearch(inputEl, resultsEl, options = {}) {
     const list = el("ul", "search-results-list");
     for (const item of items) {
       const li = el("li", "search-result-item");
-      const a = el("a", "search-result-link");
-      a.href = entryHref(item);
-      a.innerHTML = `<strong>${escapeHtml(item.title)}</strong>`;
+      const card = el("div", "search-result-card");
+
+      const titleLink = el("a", "search-result-title");
+      titleLink.href = entryHref(item);
+      titleLink.textContent = item.title;
+
+      card.append(titleLink);
+
       if (item.moduleTitle) {
-        a.append(el("span", "search-result-meta", item.moduleTitle));
+        card.append(el("span", "search-result-meta", item.moduleTitle));
       }
       if (item.excerpt) {
-        a.append(el("span", "search-result-excerpt", item.excerpt));
+        card.append(el("p", "search-result-excerpt", item.excerpt));
       }
-      li.append(a);
+
+      li.append(card);
       list.append(li);
     }
     resultsEl.append(list);
@@ -106,9 +116,10 @@ export function mountSearch(inputEl, resultsEl, options = {}) {
                 (e) => e.type === "guide" || options.moduleSlugs.includes(e.module)
               ),
             },
-            q
+            q,
+            options.limit
           )
-        : searchLessons(index, q);
+        : searchLessons(index, q, options.limit);
       renderResults(filtered, q);
     }, 180);
   });
