@@ -8,11 +8,15 @@ import {
   importProgress,
   findContinueLesson,
   findNextInPath,
+  findReviewQueue,
   formatReadingMinutes,
   getModuleProgress,
   getStats,
+  getWeeklyLessonGoal,
+  getWeeklyLessonProgress,
   onProgressChange,
   resetProgress,
+  setWeeklyLessonGoal,
   storageAvailable,
 } from "./progress.js";
 import { loadManifest, renderContentError } from "./content-loader.js";
@@ -75,6 +79,80 @@ function guideLocalHref(title) {
 function lessonHref(item) {
   if (item.type === "guide") return buildLearnUrl({ guideId: item.guideId });
   return buildLearnUrl({ module: item.module, lessonId: item.lessonId });
+}
+
+function renderWeeklyGoal(container) {
+  if (!storageAvailable()) return;
+  const { goal, read } = getWeeklyLessonProgress();
+  const section = el("div", "weekly-goal-panel");
+  section.append(el("span", "weekly-goal-label", "Reading goal this week"));
+
+  const count = el("span", "weekly-goal-count", `${read} / ~${goal} lessons`);
+  section.append(count);
+
+  const bar = el("div", "progress-bar weekly-goal-bar");
+  const fill = el("div", "progress-bar-fill");
+  const pct = goal > 0 ? Math.min(100, Math.round((read / goal) * 100)) : 0;
+  fill.style.width = `${pct}%`;
+  bar.append(fill);
+  section.append(bar);
+
+  const edit = el("label", "weekly-goal-edit");
+  edit.append(document.createTextNode("Target: "));
+  const input = document.createElement("input");
+  input.type = "number";
+  input.min = "0";
+  input.max = "50";
+  input.className = "weekly-goal-input";
+  input.value = String(getWeeklyLessonGoal());
+  input.setAttribute("aria-label", "Weekly lesson target");
+  input.addEventListener("change", () => {
+    const val = Number(input.value);
+    if (Number.isFinite(val)) setWeeklyLessonGoal(val);
+    refreshProgress(manifestRef, roleRef, careerRef);
+  });
+  edit.append(input, document.createTextNode(" lessons / week"));
+  section.append(edit);
+
+  container.append(section);
+}
+
+let manifestRef = null;
+let roleRef = "all";
+let careerRef = null;
+
+function renderReviewQueue(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const items = findReviewQueue(manifest, slugs?.length ? slugs : null);
+  if (!items.length) return;
+
+  const section = el("div", "review-queue-panel");
+  section.append(
+    el("h3", "review-queue-title", "Worth revisiting"),
+    el("p", "review-queue-desc", "Lessons you marked Not yet or Partly — a gentle nudge, not a backlog.")
+  );
+
+  const list = el("ul", "review-queue-list");
+  for (const item of items) {
+    const row = el("li", "review-queue-item");
+    const link = el("a", "review-queue-link");
+    link.href = lessonHref(item);
+    link.textContent = item.title;
+    row.append(link);
+    row.append(
+      el("span", "review-queue-meta", `${item.confidenceLabel} · ${item.daysSince}d ago`)
+    );
+    list.append(row);
+  }
+  section.append(list);
+  container.append(section);
+}
+
+function renderLearningExtras(container, manifest, roleId, careerData) {
+  clearChildren(container);
+  renderWeeklyGoal(container);
+  renderReviewQueue(container, manifest, roleId, careerData);
 }
 
 function renderProgressHero(container, manifest, roleId, careerData) {
@@ -178,10 +256,17 @@ function renderProgressHero(container, manifest, roleId, careerData) {
   }
 
   card.append(actions);
+
+  const extrasHost = document.getElementById("learning-extras");
+  if (extrasHost) renderLearningExtras(extrasHost, manifest, roleId, careerData);
+
   container.append(card);
 }
 
 function refreshProgress(manifest, roleId, careerData) {
+  manifestRef = manifest;
+  roleRef = roleId;
+  careerRef = careerData;
   renderProgressHero(document.getElementById("progress-hero"), manifest, roleId, careerData);
   updateModulesSection(roleId, careerData, manifest);
 }
@@ -552,6 +637,9 @@ async function init() {
     initWhatsNew(document.getElementById("whats-new"));
     renderStats(document.getElementById("stats"), config.repo);
     if (manifest) renderProgressHero(document.getElementById("progress-hero"), manifest, selectedRoleId, careerData);
+    manifestRef = manifest;
+    roleRef = selectedRoleId;
+    careerRef = careerData;
 
     try {
       projectsCache = await loadProjects();

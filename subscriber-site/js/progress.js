@@ -38,6 +38,30 @@ function normalizeProjects(raw) {
   return out;
 }
 
+function normalizeConfidenceAt(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const out = {};
+  for (const [key, at] of Object.entries(raw)) {
+    if (!isValidProgressKey(key)) continue;
+    if (typeof at === "string" && at.length <= 40) out[key] = at;
+  }
+  return out;
+}
+
+function normalizeReflections(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const out = {};
+  for (const [key, text] of Object.entries(raw)) {
+    if (!isValidProgressKey(key)) continue;
+    if (typeof text === "string" && text.trim()) {
+      out[key] = text.trim().slice(0, 500);
+    }
+  }
+  return out;
+}
+
+const REVIEW_AFTER_DAYS = 3;
+
 function weekStartIso(date = new Date()) {
   const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
   const day = d.getUTCDay() || 7;
@@ -54,6 +78,11 @@ function defaultState() {
     projects: {},
     focusMinutesThisWeek: 0,
     focusWeekStart: weekStartIso(),
+    confidenceAt: {},
+    reflections: {},
+    weeklyLessonGoal: 3,
+    lessonsReadThisWeek: 0,
+    lessonWeekStart: weekStartIso(),
     lastSeenCommit: null,
     lastVisitAt: null,
     updatedAt: null,
@@ -88,6 +117,20 @@ function normalizeImportState(data) {
     projects: normalizeProjects(data.projects),
     focusMinutesThisWeek,
     focusWeekStart,
+    confidenceAt: normalizeConfidenceAt(data.confidenceAt),
+    reflections: normalizeReflections(data.reflections),
+    weeklyLessonGoal:
+      typeof data.weeklyLessonGoal === "number" && data.weeklyLessonGoal >= 0
+        ? Math.min(Math.round(data.weeklyLessonGoal), 50)
+        : 3,
+    lessonsReadThisWeek:
+      typeof data.lessonsReadThisWeek === "number" && data.lessonsReadThisWeek >= 0
+        ? Math.min(Math.round(data.lessonsReadThisWeek), 500)
+        : 0,
+    lessonWeekStart:
+      typeof data.lessonWeekStart === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.lessonWeekStart)
+        ? data.lessonWeekStart
+        : weekStartIso(),
     lastSeenCommit: typeof data.lastSeenCommit === "string" ? data.lastSeenCommit.slice(0, 64) : null,
     lastVisitAt: typeof data.lastVisitAt === "string" ? data.lastVisitAt : null,
     updatedAt: null,
@@ -115,6 +158,20 @@ function loadRaw() {
       focusWeekStart:
         typeof data.focusWeekStart === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.focusWeekStart)
           ? data.focusWeekStart
+          : weekStartIso(),
+      confidenceAt: normalizeConfidenceAt(data.confidenceAt),
+      reflections: normalizeReflections(data.reflections),
+      weeklyLessonGoal:
+        typeof data.weeklyLessonGoal === "number" && data.weeklyLessonGoal >= 0
+          ? Math.min(Math.round(data.weeklyLessonGoal), 50)
+          : 3,
+      lessonsReadThisWeek:
+        typeof data.lessonsReadThisWeek === "number" && data.lessonsReadThisWeek >= 0
+          ? Math.min(Math.round(data.lessonsReadThisWeek), 500)
+          : 0,
+      lessonWeekStart:
+        typeof data.lessonWeekStart === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.lessonWeekStart)
+          ? data.lessonWeekStart
           : weekStartIso(),
       lastSeenCommit: typeof data.lastSeenCommit === "string" ? data.lastSeenCommit : null,
       lastVisitAt: typeof data.lastVisitAt === "string" ? data.lastVisitAt : null,
@@ -152,13 +209,25 @@ export function isLessonComplete(key) {
   return loadRaw().completedLessons.includes(key);
 }
 
+function bumpWeeklyLessons(state) {
+  const currentWeek = weekStartIso();
+  if (state.lessonWeekStart !== currentWeek) {
+    state.lessonsReadThisWeek = 1;
+    state.lessonWeekStart = currentWeek;
+  } else {
+    state.lessonsReadThisWeek = (state.lessonsReadThisWeek || 0) + 1;
+  }
+}
+
 export function markLessonComplete(key, complete = true) {
   const state = loadRaw();
+  const wasComplete = state.completedLessons.includes(key);
   const set = new Set(state.completedLessons);
   if (complete) set.add(key);
   else set.delete(key);
   state.completedLessons = [...set];
   state.lastLesson = complete ? key : state.lastLesson;
+  if (complete && !wasComplete) bumpWeeklyLessons(state);
   return save(state);
 }
 
@@ -177,14 +246,99 @@ export function getConfidence(key) {
 export function setConfidence(key, level) {
   if (!isValidProgressKey(key)) return false;
   const state = loadRaw();
+  if (!state.confidenceAt) state.confidenceAt = {};
   if (level === null || level === undefined) {
     delete state.confidence[key];
+    delete state.confidenceAt[key];
   } else if (CONFIDENCE_LEVELS.has(level)) {
     state.confidence[key] = level;
+    state.confidenceAt[key] = new Date().toISOString();
   } else {
     return false;
   }
   return save(state);
+}
+
+export function getReflection(key) {
+  return loadRaw().reflections?.[key] || "";
+}
+
+export function setReflection(key, text) {
+  if (!isValidProgressKey(key)) return false;
+  const state = loadRaw();
+  if (!state.reflections) state.reflections = {};
+  const trimmed = typeof text === "string" ? text.trim().slice(0, 500) : "";
+  if (!trimmed) delete state.reflections[key];
+  else state.reflections[key] = trimmed;
+  return save(state);
+}
+
+export function getWeeklyLessonGoal() {
+  return loadRaw().weeklyLessonGoal ?? 3;
+}
+
+export function setWeeklyLessonGoal(goal) {
+  const state = loadRaw();
+  state.weeklyLessonGoal = Math.min(Math.max(Math.round(goal), 0), 50);
+  return save(state);
+}
+
+export function getWeeklyLessonProgress() {
+  const state = loadRaw();
+  const currentWeek = weekStartIso();
+  const read = state.lessonWeekStart === currentWeek ? state.lessonsReadThisWeek || 0 : 0;
+  return {
+    goal: state.weeklyLessonGoal ?? 3,
+    read,
+    weekStart: currentWeek,
+  };
+}
+
+export function findReviewQueue(manifest, moduleSlugs = null, minDays = REVIEW_AFTER_DAYS) {
+  const state = loadRaw();
+  const now = Date.now();
+  const minMs = minDays * 86400000;
+  const items = [];
+
+  for (const item of iterLessons(manifest, moduleSlugs)) {
+    const level = state.confidence[item.key];
+    if (level !== 0 && level !== 1) continue;
+    const at = state.confidenceAt?.[item.key];
+    if (!at) continue;
+    const age = now - new Date(at).getTime();
+    if (age < minMs) continue;
+    items.push({
+      ...item,
+      type: "module",
+      kind: "review",
+      confidenceLevel: level,
+      confidenceLabel: level === 0 ? "Not yet" : "Partly",
+      daysSince: Math.floor(age / 86400000),
+    });
+  }
+
+  for (const guide of manifest?.guides || []) {
+    const key = guideKey(guide.id);
+    const level = state.confidence[key];
+    if (level !== 0 && level !== 1) continue;
+    const at = state.confidenceAt?.[key];
+    if (!at) continue;
+    const age = now - new Date(at).getTime();
+    if (age < minMs) continue;
+    items.push({
+      key,
+      type: "guide",
+      guideId: guide.id,
+      title: guide.title,
+      confidenceLevel: level,
+      confidenceLabel: level === 0 ? "Not yet" : "Partly",
+      daysSince: Math.floor(age / 86400000),
+      kind: "review",
+    });
+  }
+
+  items.sort((a, b) => b.daysSince - a.daysSince);
+  return items.slice(0, 5);
 }
 
 export function getProjectStatus(projectId) {
@@ -464,7 +618,7 @@ export function importProgress(onComplete) {
 export function resetProgress() {
   const message =
     "Reset all learning progress on this device?\n\n" +
-    "This clears: lessons read, continue position, confidence ratings, project status, and focus time.\n" +
+    "This clears: lessons read, continue position, confidence ratings, reflections, reading goal progress, project status, and focus time.\n" +
     "Your career path filter and visit history are kept.\n\n" +
     "This cannot be undone.";
   if (!window.confirm(message)) return false;

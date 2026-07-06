@@ -28,6 +28,16 @@ import {
   onCareerChange,
 } from "./career-path.js";
 import { mountFocusSession, setLessonReadingMinutes } from "./focus-session.js";
+import { maybeExplainPrompt, mountExplainPrompt } from "./explain-prompt.js";
+import {
+  applyReaderMeasurePref,
+  enhanceCodeBlocks,
+  findQuickReferenceLesson,
+  mountPrintButton,
+  mountReaderKeyboard,
+  mountReaderMeasureToggle,
+  renderCheckpointBanner,
+} from "./reader-tools.js";
 import { mountSearch } from "./search.js";
 import { formatSyncDate } from "./site-meta.js";
 import { clearChildren, el } from "./security.js";
@@ -38,6 +48,7 @@ const GUIDE_RE = /^[a-z0-9][a-z0-9-]{0,120}$/i;
 
 let manifest = null;
 let current = null;
+let currentTitle = "";
 let careerData = null;
 let selectedRoleId = "all";
 
@@ -338,16 +349,24 @@ function bindConfidenceCheckin() {
   });
 }
 
+function promptExplainIfNeeded(route) {
+  const key = currentKey(route);
+  if (!key || !currentTitle) return;
+  maybeExplainPrompt({ lessonKey: key, lessonTitle: currentTitle });
+}
+
 function updateMarkRead(route) {
   const checkbox = document.getElementById("mark-read");
   const key = currentKey(route);
   if (!key || !checkbox) return;
   checkbox.checked = isLessonComplete(key);
   checkbox.onchange = () => {
+    const wasComplete = isLessonComplete(key);
     markLessonComplete(key, checkbox.checked);
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
     updateProgressUI();
+    if (checkbox.checked && !wasComplete) promptExplainIfNeeded(route);
   };
 }
 
@@ -364,6 +383,8 @@ async function showLesson(route) {
     );
     githubLink.hidden = true;
     document.getElementById("lesson-legal").hidden = true;
+    const checkpointHost = document.getElementById("module-checkpoint");
+    if (checkpointHost) checkpointHost.hidden = true;
     clearChildren(document.getElementById("reader-breadcrumb"));
     clearChildren(document.getElementById("reader-pager"));
     const markWrap = document.querySelector(".mark-read");
@@ -381,9 +402,26 @@ async function showLesson(route) {
   document.title = `${resolved.meta.title} · Nabid In Motion`;
 
   const content = await loadContentJSON(`content/${resolved.path}`);
+  currentTitle = content.title || resolved.meta.title || "";
   setSanitizedHtml(contentEl, content.html);
+  enhanceCodeBlocks(contentEl, content.githubUrl);
   scrollToHash();
   renderLessonLegal(content);
+
+  const checkpointHost = document.getElementById("module-checkpoint");
+  if (checkpointHost) {
+    if (route.type === "module" && route.lessonId === "readme" && resolved.mod) {
+      const quickRef = findQuickReferenceLesson(resolved.mod);
+      if (quickRef) renderCheckpointBanner(checkpointHost, resolved.mod, quickRef);
+      else {
+        checkpointHost.hidden = true;
+        clearChildren(checkpointHost);
+      }
+    } else {
+      checkpointHost.hidden = true;
+      clearChildren(checkpointHost);
+    }
+  }
 
   githubLink.href = content.githubUrl;
   githubLink.hidden = false;
@@ -475,14 +513,24 @@ async function init() {
       onMarkRead: () => {
         const checkbox = document.getElementById("mark-read");
         if (!checkbox || !current) return;
+        const wasComplete = checkbox.checked;
         checkbox.checked = true;
         const key = currentKey(current);
         if (key) markLessonComplete(key, true);
         renderSidebarGuides(document.getElementById("sidebar-guides"));
         renderSidebarModules(document.getElementById("sidebar-modules"));
         updateProgressUI();
+        if (!wasComplete) promptExplainIfNeeded(current);
+      },
+      onSessionEnd: () => {
+        if (current) promptExplainIfNeeded(current);
       },
     });
+    mountExplainPrompt();
+    mountReaderMeasureToggle();
+    mountPrintButton();
+    applyReaderMeasurePref();
+    mountReaderKeyboard();
     bindSearch();
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));

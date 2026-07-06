@@ -647,7 +647,11 @@
 .reader-page.focus-active .mark-read,
 .reader-page.focus-active #github-source,
 .reader-page.focus-active .reader-pager,
-.reader-page.focus-active .sidebar-search-section {
+.reader-page.focus-active .sidebar-search-section,
+.reader-page.focus-active .reader-kbd-hint,
+.reader-page.focus-active .reader-tool-btn,
+.reader-page.focus-active #reader-print,
+.reader-page.focus-active #reader-measure-toggle {
   display: none !important;
 }
 
@@ -674,4 +678,193 @@
   .reader-progress-wrap { display: none; }
   .focus-session-wrap { align-items: flex-start; }
   .focus-session-presets { left: 0; right: auto; }
+}
+
+/* ── Reader tools: narrow measure, code blocks, checkpoint, explain prompt ── */
+
+.reader-page.reader-narrow .reader-content {
+  max-width: 65ch;
+}
+
+.reader-page.reader-narrow .reader-main {
+  max-width: calc(65ch + 3rem);
+  margin-inline: auto;
+}
+
+.reader-page.focus-active .reader-content {
+  max-width: 65ch;
+  line-height: 1.75;
+}
+
+.reader-page.focus-active .reader-main {
+  max-width: calc(65ch + 3rem);
+  margin-inline: auto;
+}
+
+.module-checkpoint-host {
+  margin-bottom: 1rem;
+}
+
+.module-checkpoint-banner {
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.08);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.module-checkpoint-banner a {
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.code-block-wrap {
+  position: relative;
+  margin: 1rem 0;
+}
+
+.code-block-wrap pre {
+  margin: 0;
+}
+
+.code-block-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.code-block-btn {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.code-block-btn:hover {
+  color: var(--text);
+  border-color: var(--blue);
+}
+
+.reader-kbd-hint {
+  margin: 1.25rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--slate-dim);
+  text-align: center;
+}
+
+.reader-kbd-hint kbd {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.5);
+  font-size: 0.68rem;
+}
+
+.explain-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.explain-prompt-overlay[hidden] {
+  display: none !important;
+}
+
+.explain-prompt-card {
+  width: min(480px, 100%);
+  padding: 1.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(10, 14, 24, 0.98);
+}
+
+.explain-prompt-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+}
+
+.explain-prompt-desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.explain-prompt-input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.92rem;
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.explain-prompt-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+@media print {
+  .grid-bg,
+  .vignette,
+  .site-header,
+  .reader-sidebar,
+  .reader-toolbar,
+  .reader-pager,
+  .reader-kbd-hint,
+  .lesson-legal,
+  .site-footer,
+  .focus-session-wrap,
+  .module-checkpoint-host,
+  .explain-prompt-overlay,
+  .focus-end-overlay {
+    display: none !important;
+  }
+
+  body.reader-page {
+    background: #fff;
+    color: #111;
+  }
+
+  .reader-shell {
+    display: block;
+  }
+
+  .reader-main {
+    padding: 0;
+    max-width: none;
+  }
+
+  .reader-content {
+    max-width: none;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .reader-content a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
 }

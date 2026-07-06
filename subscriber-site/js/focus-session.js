@@ -11,6 +11,7 @@ let tickTimer = null;
 let lessonReadingMinutes = null;
 let extendedOnce = false;
 let onMarkRead = null;
+let onSessionEnd = null;
 
 function formatClock(totalSeconds) {
   const s = Math.max(0, totalSeconds);
@@ -223,6 +224,7 @@ export function setLessonReadingMinutes(minutes) {
 
 export function mountFocusSession(options = {}) {
   onMarkRead = options.onMarkRead || null;
+  onSessionEnd = options.onSessionEnd || null;
 
   const picker = document.getElementById("focus-session-picker");
   const presets = picker?.querySelector(".focus-session-presets");
@@ -240,7 +242,10 @@ export function mountFocusSession(options = {}) {
 
   exitBtn?.addEventListener("click", exitSessionEarly);
 
-  document.getElementById("focus-end-continue")?.addEventListener("click", hideEndOverlay);
+  document.getElementById("focus-end-continue")?.addEventListener("click", () => {
+    hideEndOverlay();
+    if (typeof onSessionEnd === "function") onSessionEnd();
+  });
   document.getElementById("focus-end-mark")?.addEventListener("click", () => {
     if (typeof onMarkRead === "function") onMarkRead();
     hideEndOverlay();

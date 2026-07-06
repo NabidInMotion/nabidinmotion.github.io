@@ -72,6 +72,8 @@
       <div class="reader-toolbar">
         <nav class="reader-breadcrumb" id="reader-breadcrumb" aria-label="Breadcrumb"></nav>
         <div class="reader-actions">
+          <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="reader-measure-toggle" aria-pressed="false">Narrow ::</button>
+          <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="reader-print">Print ::</button>
           <div class="confidence-checkin" id="confidence-checkin" hidden>
             <span class="confidence-label">How confident?</span>
             <div class="confidence-buttons" role="group" aria-label="Confidence check-in">
@@ -88,10 +90,12 @@
           <a class="btn btn-ghost btn-sm" id="github-source" href="#" target="_blank" rel="noopener noreferrer">GitHub ::</a>
         </div>
       </div>
+      <div id="module-checkpoint" class="module-checkpoint-host" hidden></div>
       <article class="reader-content prose" id="reader-content">
         <p class="reader-loading">Loading lesson…</p>
       </article>
       <nav class="reader-pager" id="reader-pager" aria-label="Lesson navigation"></nav>
+      <p class="reader-kbd-hint" id="reader-kbd-hint"><kbd>j</kbd>/<kbd>k</kbd> prev/next · <kbd>/</kbd> search · <kbd>f</kbd> focus</p>
       <aside class="lesson-legal" id="lesson-legal" hidden></aside>
     </main>
   </div>
@@ -119,6 +123,18 @@
         <button type="button" class="btn btn-primary btn-sm" id="focus-end-mark">Mark lesson read</button>
         <button type="button" class="btn btn-ghost btn-sm" id="focus-end-extend">+5 min</button>
         <button type="button" class="btn btn-ghost btn-sm" id="focus-end-continue">Continue reading</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="explain-prompt-overlay" id="explain-prompt-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="explain-prompt-title">
+    <div class="explain-prompt-card">
+      <h2 class="explain-prompt-title" id="explain-prompt-title">What did you learn?</h2>
+      <p class="explain-prompt-desc">Optional — one sentence helps memory. Saved on this device only.</p>
+      <textarea id="explain-prompt-input" class="explain-prompt-input" rows="3" maxlength="500" placeholder="In one sentence…"></textarea>
+      <div class="explain-prompt-actions">
+        <button type="button" class="btn btn-primary btn-sm" id="explain-prompt-save">Save</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="explain-prompt-skip">Skip</button>
       </div>
     </div>
   </div>

@@ -3,8 +3,11 @@
  */
 import {
   buildLearnUrl,
+  getConfidence,
   getProjectStats,
   getProjectStatus,
+  isLessonComplete,
+  lessonKey,
   onProgressChange,
   setProjectStatus,
   storageAvailable,
@@ -16,6 +19,8 @@ const TIER_LABELS = {
   intermediate: "Intermediate",
   advanced: "Advanced",
 };
+
+const CONFIDENCE_LABELS = ["Not yet", "Partly", "Yes"];
 
 export async function loadProjects() {
   const res = await fetch("data/projects.json", { credentials: "same-origin" });
@@ -30,6 +35,33 @@ const STATUS_OPTIONS = [
   ["done", "Done"],
 ];
 
+function lessonBriefHref(project) {
+  const lessonId = project.lessonId || "readme";
+  return buildLearnUrl({ module: project.module, lessonId });
+}
+
+function renderLessonBridge(project) {
+  const lessonId = project.lessonId || "readme";
+  const key = lessonKey(project.module, lessonId);
+  const read = isLessonComplete(key);
+  const confidence = getConfidence(key);
+
+  const bridge = el("div", "project-lesson-bridge");
+  const brief = el("a", "project-brief-link", "Read project brief ::");
+  brief.href = lessonBriefHref(project);
+  bridge.append(brief);
+
+  const badges = el("div", "project-lesson-badges");
+  badges.append(el("span", `project-badge project-badge--read${read ? " is-on" : ""}`, read ? "Brief read" : "Brief unread"));
+  if (confidence !== null) {
+    badges.append(
+      el("span", "project-badge project-badge--confidence", CONFIDENCE_LABELS[confidence] || "")
+    );
+  }
+  bridge.append(badges);
+  return bridge;
+}
+
 function renderProjectCard(project) {
   const status = getProjectStatus(project.id);
   const card = el("article", `project-card project-card--${status.replace("_", "-")}`);
@@ -42,6 +74,7 @@ function renderProjectCard(project) {
   card.append(head);
 
   if (project.skills) card.append(el("p", "project-skills", project.skills));
+  card.append(renderLessonBridge(project));
 
   const statusWrap = el("div", "project-status-group");
   statusWrap.setAttribute("role", "group");
@@ -65,10 +98,6 @@ function renderProjectCard(project) {
     statusWrap.append(btn);
   }
   card.append(statusWrap);
-
-  const moduleLink = el("a", "project-module-link", "Open module brief ::");
-  moduleLink.href = buildLearnUrl({ module: project.module, lessonId: "readme" });
-  card.append(moduleLink);
 
   return card;
 }
