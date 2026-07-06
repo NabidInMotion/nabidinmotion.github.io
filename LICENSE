@@ -1,0 +1,71 @@
+Copyright (c) 2026 Md Shahabub Alam · Nabid In Motion
+All rights reserved.
+
+Nabid In Motion Study Hub — proprietary license
+Repository: https://github.com/NabidInMotion/nabidinmotion.github.io
+Live site: https://nabidinmotion.github.io
+
+================================================================================
+IMPORTANT — NOT THE MIT LICENSE
+================================================================================
+
+This license applies to the Study Hub website project in this repository,
+including but not limited to:
+
+  subscriber-site/   (HTML, CSS, JavaScript, data, built content snapshots)
+  scripts/           (build and tooling)
+  .github/workflows/ (deployment and automation)
+
+Unless you have prior written permission from the copyright holder, you may NOT:
+
+  • copy, reproduce, publish, or redistribute this source code or the site
+  • mirror, clone, or operate a derivative copy of the Study Hub
+  • use the design, layout, branding, curation, or presentation commercially
+  • remove or alter copyright or legal notices
+  • scrape or bulk-download content for republication elsewhere
+
+Permitted without separate permission:
+
+  • visiting https://nabidinmotion.github.io for personal, non-commercial learning
+  • linking to the public website (ordinary hyperlinks)
+  • viewing this public GitHub repository for reference only (no license to copy)
+
+================================================================================
+CURRICULUM (SEPARATE REPOSITORY — DIFFERENT LICENSE)
+================================================================================
+
+Lesson markdown in the git submodule `road-to-machine-learning/` is maintained
+in a separate repository and is licensed under the MIT License there:
+
+  https://github.com/NabidAlam/road-to-machine-learning
+
+The MIT License applies to that curriculum repository only — not to the Study
+Hub code, design, HTML/JS/CSS, or the curated presentation on this site.
+
+Synced lesson HTML/JSON under subscriber-site/content/ is a derived presentation
+of curriculum material and remains protected as part of this Study Hub project
+except where the underlying curriculum text is used under MIT from the source
+repository with proper attribution.
+
+================================================================================
+ENFORCEMENT & GOVERNING LAW
+================================================================================
+
+Unauthorized use may be pursued under German law, including the Urheberrechts-
+gesetz (UrhG) and related civil and criminal provisions.
+
+German law applies. Place of jurisdiction for merchants: Berlin, Germany.
+
+For licensing enquiries: nabidinmotionofficial@gmail.com
+
+Full terms for site visitors:
+  DE: subscriber-site/nutzungsbedingungen.html
+  EN: subscriber-site/terms.html
+
+================================================================================
+DISCLAIMER
+================================================================================
+
+This file is a copyright notice and license grant statement. It is not legal
+advice. For binding advice tailored to your situation, consult a qualified
+lawyer in Germany.
