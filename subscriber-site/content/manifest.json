@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-06T00:41:18.372Z",
+  "syncedAt": "2026-07-06T20:06:34.205Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 265,
   "modules": [
@@ -1757,13 +1757,6 @@
       "readingMinutes": 2
     },
     {
-      "id": "readme",
-      "title": "Install Anaconda from https://www.anaconda.com/products/individual",
-      "source": "README.md",
-      "path": "guides/readme.json",
-      "readingMinutes": 37
-    },
-    {
       "id": "resources--introduction_to_ml_cheatsheet",
       "title": "Introduction to ML Cheatsheet",
       "source": "resources/introduction_to_ml_cheatsheet.md",
@@ -2023,6 +2016,13 @@
       "readingMinutes": 4
     },
     {
+      "id": "readme",
+      "title": "Road to ML: From Zero to Hero",
+      "source": "README.md",
+      "path": "guides/readme.json",
+      "readingMinutes": 37
+    },
+    {
       "id": "resources--stakeholder_communication",
       "title": "Stakeholder Communication Guide for ML Projects",
       "source": "resources/stakeholder_communication.md",
@@ -2048,7 +2048,7 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-06T00:41:18.372Z",
+    "contentSyncedAt": "2026-07-06T20:06:34.205Z",
     "sourceCommit": "152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
     "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
     "sourceCommitDate": "2026-07-05T12:05:58+02:00",

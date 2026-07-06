@@ -866,6 +866,36 @@
   .focus-session-presets { left: 0; right: auto; }
 }
 
+/* ── Curriculum media (CSP-safe replacements for external badge/thumbnail images) ── */
+
+.reader-content .curriculum-media-link {
+  display: inline-block;
+  margin: 0.2rem 0.4rem 0.2rem 0;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.14));
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.35;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.reader-content .curriculum-media-link:hover {
+  border-color: var(--accent, #5b9fd4);
+  background: rgba(91, 159, 212, 0.08);
+}
+
+.reader-content .curriculum-media-fallback {
+  display: inline-block;
+  margin: 0.2rem 0.4rem 0.2rem 0;
+  padding: 0.25rem 0.65rem;
+  border: 1px dashed var(--border, rgba(255, 255, 255, 0.14));
+  border-radius: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--text-muted, #9aa5b1);
+}
+
 /* ── Reader tools: narrow measure, code blocks, checkpoint, explain prompt ── */
 
 .reader-page.reader-narrow .reader-content {
