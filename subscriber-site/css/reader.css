@@ -560,6 +560,12 @@
   color: var(--slate-dim);
 }
 
+#lesson-bookmark.active {
+  border-color: rgba(59, 130, 246, 0.45);
+  color: var(--blue);
+  background: rgba(59, 130, 246, 0.1);
+}
+
 /* Focus sessions */
 .focus-session-wrap {
   display: flex;

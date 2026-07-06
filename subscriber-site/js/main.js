@@ -6,16 +6,23 @@ import {
   buildLearnUrl,
   exportProgress,
   importProgress,
+  findBookmarks,
   findContinueLesson,
+  findGaps,
   findNextInPath,
+  findRefreshSuggestions,
   findReviewQueue,
   formatReadingMinutes,
+  getModuleMilestones,
   getModuleProgress,
   getStats,
+  getWeeklyFocusGoal,
+  getWeeklyFocusProgress,
   getWeeklyLessonGoal,
   getWeeklyLessonProgress,
   onProgressChange,
   resetProgress,
+  setWeeklyFocusGoal,
   setWeeklyLessonGoal,
   storageAvailable,
 } from "./progress.js";
@@ -81,6 +88,150 @@ function lessonHref(item) {
   return buildLearnUrl({ module: item.module, lessonId: item.lessonId });
 }
 
+function renderWeeklyFocusGoal(container) {
+  if (!storageAvailable()) return;
+  const { goal, minutes } = getWeeklyFocusProgress();
+  const section = el("div", "weekly-goal-panel weekly-focus-panel");
+  section.append(el("span", "weekly-goal-label", "Focus goal this week"));
+
+  const count = el("span", "weekly-goal-count", `${minutes} / ${goal} min`);
+  section.append(count);
+
+  const bar = el("div", "progress-bar weekly-goal-bar");
+  const fill = el("div", "progress-bar-fill");
+  const pct = goal > 0 ? Math.min(100, Math.round((minutes / goal) * 100)) : 0;
+  fill.style.width = `${pct}%`;
+  bar.append(fill);
+  section.append(bar);
+
+  const edit = el("label", "weekly-goal-edit");
+  edit.append(document.createTextNode("Target: "));
+  const input = document.createElement("input");
+  input.type = "number";
+  input.min = "0";
+  input.max = "600";
+  input.className = "weekly-goal-input";
+  input.value = String(getWeeklyFocusGoal());
+  input.setAttribute("aria-label", "Weekly focus minutes target");
+  input.addEventListener("change", () => {
+    const val = Number(input.value);
+    if (Number.isFinite(val)) setWeeklyFocusGoal(val);
+    refreshProgress(manifestRef, roleRef, careerRef);
+  });
+  edit.append(input, document.createTextNode(" min / week"));
+  section.append(edit);
+
+  container.append(section);
+}
+
+function renderModuleMilestones(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const items = getModuleMilestones(manifest, slugs?.length ? slugs : null);
+  if (!items.length) return;
+
+  const section = el("div", "learning-panel learning-panel-milestones");
+  section.append(
+    el("h3", "learning-panel-title", "Modules completed"),
+    el("p", "learning-panel-desc", "Recent module milestones on this device.")
+  );
+  const list = el("ul", "learning-panel-list");
+  for (const mod of items) {
+    const row = el("li", "learning-panel-item");
+    const link = el("a", "learning-panel-link");
+    link.href = buildLearnUrl({ module: mod.slug, lessonId: "readme" });
+    link.textContent = mod.title;
+    row.append(link);
+    row.append(
+      el(
+        "span",
+        "learning-panel-meta",
+        `${mod.lessonCount} lessons · ${mod.daysAgo === 0 ? "today" : `${mod.daysAgo}d ago`}`
+      )
+    );
+    list.append(row);
+  }
+  section.append(list);
+  container.append(section);
+}
+
+function renderPathGaps(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const gaps = findGaps(manifest, slugs?.length ? slugs : null);
+  if (!gaps.length) return;
+
+  const section = el("div", "learning-panel learning-panel-gaps");
+  section.append(
+    el("h3", "learning-panel-title", "Path gaps"),
+    el("p", "learning-panel-desc", "Later modules have progress, but these earlier ones do not.")
+  );
+  const list = el("ul", "learning-panel-list");
+  for (const mod of gaps) {
+    const row = el("li", "learning-panel-item");
+    const link = el("a", "learning-panel-link");
+    link.href = buildLearnUrl({ module: mod.slug, lessonId: "readme" });
+    link.textContent = mod.title;
+    row.append(link);
+    row.append(el("span", "learning-panel-meta", `${mod.total} lessons`));
+    list.append(row);
+  }
+  section.append(list);
+  container.append(section);
+}
+
+function renderBookmarks(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const items = findBookmarks(manifest, slugs?.length ? slugs : null);
+  if (!items.length) return;
+
+  const section = el("div", "learning-panel learning-panel-bookmarks");
+  section.append(
+    el("h3", "learning-panel-title", "Bookmarked"),
+    el("p", "learning-panel-desc", "Lessons you saved to revisit — from the reader toolbar.")
+  );
+  const list = el("ul", "learning-panel-list");
+  for (const item of items) {
+    const row = el("li", "learning-panel-item");
+    const link = el("a", "learning-panel-link");
+    link.href = lessonHref(item);
+    link.textContent = item.title;
+    row.append(link);
+    if (item.moduleTitle) {
+      row.append(el("span", "learning-panel-meta", item.moduleTitle));
+    }
+    list.append(row);
+  }
+  section.append(list);
+  container.append(section);
+}
+
+function renderRefreshSuggestions(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const items = findRefreshSuggestions(manifest, slugs?.length ? slugs : null);
+  if (!items.length) return;
+
+  const section = el("div", "learning-panel learning-panel-refresh");
+  section.append(
+    el("h3", "learning-panel-title", "Worth a refresh"),
+    el("p", "learning-panel-desc", "Lessons you read a while ago — a quick skim can help retention.")
+  );
+  const list = el("ul", "learning-panel-list");
+  for (const item of items) {
+    const row = el("li", "learning-panel-item");
+    const link = el("a", "learning-panel-link");
+    link.href = lessonHref(item);
+    link.textContent = item.title;
+    row.append(link);
+    row.append(el("span", "learning-panel-meta", `${item.daysSince}d since read`));
+    list.append(row);
+  }
+  section.append(list);
+  container.append(section);
+}
+
 function renderWeeklyGoal(container) {
   if (!storageAvailable()) return;
   const { goal, read } = getWeeklyLessonProgress();
@@ -141,7 +292,11 @@ function renderReviewQueue(container, manifest, roleId, careerData) {
     link.textContent = item.title;
     row.append(link);
     row.append(
-      el("span", "review-queue-meta", `${item.confidenceLabel} · ${item.daysSince}d ago`)
+      el(
+        "span",
+        "review-queue-meta",
+        `${item.confidenceLabel} · ${item.daysSince}d ago · revisit ~${item.dueDays}d`
+      )
     );
     list.append(row);
   }
@@ -152,7 +307,12 @@ function renderReviewQueue(container, manifest, roleId, careerData) {
 function renderLearningExtras(container, manifest, roleId, careerData) {
   clearChildren(container);
   renderWeeklyGoal(container);
+  renderWeeklyFocusGoal(container);
+  renderModuleMilestones(container, manifest, roleId, careerData);
+  renderPathGaps(container, manifest, roleId, careerData);
+  renderBookmarks(container, manifest, roleId, careerData);
   renderReviewQueue(container, manifest, roleId, careerData);
+  renderRefreshSuggestions(container, manifest, roleId, careerData);
 }
 
 function renderProgressHero(container, manifest, roleId, careerData) {

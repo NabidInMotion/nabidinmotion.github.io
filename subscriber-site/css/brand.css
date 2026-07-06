@@ -375,12 +375,17 @@ a:hover { text-decoration: underline; }
 }
 
 .weekly-goal-panel,
-.review-queue-panel {
+.review-queue-panel,
+.learning-panel {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1.25rem 1.5rem;
   text-align: left;
+}
+
+.weekly-focus-panel {
+  border-color: rgba(59, 130, 246, 0.2);
 }
 
 .weekly-goal-label {
@@ -470,6 +475,56 @@ a:hover { text-decoration: underline; }
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--slate-dim);
+}
+
+.learning-panel-title {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.learning-panel-desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.learning-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.learning-panel-item {
+  padding: 0.45rem 0;
+  border-top: 1px solid rgba(31, 42, 61, 0.45);
+}
+
+.learning-panel-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.learning-panel-link {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.learning-panel-link:hover { text-decoration: underline; }
+
+.learning-panel-meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--slate-dim);
+  margin-top: 0.15rem;
 }
 
 .project-lesson-bridge {

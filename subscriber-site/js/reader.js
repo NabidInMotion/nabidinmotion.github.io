@@ -9,6 +9,7 @@ import {
   getStats,
   guideKey,
   importProgress,
+  isBookmarked,
   isLessonComplete,
   lessonKey,
   markLessonComplete,
@@ -17,6 +18,7 @@ import {
   setConfidence,
   setLastLesson,
   storageAvailable,
+  toggleBookmark,
 } from "./progress.js";
 import { loadContentJSON, loadManifest, renderContentError } from "./content-loader.js";
 import {
@@ -27,7 +29,7 @@ import {
   moduleSlugsForRole,
   onCareerChange,
 } from "./career-path.js";
-import { mountFocusSession, setLessonReadingMinutes } from "./focus-session.js";
+import { mountFocusSession, setFocusLessonKey, setLessonReadingMinutes } from "./focus-session.js";
 import { maybeExplainPrompt, mountExplainPrompt } from "./explain-prompt.js";
 import {
   applyReaderMeasurePref,
@@ -350,6 +352,33 @@ function promptExplainIfNeeded(route) {
   maybeExplainPrompt({ lessonKey: key, lessonTitle: currentTitle });
 }
 
+function updateBookmarkUI(route) {
+  const btn = document.getElementById("lesson-bookmark");
+  if (!btn) return;
+  const key = currentKey(route);
+  if (!key || !storageAvailable()) {
+    btn.hidden = true;
+    return;
+  }
+  btn.hidden = false;
+  const saved = isBookmarked(key);
+  btn.classList.toggle("active", saved);
+  btn.setAttribute("aria-pressed", saved ? "true" : "false");
+  btn.textContent = saved ? "Bookmarked ::" : "Bookmark ::";
+}
+
+function bindBookmarkButton() {
+  const btn = document.getElementById("lesson-bookmark");
+  if (!btn || !storageAvailable()) return;
+  btn.addEventListener("click", () => {
+    if (!current) return;
+    const key = currentKey(current);
+    if (!key) return;
+    toggleBookmark(key);
+    updateBookmarkUI(current);
+  });
+}
+
 function updateMarkRead(route) {
   const checkbox = document.getElementById("mark-read");
   const key = currentKey(route);
@@ -357,7 +386,7 @@ function updateMarkRead(route) {
   checkbox.checked = isLessonComplete(key);
   checkbox.onchange = () => {
     const wasComplete = isLessonComplete(key);
-    markLessonComplete(key, checkbox.checked);
+    markLessonComplete(key, checkbox.checked, manifest);
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
     updateProgressUI();
@@ -425,12 +454,18 @@ async function showLesson(route) {
   renderPager({ ...route, mod: resolved.mod });
   updateMarkRead(route);
   updateConfidenceUI(route);
+  updateBookmarkUI(route);
 
   const readingMinutes = resolved.meta.readingMinutes || content.readingMinutes || null;
   setLessonReadingMinutes(readingMinutes);
 
   const key = currentKey(route);
-  if (key) setLastLesson(key);
+  if (key) {
+    setLastLesson(key);
+    setFocusLessonKey(key);
+  } else {
+    setFocusLessonKey(null);
+  }
 
   history.replaceState(
     null,
@@ -513,6 +548,7 @@ async function init() {
     selectedRoleId = getSelectedRoleId();
     bindChrome();
     bindConfidenceCheckin();
+    bindBookmarkButton();
     bindContentAnchors(document.getElementById("reader-content"));
     mountFocusSession({
       onMarkRead: () => {
@@ -521,7 +557,7 @@ async function init() {
         const wasComplete = checkbox.checked;
         checkbox.checked = true;
         const key = currentKey(current);
-        if (key) markLessonComplete(key, true);
+        if (key) markLessonComplete(key, true, manifest);
         renderSidebarGuides(document.getElementById("sidebar-guides"));
         renderSidebarModules(document.getElementById("sidebar-modules"));
         updateProgressUI();

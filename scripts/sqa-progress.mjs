@@ -123,9 +123,10 @@ async function run() {
   let exportOk = false;
   if (newFile) {
     const exported = JSON.parse(fs.readFileSync(path.join(downloadDir, newFile), "utf8"));
-    exportOk = exported.v === 2 && Array.isArray(exported.completedLessons);
+    exportOk =
+      (exported.v === 2 || exported.v === 3) && Array.isArray(exported.completedLessons);
   }
-  record("PT-14", "Export progress downloads valid schema v2 JSON", exportOk, newFile ?? "no file");
+  record("PT-14", "Export progress downloads valid progress JSON", exportOk, newFile ?? "no file");
 
   // PT-15: Reset progress clears state
   page.once("dialog", (d) => d.accept());

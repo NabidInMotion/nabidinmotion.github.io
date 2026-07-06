@@ -16,7 +16,8 @@
     "curriculum:sync": "git submodule update --remote road-to-machine-learning && node scripts/sync-curriculum.js",
     "sqa:focus": "node scripts/sqa-focus.mjs",
     "sqa:learning": "node scripts/sqa-learning.mjs",
-    "test:study-assistant": "node scripts/test-study-assistant.mjs"
+    "test:study-assistant": "node scripts/test-study-assistant.mjs",
+    "test:progress": "node scripts/test-progress-v3.mjs"
   },
   "engines": {
     "node": ">=18"

@@ -75,6 +75,7 @@
         <div class="reader-actions">
           <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="reader-measure-toggle" aria-pressed="false">Narrow ::</button>
           <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="reader-print">Print ::</button>
+          <button type="button" class="btn btn-ghost btn-sm reader-tool-btn" id="lesson-bookmark" hidden>Bookmark ::</button>
           <div class="confidence-checkin" id="confidence-checkin" hidden>
             <span class="confidence-label">How confident?</span>
             <div class="confidence-buttons" role="group" aria-label="Confidence check-in">
@@ -157,7 +158,7 @@
   <div class="explain-prompt-overlay" id="explain-prompt-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="explain-prompt-title">
     <div class="explain-prompt-card">
       <h2 class="explain-prompt-title" id="explain-prompt-title">What did you learn?</h2>
-      <p class="explain-prompt-desc">Optional — one sentence helps memory. Saved on this device only.</p>
+      <p class="explain-prompt-desc" id="explain-prompt-desc">Optional — one sentence helps memory. Saved on this device only.</p>
       <textarea id="explain-prompt-input" class="explain-prompt-input" rows="3" maxlength="500" placeholder="In one sentence…"></textarea>
       <div class="explain-prompt-actions">
         <button type="button" class="btn btn-primary btn-sm" id="explain-prompt-save">Save</button>

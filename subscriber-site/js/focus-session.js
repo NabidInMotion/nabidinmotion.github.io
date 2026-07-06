@@ -2,12 +2,19 @@
  * Optional focus sessions: countdown timer, simplified reader chrome, gentle end screen.
  * Active timer lives in sessionStorage only; weekly totals in localStorage via progress.js.
  */
-import { getFocusWeeklyMinutes, recordFocusMinutes, storageAvailable } from "./progress.js";
+import { getFocusWeeklyMinutes, getWeeklyFocusProgress, recordFocusMinutes, storageAvailable } from "./progress.js";
 
 const SESSION_KEY = "nim-focus-active";
 const TICK_MS = 1000;
 
 let tickTimer = null;
+let focusLessonKey = null;
+
+export function setFocusLessonKey(key) {
+  focusLessonKey =
+    typeof key === "string" && /^(guide\/[\w-]+|[\w-]+\/[\w-]+)$/.test(key) ? key : null;
+}
+
 let lessonReadingMinutes = null;
 let extendedOnce = false;
 let onMarkRead = null;
@@ -85,9 +92,16 @@ function updateTimerDisplay(seconds) {
 function updateWeeklyHint() {
   const hint = document.getElementById("focus-weekly-hint");
   if (!hint || !storageAvailable()) return;
-  const mins = getFocusWeeklyMinutes();
-  hint.textContent = mins > 0 ? `${mins} focused min this week (on this device)` : "";
-  hint.hidden = mins <= 0;
+  const { minutes, goal } = getWeeklyFocusProgress();
+  if (minutes <= 0) {
+    hint.hidden = true;
+    return;
+  }
+  hint.textContent =
+    goal > 0
+      ? `${minutes} / ${goal} focused min this week (on this device)`
+      : `${minutes} focused min this week (on this device)`;
+  hint.hidden = false;
 }
 
 function hideEndOverlay() {
@@ -121,7 +135,7 @@ function finishSession(completedNaturally) {
   const session = loadSession();
   stopTick();
   if (session && storageAvailable()) {
-    recordFocusMinutes(elapsedMinutes(session));
+    recordFocusMinutes(elapsedMinutes(session), focusLessonKey);
     updateWeeklyHint();
   }
   clearSession();

@@ -31,7 +31,7 @@ This is the on-site home for the [Road to Machine Learning](https://github.com/N
 | Study hub | Landing page with modules, guides, YouTube cards, and career path picker |
 | Reader | `learn.html` with sidebar, table of contents, and prev/next links |
 | Career paths | 12 roles from the GitHub README; filters modules and the reader sidebar |
-| Progress | Saved in `localStorage` on the device. Mark lessons read, continue where you left off, export or reset |
+| Progress | Saved in `localStorage` on the device. Mark lessons read, confidence check-ins, bookmarks, spaced review, module milestones, weekly goals, export or reset |
 | Content sync | Markdown becomes sanitized HTML with Shiki syntax highlighting (`dark-plus`) |
 | Study assistant | Retrieval-only RAG: finds excerpts from synced lessons with source links (no LLM, no network) |
 | Legal pages | Datenschutz, Impressum, Nutzungsbedingungen, plus English privacy and terms |
