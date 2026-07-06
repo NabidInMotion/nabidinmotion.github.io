@@ -203,13 +203,13 @@ Typical loop: edit markdown → `npm run curriculum:sync` → refresh the browse
 
 **Production URL:** [https://nabidinmotion.github.io](https://nabidinmotion.github.io) (GitHub Pages only — no custom domain)
 
-GitHub Actions deploys `subscriber-site/` to the `gh-pages` branch via `.github/workflows/deploy-pages.yml` when `subscriber-site/` changes on `main`.
+GitHub Actions deploys `subscriber-site/` via `.github/workflows/deploy-pages.yml` when `subscriber-site/` changes on `main`.
 
 One-time setup on [NabidInMotion/nabidinmotion.github.io](https://github.com/NabidInMotion/nabidinmotion.github.io):
 
-1. **Settings → Pages → Source:** Deploy from branch → **gh-pages** → **/ (root)**
+1. **Settings → Pages → Build and deployment → Source:** **GitHub Actions** (not “Deploy from a branch”)
 2. **Settings → Actions → General → Workflow permissions:** Read and write
-3. Run **Actions → Deploy Study Hub → Run workflow** once after the first push
+3. Run **Actions → Deploy Study Hub → Run workflow** once after the first merge
 
 Files `_headers`, `vercel.json`, and `staticwebapp.config.json` are **reference configs for forks or alternate hosts**. GitHub Pages does not apply them on `*.github.io`.
 
