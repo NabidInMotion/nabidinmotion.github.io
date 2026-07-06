@@ -38,6 +38,13 @@ function normalizeProjects(raw) {
   return out;
 }
 
+function weekStartIso(date = new Date()) {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const day = d.getUTCDay() || 7;
+  if (day !== 1) d.setUTCDate(d.getUTCDate() - (day - 1));
+  return d.toISOString().slice(0, 10);
+}
+
 function defaultState() {
   return {
     v: SCHEMA_VERSION,
@@ -45,6 +52,8 @@ function defaultState() {
     lastLesson: null,
     confidence: {},
     projects: {},
+    focusMinutesThisWeek: 0,
+    focusWeekStart: weekStartIso(),
     lastSeenCommit: null,
     lastVisitAt: null,
     updatedAt: null,
@@ -62,12 +71,23 @@ function normalizeImportState(data) {
     ? data.lastLesson
     : null;
 
+  const focusMinutesThisWeek =
+    typeof data.focusMinutesThisWeek === "number" && data.focusMinutesThisWeek >= 0
+      ? Math.min(Math.round(data.focusMinutesThisWeek), 10000)
+      : 0;
+  const focusWeekStart =
+    typeof data.focusWeekStart === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.focusWeekStart)
+      ? data.focusWeekStart
+      : weekStartIso();
+
   return {
     v: SCHEMA_VERSION,
     completedLessons,
     lastLesson,
     confidence: normalizeConfidence(data.confidence),
     projects: normalizeProjects(data.projects),
+    focusMinutesThisWeek,
+    focusWeekStart,
     lastSeenCommit: typeof data.lastSeenCommit === "string" ? data.lastSeenCommit.slice(0, 64) : null,
     lastVisitAt: typeof data.lastVisitAt === "string" ? data.lastVisitAt : null,
     updatedAt: null,
@@ -88,6 +108,14 @@ function loadRaw() {
       lastLesson: typeof data.lastLesson === "string" ? data.lastLesson : null,
       confidence: normalizeConfidence(data.confidence),
       projects: normalizeProjects(data.projects),
+      focusMinutesThisWeek:
+        typeof data.focusMinutesThisWeek === "number" && data.focusMinutesThisWeek >= 0
+          ? Math.min(Math.round(data.focusMinutesThisWeek), 10000)
+          : 0,
+      focusWeekStart:
+        typeof data.focusWeekStart === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.focusWeekStart)
+          ? data.focusWeekStart
+          : weekStartIso(),
       lastSeenCommit: typeof data.lastSeenCommit === "string" ? data.lastSeenCommit : null,
       lastVisitAt: typeof data.lastVisitAt === "string" ? data.lastVisitAt : null,
       updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : null,
@@ -350,6 +378,27 @@ export function formatReadingMinutes(minutes) {
   return minutes === 1 ? "~1 min read" : `~${minutes} min read`;
 }
 
+export function getFocusWeeklyMinutes() {
+  const state = loadRaw();
+  const currentWeek = weekStartIso();
+  if (state.focusWeekStart !== currentWeek) return 0;
+  return state.focusMinutesThisWeek || 0;
+}
+
+export function recordFocusMinutes(minutes) {
+  if (!storageAvailable() || !Number.isFinite(minutes) || minutes < 1) return false;
+  const rounded = Math.min(Math.round(minutes), 480);
+  const state = loadRaw();
+  const currentWeek = weekStartIso();
+  const prior =
+    state.focusWeekStart === currentWeek ? state.focusMinutesThisWeek || 0 : 0;
+  return save({
+    ...state,
+    focusMinutesThisWeek: prior + rounded,
+    focusWeekStart: currentWeek,
+  });
+}
+
 export function exportProgress() {
   const data = loadRaw();
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -415,7 +464,7 @@ export function importProgress(onComplete) {
 export function resetProgress() {
   const message =
     "Reset all learning progress on this device?\n\n" +
-    "This clears: lessons read, continue position, confidence ratings, and project status.\n" +
+    "This clears: lessons read, continue position, confidence ratings, project status, and focus time.\n" +
     "Your career path filter and visit history are kept.\n\n" +
     "This cannot be undone.";
   if (!window.confirm(message)) return false;

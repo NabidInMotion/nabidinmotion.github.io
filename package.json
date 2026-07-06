@@ -13,7 +13,8 @@
     "sync:curriculum": "node scripts/sync-curriculum.js",
     "curriculum:init": "git submodule update --init --recursive",
     "curriculum:pull": "git submodule update --remote road-to-machine-learning",
-    "curriculum:sync": "git submodule update --remote road-to-machine-learning && node scripts/sync-curriculum.js"
+    "curriculum:sync": "git submodule update --remote road-to-machine-learning && node scripts/sync-curriculum.js",
+    "sqa:focus": "node scripts/sqa-focus.mjs"
   },
   "engines": {
     "node": ">=18"

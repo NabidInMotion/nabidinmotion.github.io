@@ -27,6 +27,7 @@ import {
   moduleSlugsForRole,
   onCareerChange,
 } from "./career-path.js";
+import { mountFocusSession, setLessonReadingMinutes } from "./focus-session.js";
 import { mountSearch } from "./search.js";
 import { formatSyncDate } from "./site-meta.js";
 import { clearChildren, el } from "./security.js";
@@ -392,6 +393,9 @@ async function showLesson(route) {
   updateMarkRead(route);
   updateConfidenceUI(route);
 
+  const readingMinutes = resolved.meta.readingMinutes || content.readingMinutes || null;
+  setLessonReadingMinutes(readingMinutes);
+
   const key = currentKey(route);
   if (key) setLastLesson(key);
 
@@ -467,6 +471,18 @@ async function init() {
     bindChrome();
     bindConfidenceCheckin();
     bindContentAnchors(document.getElementById("reader-content"));
+    mountFocusSession({
+      onMarkRead: () => {
+        const checkbox = document.getElementById("mark-read");
+        if (!checkbox || !current) return;
+        checkbox.checked = true;
+        const key = currentKey(current);
+        if (key) markLessonComplete(key, true);
+        renderSidebarGuides(document.getElementById("sidebar-guides"));
+        renderSidebarModules(document.getElementById("sidebar-modules"));
+        updateProgressUI();
+      },
+    });
     bindSearch();
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));

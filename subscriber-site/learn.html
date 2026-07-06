@@ -30,6 +30,22 @@
             <div class="progress-bar-fill" id="reader-progress-fill"></div>
           </div>
         </div>
+        <div class="focus-session-wrap" id="focus-session-wrap">
+          <details class="focus-session-picker" id="focus-session-picker">
+            <summary class="btn btn-ghost btn-sm focus-session-trigger">Focus ::</summary>
+            <div class="focus-session-presets" role="menu">
+              <button type="button" class="focus-preset-btn" data-focus-minutes="15" role="menuitem">15 min</button>
+              <button type="button" class="focus-preset-btn" data-focus-minutes="25" role="menuitem">25 min</button>
+              <button type="button" class="focus-preset-btn" data-focus-minutes="45" role="menuitem">45 min</button>
+              <button type="button" class="focus-preset-btn" id="focus-preset-lesson" role="menuitem" hidden>This lesson</button>
+            </div>
+          </details>
+          <div class="focus-session-active" id="focus-session-active" hidden>
+            <span class="focus-timer" id="focus-timer" aria-live="off">25:00</span>
+            <button type="button" class="btn btn-ghost btn-sm" id="focus-exit">Exit focus</button>
+          </div>
+          <p class="focus-weekly-hint" id="focus-weekly-hint" hidden></p>
+        </div>
         <button type="button" class="sidebar-toggle btn btn-ghost" id="sidebar-toggle" aria-expanded="false" aria-controls="reader-sidebar">Menu ::</button>
       </div>
     </div>
@@ -94,6 +110,18 @@
     </div>
     <div class="container content-stamp-wrap" id="content-stamp"></div>
   </footer>
+
+  <div class="focus-end-overlay" id="focus-end-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="focus-end-title">
+    <div class="focus-end-card">
+      <h2 class="focus-end-title" id="focus-end-title">Focus session complete</h2>
+      <p class="focus-end-body" id="focus-end-body"></p>
+      <div class="focus-end-actions">
+        <button type="button" class="btn btn-primary btn-sm" id="focus-end-mark">Mark lesson read</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="focus-end-extend">+5 min</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="focus-end-continue">Continue reading</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
     import { initSiteMeta } from "./js/site-meta.js";
