@@ -20,6 +20,8 @@ import {
   getWeeklyFocusProgress,
   getWeeklyLessonGoal,
   getWeeklyLessonProgress,
+  HOME_BOOKMARK_PREVIEW,
+  MAX_BOOKMARKS,
   onProgressChange,
   resetProgress,
   setWeeklyFocusGoal,
@@ -183,16 +185,31 @@ function renderPathGaps(container, manifest, roleId, careerData) {
 function renderBookmarks(container, manifest, roleId, careerData) {
   if (!storageAvailable() || !manifest) return;
   const slugs = moduleSlugsForRole(roleId, careerData);
-  const items = findBookmarks(manifest, slugs?.length ? slugs : null);
-  if (!items.length) return;
+  const all = findBookmarks(manifest, slugs?.length ? slugs : null);
+  if (!all.length) return;
 
   const section = el("div", "learning-panel learning-panel-bookmarks");
+  const countLabel =
+    all.length === 1 ? "1 lesson saved" : `${all.length} lessons saved`;
   section.append(
     el("h3", "learning-panel-title", "Bookmarked"),
-    el("p", "learning-panel-desc", "Lessons you saved to revisit — from the reader toolbar.")
+    el(
+      "p",
+      "learning-panel-desc",
+      `Pinned from the reader — most recent first. Up to ${MAX_BOOKMARKS} on this device (${countLabel}).`
+    )
   );
-  const list = el("ul", "learning-panel-list");
-  for (const item of items) {
+
+  const showAll = bookmarksExpanded || all.length <= HOME_BOOKMARK_PREVIEW;
+  const visible = showAll ? all : all.slice(0, HOME_BOOKMARK_PREVIEW);
+
+  const list = el(
+    "ul",
+    showAll && all.length > HOME_BOOKMARK_PREVIEW
+      ? "learning-panel-list learning-panel-list--scroll"
+      : "learning-panel-list"
+  );
+  for (const item of visible) {
     const row = el("li", "learning-panel-item");
     const link = el("a", "learning-panel-link");
     link.href = lessonHref(item);
@@ -204,6 +221,20 @@ function renderBookmarks(container, manifest, roleId, careerData) {
     list.append(row);
   }
   section.append(list);
+
+  if (all.length > HOME_BOOKMARK_PREVIEW) {
+    const toggle = el("button", "learning-panel-more link-btn");
+    toggle.type = "button";
+    toggle.textContent = bookmarksExpanded
+      ? "Show fewer"
+      : `Show all ${all.length} bookmarks`;
+    toggle.addEventListener("click", () => {
+      bookmarksExpanded = !bookmarksExpanded;
+      refreshProgress(manifestRef, roleRef, careerRef);
+    });
+    section.append(toggle);
+  }
+
   container.append(section);
 }
 
@@ -271,6 +302,7 @@ function renderWeeklyGoal(container) {
 let manifestRef = null;
 let roleRef = "all";
 let careerRef = null;
+let bookmarksExpanded = false;
 
 function renderReviewQueue(container, manifest, roleId, careerData) {
   if (!storageAvailable() || !manifest) return;

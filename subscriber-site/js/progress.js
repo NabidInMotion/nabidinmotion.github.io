@@ -13,6 +13,8 @@ const REVIEW_INTERVALS_NOT_YET = [1, 2, 4, 7];
 const REVIEW_INTERVALS_PARTLY = [3, 7, 14, 21];
 const REFRESH_AFTER_DAYS = 30;
 const DEFAULT_WEEKLY_FOCUS_GOAL = 90;
+export const MAX_BOOKMARKS = 50;
+export const HOME_BOOKMARK_PREVIEW = 5;
 
 export const REFLECTION_PROMPTS = {
   summary: {
@@ -106,7 +108,7 @@ function normalizeModuleIsoMap(raw) {
 
 function normalizeBookmarks(raw) {
   if (!Array.isArray(raw)) return [];
-  return [...new Set(raw.filter(isValidProgressKey))].slice(0, 100);
+  return [...new Set(raw.filter(isValidProgressKey))].slice(0, MAX_BOOKMARKS);
 }
 
 function normalizeReflections(raw) {
@@ -162,6 +164,7 @@ function defaultState() {
     reviewPass: {},
     moduleCompletedAt: {},
     bookmarks: [],
+    bookmarkedAt: {},
     focusByKey: {},
     lastSeenCommit: null,
     lastVisitAt: null,
@@ -222,6 +225,7 @@ function normalizeImportState(data) {
     reviewPass: normalizeCountMap(data.reviewPass),
     moduleCompletedAt: normalizeModuleIsoMap(data.moduleCompletedAt),
     bookmarks: normalizeBookmarks(data.bookmarks),
+    bookmarkedAt: normalizeIsoMap(data.bookmarkedAt),
     focusByKey: normalizeMinutesMap(data.focusByKey),
     lastSeenCommit: typeof data.lastSeenCommit === "string" ? data.lastSeenCommit.slice(0, 64) : null,
     lastVisitAt: typeof data.lastVisitAt === "string" ? data.lastVisitAt : null,
@@ -614,17 +618,43 @@ export function isBookmarked(key) {
   return loadRaw().bookmarks.includes(key);
 }
 
-export function toggleBookmark(key) {
-  if (!isValidProgressKey(key)) return false;
-  const state = loadRaw();
-  const set = new Set(state.bookmarks || []);
-  if (set.has(key)) set.delete(key);
-  else set.add(key);
-  state.bookmarks = [...set].slice(0, 100);
-  return save(state);
+export function getBookmarkCount() {
+  return loadRaw().bookmarks.length;
 }
 
-export function findBookmarks(manifest, moduleSlugs = null) {
+export function toggleBookmark(key) {
+  if (!isValidProgressKey(key)) return { ok: false, evicted: null };
+  const state = loadRaw();
+  if (!state.bookmarkedAt) state.bookmarkedAt = {};
+  const set = new Set(state.bookmarks || []);
+  let evicted = null;
+
+  if (set.has(key)) {
+    set.delete(key);
+    delete state.bookmarkedAt[key];
+  } else {
+    if (set.size >= MAX_BOOKMARKS) {
+      const oldest = [...set].sort(
+        (a, b) =>
+          new Date(state.bookmarkedAt[a] || 0).getTime() -
+          new Date(state.bookmarkedAt[b] || 0).getTime()
+      )[0];
+      if (oldest) {
+        set.delete(oldest);
+        delete state.bookmarkedAt[oldest];
+        evicted = oldest;
+      }
+    }
+    set.add(key);
+    state.bookmarkedAt[key] = new Date().toISOString();
+  }
+
+  state.bookmarks = [...set];
+  const ok = save(state);
+  return { ok, evicted };
+}
+
+export function findBookmarks(manifest, moduleSlugs = null, { limit = null } = {}) {
   const state = loadRaw();
   const items = [];
   const allowed = moduleSlugs?.length ? new Set(moduleSlugs) : null;
@@ -638,9 +668,16 @@ export function findBookmarks(manifest, moduleSlugs = null) {
       ...parsed,
       type: parsed.type,
       kind: "bookmark",
+      bookmarkedAt: state.bookmarkedAt?.[key] || null,
     });
   }
-  return items;
+
+  items.sort(
+    (a, b) =>
+      new Date(b.bookmarkedAt || 0).getTime() - new Date(a.bookmarkedAt || 0).getTime()
+  );
+
+  return limit ? items.slice(0, limit) : items;
 }
 
 export function getProjectStatus(projectId) {

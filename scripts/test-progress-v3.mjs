@@ -129,10 +129,12 @@ async function run() {
   test("bookmarks round-trip", () => {
     localStorage.clear();
     const key = lessonKey("01-python-for-data-science", "readme");
-    toggleBookmark(key);
+    const { ok } = toggleBookmark(key);
+    assert.equal(ok, true);
     const items = findBookmarks(manifest);
     assert.equal(items.length, 1);
     assert.equal(items[0].key, key);
+    assert.ok(items[0].bookmarkedAt);
   });
 
   test("focus minutes per lesson and weekly goal", () => {
