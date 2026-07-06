@@ -1,6 +1,7 @@
 /**
  * Client-side curriculum search over pre-built search-index.json (no external API).
  */
+import { loadContentJSON } from "./content-loader.js";
 import { buildLearnUrl } from "./progress.js";
 import { clearChildren, el, escapeHtml } from "./security.js";
 
@@ -8,10 +9,7 @@ let indexCache = null;
 
 export async function loadSearchIndex() {
   if (indexCache) return indexCache;
-  const res = await fetch("content/search-index.json", { credentials: "same-origin", cache: "no-cache" });
-  if (!res.ok) throw new Error("Search index not available");
-  const data = await res.json();
-  indexCache = data;
+  indexCache = await loadContentJSON("content/search-index.json");
   return indexCache;
 }
 

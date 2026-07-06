@@ -1,13 +1,16 @@
 /**
  * "New since last visit" — compares local lastSeenCommit to synced curriculum.
  */
+import { loadContentJSON } from "./content-loader.js";
 import { getLastSeenCommit, markVisitSeen, storageAvailable } from "./progress.js";
 import { clearChildren, el } from "./security.js";
 
 export async function loadChangelog() {
-  const res = await fetch("content/changelog.json", { credentials: "same-origin", cache: "no-cache" });
-  if (!res.ok) return null;
-  return res.json();
+  try {
+    return await loadContentJSON("content/changelog.json");
+  } catch {
+    return null;
+  }
 }
 
 export function getUpdatesSinceLastVisit(changelog, lastSeen) {
