@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-05T11:29:11.593Z",
+  "syncedAt": "2026-07-06T00:29:49.024Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 265,
   "modules": [
@@ -758,16 +758,16 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Time Series Exercises (Practice Pack)",
-          "source": "15-time-series-analysis/exercises/README.md",
+          "title": "Module 15: Time Series Analysis",
+          "source": "15-time-series-analysis/README.md",
           "path": "modules/15-time-series-analysis/readme.json",
           "readingMinutes": 2
         },
         {
-          "id": "readme",
-          "title": "Module 15: Time Series Analysis",
-          "source": "15-time-series-analysis/README.md",
-          "path": "modules/15-time-series-analysis/readme.json",
+          "id": "exercises",
+          "title": "Time Series Exercises (Practice Pack)",
+          "source": "15-time-series-analysis/exercises/README.md",
+          "path": "modules/15-time-series-analysis/exercises.json",
           "readingMinutes": 2
         },
         {
@@ -814,52 +814,52 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Project 6: Customer Data Dashboard with Streamlit",
-          "source": "16-projects-beginner/project-06-customer-dashboard/README.md",
-          "path": "modules/16-projects-beginner/readme.json",
-          "readingMinutes": 3
-        },
-        {
-          "id": "readme",
-          "title": "Project 5: Wine Quality Prediction",
-          "source": "16-projects-beginner/project-05-wine-quality/README.md",
-          "path": "modules/16-projects-beginner/readme.json",
-          "readingMinutes": 3
-        },
-        {
-          "id": "readme",
-          "title": "Project 4: Spam Email Detection",
-          "source": "16-projects-beginner/project-04-spam-detection/README.md",
-          "path": "modules/16-projects-beginner/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
-          "title": "Project 3: Titanic Survival Prediction",
-          "source": "16-projects-beginner/project-03-titanic-survival/README.md",
-          "path": "modules/16-projects-beginner/readme.json",
-          "readingMinutes": 3
-        },
-        {
-          "id": "readme",
-          "title": "Project 2: Iris Flower Classification",
-          "source": "16-projects-beginner/project-02-iris-classification/README.md",
-          "path": "modules/16-projects-beginner/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
-          "title": "Project 1: House Price Prediction",
-          "source": "16-projects-beginner/project-01-house-price-prediction/README.md",
-          "path": "modules/16-projects-beginner/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
           "title": "Beginner Projects",
           "source": "16-projects-beginner/README.md",
           "path": "modules/16-projects-beginner/readme.json",
           "readingMinutes": 4
+        },
+        {
+          "id": "project-01-house-price-prediction",
+          "title": "Project 1: House Price Prediction",
+          "source": "16-projects-beginner/project-01-house-price-prediction/README.md",
+          "path": "modules/16-projects-beginner/project-01-house-price-prediction.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-02-iris-classification",
+          "title": "Project 2: Iris Flower Classification",
+          "source": "16-projects-beginner/project-02-iris-classification/README.md",
+          "path": "modules/16-projects-beginner/project-02-iris-classification.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-03-titanic-survival",
+          "title": "Project 3: Titanic Survival Prediction",
+          "source": "16-projects-beginner/project-03-titanic-survival/README.md",
+          "path": "modules/16-projects-beginner/project-03-titanic-survival.json",
+          "readingMinutes": 3
+        },
+        {
+          "id": "project-04-spam-detection",
+          "title": "Project 4: Spam Email Detection",
+          "source": "16-projects-beginner/project-04-spam-detection/README.md",
+          "path": "modules/16-projects-beginner/project-04-spam-detection.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-05-wine-quality",
+          "title": "Project 5: Wine Quality Prediction",
+          "source": "16-projects-beginner/project-05-wine-quality/README.md",
+          "path": "modules/16-projects-beginner/project-05-wine-quality.json",
+          "readingMinutes": 3
+        },
+        {
+          "id": "project-06-customer-dashboard",
+          "title": "Project 6: Customer Data Dashboard with Streamlit",
+          "source": "16-projects-beginner/project-06-customer-dashboard/README.md",
+          "path": "modules/16-projects-beginner/project-06-customer-dashboard.json",
+          "readingMinutes": 3
         },
         {
           "id": "projects-beginner",
@@ -898,66 +898,66 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Project 8: Ensemble Methods Comparison Project",
-          "source": "17-projects-intermediate/project-08-ensemble-comparison/README.md",
-          "path": "modules/17-projects-intermediate/readme.json",
-          "readingMinutes": 4
-        },
-        {
-          "id": "readme",
-          "title": "Project 7: Feature Engineering Mastery Project",
-          "source": "17-projects-intermediate/project-07-feature-engineering/README.md",
-          "path": "modules/17-projects-intermediate/readme.json",
-          "readingMinutes": 4
-        },
-        {
-          "id": "readme",
-          "title": "Project 6: Time Series Forecasting",
-          "source": "17-projects-intermediate/project-06-time-series-forecasting/README.md",
-          "path": "modules/17-projects-intermediate/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
-          "title": "Project 5: Customer Segmentation",
-          "source": "17-projects-intermediate/project-05-customer-segmentation/README.md",
-          "path": "modules/17-projects-intermediate/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
-          "title": "Project 4: Credit Card Fraud Detection",
-          "source": "17-projects-intermediate/project-04-fraud-detection/README.md",
-          "path": "modules/17-projects-intermediate/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
-          "title": "Project 3: Movie Recommendation System",
-          "source": "17-projects-intermediate/project-03-movie-recommendation/README.md",
-          "path": "modules/17-projects-intermediate/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
-          "title": "Project 2: Customer Churn Prediction",
-          "source": "17-projects-intermediate/project-02-customer-churn/README.md",
-          "path": "modules/17-projects-intermediate/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
-          "title": "Project 1: Handwritten Digit Recognition (MNIST)",
-          "source": "17-projects-intermediate/project-01-mnist-digit-recognition/README.md",
-          "path": "modules/17-projects-intermediate/readme.json",
-          "readingMinutes": 2
-        },
-        {
-          "id": "readme",
           "title": "Intermediate Projects",
           "source": "17-projects-intermediate/README.md",
           "path": "modules/17-projects-intermediate/readme.json",
           "readingMinutes": 5
+        },
+        {
+          "id": "project-01-mnist-digit-recognition",
+          "title": "Project 1: Handwritten Digit Recognition (MNIST)",
+          "source": "17-projects-intermediate/project-01-mnist-digit-recognition/README.md",
+          "path": "modules/17-projects-intermediate/project-01-mnist-digit-recognition.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-02-customer-churn",
+          "title": "Project 2: Customer Churn Prediction",
+          "source": "17-projects-intermediate/project-02-customer-churn/README.md",
+          "path": "modules/17-projects-intermediate/project-02-customer-churn.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-03-movie-recommendation",
+          "title": "Project 3: Movie Recommendation System",
+          "source": "17-projects-intermediate/project-03-movie-recommendation/README.md",
+          "path": "modules/17-projects-intermediate/project-03-movie-recommendation.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-04-fraud-detection",
+          "title": "Project 4: Credit Card Fraud Detection",
+          "source": "17-projects-intermediate/project-04-fraud-detection/README.md",
+          "path": "modules/17-projects-intermediate/project-04-fraud-detection.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-05-customer-segmentation",
+          "title": "Project 5: Customer Segmentation",
+          "source": "17-projects-intermediate/project-05-customer-segmentation/README.md",
+          "path": "modules/17-projects-intermediate/project-05-customer-segmentation.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-06-time-series-forecasting",
+          "title": "Project 6: Time Series Forecasting",
+          "source": "17-projects-intermediate/project-06-time-series-forecasting/README.md",
+          "path": "modules/17-projects-intermediate/project-06-time-series-forecasting.json",
+          "readingMinutes": 2
+        },
+        {
+          "id": "project-07-feature-engineering",
+          "title": "Project 7: Feature Engineering Mastery Project",
+          "source": "17-projects-intermediate/project-07-feature-engineering/README.md",
+          "path": "modules/17-projects-intermediate/project-07-feature-engineering.json",
+          "readingMinutes": 4
+        },
+        {
+          "id": "project-08-ensemble-comparison",
+          "title": "Project 8: Ensemble Methods Comparison Project",
+          "source": "17-projects-intermediate/project-08-ensemble-comparison/README.md",
+          "path": "modules/17-projects-intermediate/project-08-ensemble-comparison.json",
+          "readingMinutes": 4
         }
       ],
       "title": "Intermediate Projects",
@@ -966,76 +966,6 @@
     {
       "slug": "18-projects-advanced",
       "lessons": [
-        {
-          "id": "readme",
-          "title": "Project 9: Model Deployment & Serving Project",
-          "source": "18-projects-advanced/project-09-model-deployment/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 4
-        },
-        {
-          "id": "readme",
-          "title": "Project 8: Model Explainability & Interpretability Project",
-          "source": "18-projects-advanced/project-08-model-explainability/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 4
-        },
-        {
-          "id": "readme",
-          "title": "Project 7: Generative Model (GAN/VAE)",
-          "source": "18-projects-advanced/project-07-generative-model/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 1
-        },
-        {
-          "id": "readme",
-          "title": "Project 6: End-to-End ML Pipeline",
-          "source": "18-projects-advanced/project-06-end-to-end-pipeline/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 1
-        },
-        {
-          "id": "readme",
-          "title": "Project 5: Object Detection",
-          "source": "18-projects-advanced/project-05-object-detection/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 1
-        },
-        {
-          "id": "readme",
-          "title": "Project 4: Chatbot Development",
-          "source": "18-projects-advanced/project-04-chatbot/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 1
-        },
-        {
-          "id": "readme",
-          "title": "Project 3: Time Series Forecasting (Advanced)",
-          "source": "18-projects-advanced/project-03-time-series-forecasting/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 1
-        },
-        {
-          "id": "readme",
-          "title": "Project 2: Sentiment Analysis on Reviews",
-          "source": "18-projects-advanced/project-02-sentiment-analysis/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 1
-        },
-        {
-          "id": "readme",
-          "title": "Project 1: Image Classification (CIFAR-10)",
-          "source": "18-projects-advanced/project-01-cifar10-classification/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 1
-        },
-        {
-          "id": "readme",
-          "title": "Capstone Blueprints (Industry-Ready, GDPR-Safe)",
-          "source": "18-projects-advanced/capstones/README.md",
-          "path": "modules/18-projects-advanced/readme.json",
-          "readingMinutes": 1
-        },
         {
           "id": "readme",
           "title": "Advanced Projects",
@@ -1063,6 +993,76 @@
           "source": "18-projects-advanced/capstones/capstone-ml-engineer.md",
           "path": "modules/18-projects-advanced/capstone-ml-engineer.json",
           "readingMinutes": 3
+        },
+        {
+          "id": "capstones",
+          "title": "Capstone Blueprints (Industry-Ready, GDPR-Safe)",
+          "source": "18-projects-advanced/capstones/README.md",
+          "path": "modules/18-projects-advanced/capstones.json",
+          "readingMinutes": 1
+        },
+        {
+          "id": "project-01-cifar10-classification",
+          "title": "Project 1: Image Classification (CIFAR-10)",
+          "source": "18-projects-advanced/project-01-cifar10-classification/README.md",
+          "path": "modules/18-projects-advanced/project-01-cifar10-classification.json",
+          "readingMinutes": 1
+        },
+        {
+          "id": "project-02-sentiment-analysis",
+          "title": "Project 2: Sentiment Analysis on Reviews",
+          "source": "18-projects-advanced/project-02-sentiment-analysis/README.md",
+          "path": "modules/18-projects-advanced/project-02-sentiment-analysis.json",
+          "readingMinutes": 1
+        },
+        {
+          "id": "project-03-time-series-forecasting",
+          "title": "Project 3: Time Series Forecasting (Advanced)",
+          "source": "18-projects-advanced/project-03-time-series-forecasting/README.md",
+          "path": "modules/18-projects-advanced/project-03-time-series-forecasting.json",
+          "readingMinutes": 1
+        },
+        {
+          "id": "project-04-chatbot",
+          "title": "Project 4: Chatbot Development",
+          "source": "18-projects-advanced/project-04-chatbot/README.md",
+          "path": "modules/18-projects-advanced/project-04-chatbot.json",
+          "readingMinutes": 1
+        },
+        {
+          "id": "project-05-object-detection",
+          "title": "Project 5: Object Detection",
+          "source": "18-projects-advanced/project-05-object-detection/README.md",
+          "path": "modules/18-projects-advanced/project-05-object-detection.json",
+          "readingMinutes": 1
+        },
+        {
+          "id": "project-06-end-to-end-pipeline",
+          "title": "Project 6: End-to-End ML Pipeline",
+          "source": "18-projects-advanced/project-06-end-to-end-pipeline/README.md",
+          "path": "modules/18-projects-advanced/project-06-end-to-end-pipeline.json",
+          "readingMinutes": 1
+        },
+        {
+          "id": "project-07-generative-model",
+          "title": "Project 7: Generative Model (GAN/VAE)",
+          "source": "18-projects-advanced/project-07-generative-model/README.md",
+          "path": "modules/18-projects-advanced/project-07-generative-model.json",
+          "readingMinutes": 1
+        },
+        {
+          "id": "project-08-model-explainability",
+          "title": "Project 8: Model Explainability & Interpretability Project",
+          "source": "18-projects-advanced/project-08-model-explainability/README.md",
+          "path": "modules/18-projects-advanced/project-08-model-explainability.json",
+          "readingMinutes": 4
+        },
+        {
+          "id": "project-09-model-deployment",
+          "title": "Project 9: Model Deployment & Serving Project",
+          "source": "18-projects-advanced/project-09-model-deployment/README.md",
+          "path": "modules/18-projects-advanced/project-09-model-deployment.json",
+          "readingMinutes": 4
         }
       ],
       "title": "Advanced Projects",
@@ -2048,7 +2048,7 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-05T11:29:11.593Z",
+    "contentSyncedAt": "2026-07-06T00:29:49.024Z",
     "sourceCommit": "152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
     "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
     "sourceCommitDate": "2026-07-05T12:05:58+02:00",

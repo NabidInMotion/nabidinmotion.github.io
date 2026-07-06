@@ -183,9 +183,15 @@ function addHeadingIds(html) {
   });
 }
 
-function lessonIdFromFile(filename) {
+function lessonIdFromRepoPath(repoPath) {
+  const parts = repoPath.split("/");
+  const filename = parts[parts.length - 1];
   const base = filename.replace(/\.md$/i, "");
-  return base.toLowerCase() === "readme" ? "readme" : base.replace(/\.md$/i, "");
+  if (base.toLowerCase() !== "readme") return base;
+  // <module>/README.md is the module overview
+  if (parts.length === 2) return "readme";
+  // Nested README.md (e.g. project folders) — unique id from parent directory
+  return parts[parts.length - 2];
 }
 
 function titleFromFilename(filename) {
@@ -269,7 +275,7 @@ function rewriteLinks(html, contextPath) {
       const slug = parts[0];
       const file = parts[parts.length - 1];
       if (file.endsWith(".md")) {
-        return `href="${toLearnHref(slug, lessonIdFromFile(file))}${hash}"`;
+        return `href="${toLearnHref(slug, lessonIdFromRepoPath(repoPath))}${hash}"`;
       }
       return `href="${toLearnHref(slug, "readme")}${hash}"`;
     }
@@ -304,8 +310,8 @@ function categorize(repoPath) {
     return {
       type: "module",
       module: top,
-      lessonId: lessonIdFromFile(path.basename(repoPath)),
-      outPath: path.join("modules", top, `${lessonIdFromFile(path.basename(repoPath))}.json`),
+      lessonId: lessonIdFromRepoPath(repoPath),
+      outPath: path.join("modules", top, `${lessonIdFromRepoPath(repoPath)}.json`),
     };
   }
   if (ROOT_GUIDES.has(repoPath)) {
