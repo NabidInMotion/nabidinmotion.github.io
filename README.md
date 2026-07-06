@@ -22,7 +22,81 @@ road-to-machine-learning          nabidinmotion (this repo)
 
 The live site at `nabidinmotion.github.io` serves pre-built JSON from `content/`. The browser never calls GitHub at runtime.
 
-**Publishing:** edit curriculum → sync locally → open a PR to `main` → Squash merge → GitHub Actions deploys `subscriber-site/` to `gh-pages`. Branch protection on `main` requires this PR step for all site changes.
+**Publishing:** edit curriculum → sync locally → open a PR to `main` → merge → GitHub Actions deploys `subscriber-site/` to [nabidinmotion.github.io](https://nabidinmotion.github.io). Branch protection on `main` requires a pull request for all changes.
+
+## Maintainer publish workflow
+
+Use this every time you update lessons or site code. **Do not push directly to `main`.**
+
+```text
+road-to-machine-learning          nabidinmotion (this repo)
+─────────────────────────          ─────────────────────────
+1. Edit markdown
+2. commit + push to main     →    3. npm run curriculum:sync
+                                  4. branch → commit → push → PR to main
+                                  5. merge PR → Deploy Study Hub runs
+                                  6. live site updates (~1–2 min)
+```
+
+### A. Curriculum changes (new or edited lessons)
+
+```bash
+# 1 — In road-to-machine-learning (separate repo)
+cd road-to-machine-learning
+# edit .md files
+git add .
+git commit -m "Update lesson X"
+git push origin main
+cd ..
+
+# 2 — In nabidinmotion (study hub)
+npm run curriculum:sync          # pull submodule + rebuild subscriber-site/content/
+npm run site                     # optional: preview at http://localhost:3080
+
+# 3 — Publish via pull request (required: main is protected)
+git checkout main
+git pull origin main
+git checkout -b sync/curriculum
+git add subscriber-site/content/ road-to-machine-learning
+git commit -m "Sync curriculum from road-to-machine-learning."
+git push -u origin HEAD
+
+# 4 — On GitHub: open PR → base: main → review diff → merge
+#     (use your remote name if not origin, e.g. git push -u brand HEAD)
+# 5 — Actions → Deploy Study Hub runs automatically after merge
+```
+
+### B. Site-only changes (JS, CSS, HTML, features)
+
+Skip `curriculum:sync` unless content also changed.
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/your-change
+# edit subscriber-site/ …
+git add .
+git commit -m "Describe the site change."
+git push -u origin HEAD
+# Open PR → merge to main → Deploy Study Hub runs
+```
+
+### What to include in each PR
+
+| You changed… | Stage in the PR |
+|--------------|-----------------|
+| Lesson markdown only | `subscriber-site/content/` + `road-to-machine-learning` submodule pointer |
+| Site UI or behaviour | Files under `subscriber-site/` (and `package.json` / scripts if needed) |
+| Both | Run `npm run curriculum:sync`, then commit content + site files together |
+
+### GitHub Actions (automatic after merge)
+
+| Workflow | When it runs | What it does |
+|----------|----------------|--------------|
+| **Deploy Study Hub** | Push to `main` touching `subscriber-site/` or deploy workflow | Builds artifact → deploys to GitHub Pages |
+| **Sync curriculum** | Manual, daily schedule, or optional cross-repo trigger | Rebuilds `content/` in CI — **fails on push to `main`** while branch protection is on; use the manual workflow above instead |
+
+The **Sync curriculum** Action is optional. Day-to-day publishing is: **push Road to ML → `npm run curriculum:sync` → PR to `main`**.
 
 ## Quick start
 
@@ -39,26 +113,7 @@ npm run site               # http://localhost:3080
 
 ## Working with the curriculum
 
-Edit lessons in `road-to-machine-learning/` — it is a full git clone of the curriculum repo. Only the maintainer publishes content. Commit and push from inside that folder, then sync and publish the study hub:
-
-```bash
-cd road-to-machine-learning
-# edit markdown
-git add .
-git commit -m "Update lesson X"
-git push origin main
-cd ..
-
-npm run curriculum:sync
-npm run site    # preview locally
-
-# publish to nabidinmotion.github.io
-git checkout -b sync/curriculum
-git add subscriber-site/content/ road-to-machine-learning
-git commit -m "Sync curriculum from road-to-machine-learning."
-git push -u origin sync/curriculum
-# Open PR on GitHub → Squash merge → Deploy Study Hub runs
-```
+`road-to-machine-learning/` is a git submodule (maintainer-only). See **[Maintainer publish workflow](#maintainer-publish-workflow)** for the full push → sync → PR steps.
 
 | Command | What it does |
 |---------|----------------|
@@ -95,7 +150,7 @@ Place the site logo at `subscriber-site/assets/logo.png`. It appears in the head
 
 Production is **GitHub Pages only** at [https://nabidinmotion.github.io](https://nabidinmotion.github.io).
 
-Deploy runs automatically when `subscriber-site/` changes on `main` (via `.github/workflows/deploy-pages.yml` → `gh-pages` branch).
+Deploy runs automatically when `subscriber-site/` changes on `main` (workflow: `.github/workflows/deploy-pages.yml`, source: **GitHub Actions** in repo Settings → Pages).
 
 For architecture, security, publishing workflow, and GDPR checklist, see [subscriber-site/README.md](subscriber-site/README.md).
 

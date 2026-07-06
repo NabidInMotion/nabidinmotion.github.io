@@ -135,21 +135,21 @@ Short reference: [`../CURRICULUM.md`](../CURRICULUM.md)
 
 ## Publishing to production
 
-`main` is protected by a GitHub ruleset (pull request required, force push blocked). **All changes reach the live site only after you merge a PR.**
+`main` is protected (pull request required). **All changes reach the live site only after you merge a PR.**
 
-Recommended workflow:
+Full step-by-step commands: **[Maintainer publish workflow](../README.md#maintainer-publish-workflow)** in the repo root README.
 
 ```text
 1. Edit curriculum (road-to-machine-learning) → push to its main
 2. npm run curriculum:sync          # rebuild subscriber-site/content/
-3. git checkout -b your-branch
-4. git add … → commit → push → open PR
+3. git checkout -b sync/curriculum  # or feature/your-change for site-only edits
+4. git add … → commit → push → open PR to main
 5. Review the diff (especially content/ for curriculum updates)
-6. Squash merge to main
+6. Merge PR
 7. Deploy Study Hub Action runs → nabidinmotion.github.io updates
 ```
 
-Site code changes (JS, CSS, HTML) follow the same PR → merge → deploy path.
+Site code changes (JS, CSS, HTML) follow the same PR → merge → deploy path (skip step 2 unless content changed too).
 
 ## Optional CI sync
 
