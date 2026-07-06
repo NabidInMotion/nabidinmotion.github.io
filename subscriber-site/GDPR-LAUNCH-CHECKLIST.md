@@ -8,7 +8,7 @@ Complete these steps before pointing your domain to production. The codebase is 
 - [x] No cookies, no analytics, no tracking scripts on the Study Hub
 - [x] No YouTube or Facebook embeds or third party thumbnail requests
 - [x] External links only on click (GitHub, YouTube, Facebook)
-- [x] Content Security Policy with strict `self` only sources
+- [x] Content Security Policy via meta tag on all HTML pages (`*.github.io` does not apply HTTP headers)
 - [x] German Datenschutzerklärung (`datenschutz.html`) incl. off-site monetization note
 - [x] Impressum (`impressum.html`) per § 5 DDG with Gewerbe and English summary
 - [x] Nutzungsbedingungen / Terms with open-source, at-your-own-risk, and link disclaimers
@@ -16,7 +16,7 @@ Complete these steps before pointing your domain to production. The codebase is 
 - [x] Terms acknowledgment banner and lesson content notices
 - [x] Progress export, import, and reset (local device only)
 - [x] Footer links on all pages
-- [x] Security headers for Netlify, Vercel, Azure, GitHub Pages
+- [x] HTTP security headers in `_headers`, `vercel.json`, `staticwebapp.config.json` (reference for forks / alt hosts; not applied on GitHub Pages)
 - [x] Contact email `nabidinmotionofficial@gmail.com` in legal pages and `security.txt`
 
 ## Tier 1 — Before go live (required)

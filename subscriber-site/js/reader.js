@@ -52,12 +52,6 @@ let currentTitle = "";
 let careerData = null;
 let selectedRoleId = "all";
 
-async function loadJSON(path) {
-  const res = await fetch(path, { credentials: "same-origin" });
-  if (!res.ok) throw new Error(`Failed to load ${path}`);
-  return res.json();
-}
-
 function parseRoute() {
   const params = new URLSearchParams(window.location.search);
   const guideId = params.get("g");
