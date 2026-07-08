@@ -15,6 +15,23 @@ const REFRESH_AFTER_DAYS = 30;
 const DEFAULT_WEEKLY_FOCUS_GOAL = 90;
 export const MAX_BOOKMARKS = 50;
 export const HOME_BOOKMARK_PREVIEW = 5;
+/** Full lesson notes in the reader panel (Markdown). */
+export const MAX_REFLECTION_LENGTH = 1500;
+/** Short “explain it back” popup — keeps retrieval prompts concise. */
+export const MAX_QUICK_REFLECTION_LENGTH = 500;
+export const MIN_REFLECTION_LENGTH = 2;
+export const MAX_REFLECTIONS = 100;
+/** Total characters across all saved notes on one device (abuse + storage guard). */
+export const MAX_REFLECTIONS_TOTAL_CHARS = 120_000;
+
+const REFLECTION_SAVE_COOLDOWN_MS = 900;
+const MAX_REFLECTION_SAVES_PER_WINDOW = 40;
+const REFLECTION_SAVE_WINDOW_MS = 60_000;
+const MAX_REPEAT_CHAR_RUN = 48;
+const MAX_URLS_IN_NOTE = 6;
+
+const reflectionSaveTimes = [];
+const reflectionLastSaveByKey = new Map();
 
 export const REFLECTION_PROMPTS = {
   summary: {
@@ -111,16 +128,135 @@ function normalizeBookmarks(raw) {
   return [...new Set(raw.filter(isValidProgressKey))].slice(0, MAX_BOOKMARKS);
 }
 
-function normalizeReflections(raw) {
+function normalizeReflections(raw, reflectionMetaRaw = null) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const meta =
+    reflectionMetaRaw && typeof reflectionMetaRaw === "object" && !Array.isArray(reflectionMetaRaw)
+      ? reflectionMetaRaw
+      : {};
   const out = {};
   for (const [key, text] of Object.entries(raw)) {
     if (!isValidProgressKey(key)) continue;
-    if (typeof text === "string" && text.trim()) {
-      out[key] = text.trim().slice(0, 500);
-    }
+    const validated = validateReflectionText(text);
+    if (validated.ok && validated.text) out[key] = validated.text;
   }
-  return out;
+  return capReflections(out, meta);
+}
+
+function capReflections(reflections, reflectionMeta = {}) {
+  const entries = Object.entries(reflections || {})
+    .filter(([, text]) => typeof text === "string" && text.trim())
+    .sort((a, b) => {
+      const atA =
+        typeof reflectionMeta[a[0]]?.at === "string" ? reflectionMeta[a[0]].at : "";
+      const atB =
+        typeof reflectionMeta[b[0]]?.at === "string" ? reflectionMeta[b[0]].at : "";
+      return atB.localeCompare(atA);
+    });
+  return Object.fromEntries(entries.slice(0, MAX_REFLECTIONS));
+}
+
+export function stripReflectionControlChars(text) {
+  return String(text ?? "")
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, "");
+}
+
+export function sanitizeReflectionText(text, maxLength = MAX_REFLECTION_LENGTH) {
+  const cap = Math.min(Math.max(Math.round(maxLength), MIN_REFLECTION_LENGTH), MAX_REFLECTION_LENGTH);
+  let cleaned = stripReflectionControlChars(text);
+  cleaned = cleaned.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
+  cleaned = cleaned.replace(/[^\S\n]+/g, " ");
+  return cleaned.trim().slice(0, cap);
+}
+
+function hasAbusiveRepetition(text) {
+  return new RegExp(`(.)\\1{${MAX_REPEAT_CHAR_RUN - 1},}`).test(text);
+}
+
+function countUrls(text) {
+  return (text.match(/https?:\/\/[^\s]+/gi) || []).length;
+}
+
+export function validateReflectionText(text, { maxLength = MAX_REFLECTION_LENGTH } = {}) {
+  const sanitized = sanitizeReflectionText(text, maxLength);
+  if (!sanitized) return { ok: true, text: "" };
+  if (sanitized.length < MIN_REFLECTION_LENGTH) {
+    return {
+      ok: false,
+      error: `Write at least ${MIN_REFLECTION_LENGTH} characters, or leave empty to clear.`,
+      text: sanitized,
+    };
+  }
+  if (hasAbusiveRepetition(sanitized)) {
+    return {
+      ok: false,
+      error: "Too much repeated text. Please write a short, genuine note.",
+      text: sanitized,
+    };
+  }
+  if (countUrls(sanitized) > MAX_URLS_IN_NOTE) {
+    return {
+      ok: false,
+      error: `Notes can include at most ${MAX_URLS_IN_NOTE} links.`,
+      text: sanitized,
+    };
+  }
+  return { ok: true, text: sanitized };
+}
+
+function reflectionsCharTotal(reflections) {
+  let total = 0;
+  for (const text of Object.values(reflections || {})) {
+    if (typeof text === "string") total += text.length;
+  }
+  return total;
+}
+
+function wouldExceedReflectionsBudget(reflections, key, newText) {
+  const current = reflections?.[key];
+  const priorLen = typeof current === "string" ? current.length : 0;
+  const nextLen = typeof newText === "string" ? newText.length : 0;
+  const nextTotal = reflectionsCharTotal(reflections) - priorLen + nextLen;
+  return nextTotal > MAX_REFLECTIONS_TOTAL_CHARS;
+}
+
+function checkReflectionRateLimit(key) {
+  const now = Date.now();
+  while (
+    reflectionSaveTimes.length &&
+    reflectionSaveTimes[0] < now - REFLECTION_SAVE_WINDOW_MS
+  ) {
+    reflectionSaveTimes.shift();
+  }
+  if (reflectionSaveTimes.length >= MAX_REFLECTION_SAVES_PER_WINDOW) {
+    return {
+      ok: false,
+      error: "Too many note saves in a short time. Please wait a minute and try again.",
+    };
+  }
+  const last = reflectionLastSaveByKey.get(key) || 0;
+  if (now - last < REFLECTION_SAVE_COOLDOWN_MS) {
+    return { ok: false, error: "Please wait a moment before saving again." };
+  }
+  return { ok: true };
+}
+
+function recordReflectionSave(key) {
+  const now = Date.now();
+  reflectionSaveTimes.push(now);
+  reflectionLastSaveByKey.set(key, now);
+}
+
+/** Test helper — resets in-memory save rate limits between unit tests. */
+export function resetReflectionLimitsForTests() {
+  reflectionSaveTimes.length = 0;
+  reflectionLastSaveByKey.clear();
+}
+
+function countReflections(state) {
+  return Object.values(state.reflections || {}).filter((t) => String(t).trim()).length;
 }
 
 function normalizeReflectionMeta(raw) {
@@ -202,7 +338,7 @@ function normalizeImportState(data) {
     focusMinutesThisWeek,
     focusWeekStart,
     confidenceAt: normalizeIsoMap(data.confidenceAt),
-    reflections: normalizeReflections(data.reflections),
+    reflections: normalizeReflections(data.reflections, data.reflectionMeta),
     reflectionMeta: normalizeReflectionMeta(data.reflectionMeta),
     weeklyLessonGoal:
       typeof data.weeklyLessonGoal === "number" && data.weeklyLessonGoal >= 0
@@ -382,11 +518,16 @@ export function setConfidence(key, level) {
 }
 
 export function getReflection(key) {
-  return loadRaw().reflections?.[key] || "";
+  const text = loadRaw().reflections?.[key] || "";
+  return sanitizeReflectionText(text);
 }
 
 export function getReflectionMeta(key) {
   return loadRaw().reflectionMeta?.[key] || null;
+}
+
+export function getReflectionCount() {
+  return countReflections(loadRaw());
 }
 
 export function pickReflectionPrompt(lessonKey) {
@@ -395,13 +536,40 @@ export function pickReflectionPrompt(lessonKey) {
   return ids[hash % ids.length];
 }
 
-export function setReflection(key, text, promptId = "summary") {
-  if (!isValidProgressKey(key)) return false;
+/** @returns {{ ok: true, text?: string } | { ok: false, error: string, text?: string }} */
+export function setReflection(key, text, promptId = "summary", { maxLength = MAX_REFLECTION_LENGTH } = {}) {
+  if (!isValidProgressKey(key)) {
+    return { ok: false, error: "Invalid lesson." };
+  }
+
+  const validated = validateReflectionText(text, { maxLength });
+  if (!validated.ok) return validated;
+
+  const trimmed = validated.text;
+  if (trimmed) {
+    const rate = checkReflectionRateLimit(key);
+    if (!rate.ok) return rate;
+  }
   const state = loadRaw();
   if (!state.reflections) state.reflections = {};
   if (!state.reflectionMeta) state.reflectionMeta = {};
-  const trimmed = typeof text === "string" ? text.trim().slice(0, 500) : "";
   const prompt = REFLECTION_PROMPT_IDS.has(promptId) ? promptId : "summary";
+  const isUpdate = Boolean(state.reflections[key]?.trim());
+
+  if (trimmed && !isUpdate && countReflections(state) >= MAX_REFLECTIONS) {
+    return {
+      ok: false,
+      error: `You can save at most ${MAX_REFLECTIONS} notes on this device. Clear an old note first.`,
+    };
+  }
+
+  if (trimmed && wouldExceedReflectionsBudget(state.reflections, key, trimmed)) {
+    return {
+      ok: false,
+      error: "Total note storage on this device is full. Shorten or clear older notes first.",
+    };
+  }
+
   if (!trimmed) {
     delete state.reflections[key];
     delete state.reflectionMeta[key];
@@ -409,7 +577,13 @@ export function setReflection(key, text, promptId = "summary") {
     state.reflections[key] = trimmed;
     state.reflectionMeta[key] = { prompt, at: new Date().toISOString() };
   }
-  return save(state);
+
+  if (!save(state)) {
+    return { ok: false, error: "Could not save — browser storage may be full or blocked." };
+  }
+
+  recordReflectionSave(key);
+  return { ok: true, text: trimmed };
 }
 
 export function getWeeklyLessonGoal() {

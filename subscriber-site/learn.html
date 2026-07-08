@@ -138,21 +138,38 @@
         <div class="lesson-notes-body">
           <p class="lesson-notes-prompt" id="lesson-notes-prompt"></p>
           <div class="lesson-notes-view" id="lesson-notes-view" hidden>
-            <p class="lesson-notes-text" id="lesson-notes-text"></p>
+            <div class="lesson-notes-text" id="lesson-notes-text"></div>
             <p class="lesson-notes-view-hint" id="lesson-notes-view-hint"></p>
             <div class="lesson-notes-actions">
               <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-edit">Edit note</button>
               <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-clear-view">Clear</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-export-pdf" hidden>Export PDF</button>
             </div>
           </div>
           <div class="lesson-notes-edit" id="lesson-notes-edit-wrap">
+            <div class="lesson-notes-toolbar" role="toolbar" aria-label="Note formatting">
+              <button type="button" class="lesson-notes-format-btn" data-note-format="bullet" title="Bullet list">• List</button>
+              <button type="button" class="lesson-notes-format-btn" data-note-format="heading" title="Heading">Heading</button>
+              <button type="button" class="lesson-notes-format-btn" data-note-format="bold" title="Bold"><strong>B</strong></button>
+              <button type="button" class="lesson-notes-format-btn" data-note-format="quote" title="Quote">Quote</button>
+              <button type="button" class="lesson-notes-format-btn" data-note-format="code" title="Code">Code</button>
+              <button type="button" class="lesson-notes-format-btn lesson-notes-preview-toggle" id="lesson-notes-preview-toggle" aria-pressed="false">Preview</button>
+            </div>
             <textarea
               id="lesson-notes-input"
               class="lesson-notes-input"
-              rows="3"
-              maxlength="500"
-              placeholder="Optional — one sentence helps memory. Saved on this device only."
+              rows="6"
+              maxlength="1500"
+              placeholder="Write your note here. Use the buttons above for bullets, headings, and more."
             ></textarea>
+            <div class="lesson-notes-live-preview lesson-notes-text" id="lesson-notes-live-preview" hidden aria-label="Note preview"></div>
+            <p class="lesson-notes-format-hint" id="lesson-notes-format-hint">
+              Tips: put quotes on their own line with <code>&gt; </code>, or use the Quote button. Bullets: <code>- </code>, headings: <code>## </code>, bold: <code>**text**</code>.
+            </p>
+            <p class="lesson-notes-privacy" id="lesson-notes-privacy">
+              Stored locally in your browser only. Export uses your device (print-to-PDF).
+            </p>
+            <p class="lesson-notes-hint" id="lesson-notes-hint" hidden aria-live="polite"></p>
             <div class="lesson-notes-actions">
               <button type="button" class="btn btn-primary btn-sm" id="lesson-notes-save">Save note</button>
               <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-cancel">Cancel</button>
@@ -202,6 +219,7 @@
       <h2 class="explain-prompt-title" id="explain-prompt-title">What did you learn?</h2>
       <p class="explain-prompt-desc" id="explain-prompt-desc">Optional — one sentence helps memory. Saved on this device only.</p>
       <textarea id="explain-prompt-input" class="explain-prompt-input" rows="3" maxlength="500" placeholder="In one sentence…"></textarea>
+      <p class="explain-prompt-status" id="explain-prompt-status" hidden role="status" aria-live="polite"></p>
       <div class="explain-prompt-actions">
         <button type="button" class="btn btn-primary btn-sm" id="explain-prompt-save">Save</button>
         <button type="button" class="btn btn-ghost btn-sm" id="explain-prompt-skip">Skip</button>

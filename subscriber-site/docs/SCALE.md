@@ -20,7 +20,8 @@ Implemented in `subscriber-site/js/`:
 | Progress import capped at 256 KB | `progress.js` |
 | Progress blob capped at 512 KB read/write | `progress.js` |
 | Lesson keys validated on load and import | `progress.js` |
-| Reflections max 500 chars | `progress.js` |
+| Reflections max 1,500 chars (lesson notes), 500 chars (quick popup) | `progress.js` |
+| Reflections capped at 100 notes / 120k chars per device | `progress.js` |
 | Career role IDs validated | `career-path.js` |
 | Search query max 120 chars, 8 tokens | `search.js` |
 | Lesson JSON max 2 MB per file | `content-loader.js` |
