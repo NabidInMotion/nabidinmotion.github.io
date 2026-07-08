@@ -16,6 +16,7 @@ const manifest = JSON.parse(
 
 function mockStorage() {
   let store = {};
+  let sessionStore = {};
   global.localStorage = {
     getItem: (k) => (Object.prototype.hasOwnProperty.call(store, k) ? store[k] : null),
     setItem: (k, v) => {
@@ -26,6 +27,18 @@ function mockStorage() {
     },
     clear: () => {
       store = {};
+    },
+  };
+  global.sessionStorage = {
+    getItem: (k) => (Object.prototype.hasOwnProperty.call(sessionStore, k) ? sessionStore[k] : null),
+    setItem: (k, v) => {
+      sessionStore[k] = String(v);
+    },
+    removeItem: (k) => {
+      delete sessionStore[k];
+    },
+    clear: () => {
+      sessionStore = {};
     },
   };
   global.window = {
@@ -87,6 +100,10 @@ async function run() {
     findInProgressLessons,
     findModuleNotYetLessons,
     getModuleConfidenceRollup,
+    buildPracticePath,
+    setPracticePathNext,
+    getPracticePathNext,
+    clearPracticePathNext,
     countReviewDue,
     isLessonReviewDue,
     isReviewSnoozed,
@@ -409,6 +426,44 @@ async function run() {
     assert.equal(items.length, 1);
     assert.equal(items[0].key, notYetKey);
     assert.equal(items[0].kind, "not_yet");
+  });
+
+  test("buildPracticePath pairs review with next lesson", () => {
+    localStorage.clear();
+    const mod = manifest.modules[0];
+    const reviewKey = lessonKey(mod.slug, mod.lessons[0].id);
+    const learnKey = lessonKey(mod.slug, mod.lessons[1]?.id || mod.lessons[0].id);
+    markLessonComplete(reviewKey, true, manifest);
+    markLessonComplete(learnKey, false, manifest);
+    setConfidence(reviewKey, 0);
+    const state = JSON.parse(localStorage.getItem("nim-study-progress"));
+    state.confidenceAt[reviewKey] = daysAgo(3);
+    localStorage.setItem("nim-study-progress", JSON.stringify(state));
+
+    const path = buildPracticePath(manifest);
+    assert.equal(path.steps.length, 2);
+    assert.equal(path.steps[0].step, "review");
+    assert.equal(path.steps[0].key, reviewKey);
+    assert.equal(path.steps[1].step, "learn");
+    assert.ok(path.nextAfterStart);
+  });
+
+  test("practice path next stores in sessionStorage", () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    const item = {
+      key: "01-python-for-data-science/readme",
+      module: "01-python-for-data-science",
+      lessonId: "readme",
+      type: "module",
+      title: "Module 01",
+      stepLabel: "New",
+    };
+    assert.equal(setPracticePathNext(item), true);
+    const got = getPracticePathNext();
+    assert.equal(got.key, item.key);
+    clearPracticePathNext();
+    assert.equal(getPracticePathNext(), null);
   });
 
   console.log(`\n${passed} tests passed`);
