@@ -7,6 +7,7 @@ const MAX_IMPORT_BYTES = 256 * 1024;
 const MAX_STORAGE_BYTES = 512 * 1024;
 const PROGRESS_KEY_RE = /^(guide\/[\w-]+|[\w-]+\/[\w-]+)$/;
 const PROJECT_ID_RE = /^(beginner|intermediate|advanced)-\d{2}$/;
+export const CONFIDENCE_LABELS = Object.freeze({ 0: "Not yet", 1: "Partly", 2: "Yes" });
 const CONFIDENCE_LEVELS = new Set([0, 1, 2]);
 const REFLECTION_PROMPT_IDS = new Set(["summary", "confused", "apply"]);
 const REVIEW_INTERVALS_NOT_YET = [1, 2, 4, 7];
@@ -1184,6 +1185,83 @@ export function getModuleProgress(moduleSlug, manifest) {
     isLessonComplete(lessonKey(moduleSlug, l.id))
   ).length;
   return { done, total, percent: total ? Math.round((done / total) * 100) : 0 };
+}
+
+/**
+ * Confidence counts and percentages for one module (rated lessons only).
+ */
+export function getModuleConfidenceRollup(moduleSlug, manifest) {
+  const mod = manifest?.modules?.find((m) => m.slug === moduleSlug);
+  if (!mod?.lessons?.length) {
+    return {
+      total: 0,
+      rated: 0,
+      notYet: 0,
+      partly: 0,
+      yes: 0,
+      unrated: 0,
+      percentYes: 0,
+      percentPartly: 0,
+      percentNotYet: 0,
+    };
+  }
+
+  const state = loadRaw();
+  let notYet = 0;
+  let partly = 0;
+  let yes = 0;
+  let unrated = 0;
+
+  for (const lesson of mod.lessons) {
+    const key = lessonKey(moduleSlug, lesson.id);
+    const level = state.confidence[key];
+    if (level === 0) notYet += 1;
+    else if (level === 1) partly += 1;
+    else if (level === 2) yes += 1;
+    else unrated += 1;
+  }
+
+  const total = mod.lessons.length;
+  const rated = notYet + partly + yes;
+
+  return {
+    total,
+    rated,
+    notYet,
+    partly,
+    yes,
+    unrated,
+    percentYes: rated ? Math.round((yes / rated) * 100) : 0,
+    percentPartly: rated ? Math.round((partly / rated) * 100) : 0,
+    percentNotYet: rated ? Math.round((notYet / rated) * 100) : 0,
+  };
+}
+
+/**
+ * Lessons in one module marked Not yet (confidence 0).
+ */
+export function findModuleNotYetLessons(moduleSlug, manifest, { limit = 12 } = {}) {
+  const mod = manifest?.modules?.find((m) => m.slug === moduleSlug);
+  if (!mod) return [];
+
+  const state = loadRaw();
+  const items = [];
+
+  for (const lesson of mod.lessons) {
+    const key = lessonKey(moduleSlug, lesson.id);
+    if (state.confidence[key] !== 0) continue;
+    items.push({
+      key,
+      type: "module",
+      module: moduleSlug,
+      lessonId: lesson.id,
+      title: lesson.title,
+      moduleTitle: mod.title,
+      kind: "not_yet",
+    });
+  }
+
+  return limit ? items.slice(0, limit) : items;
 }
 
 export function parseLessonKey(key, manifest) {

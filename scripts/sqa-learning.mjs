@@ -490,6 +490,41 @@ async function run() {
     `${confusedPanel.items} · ${confusedPanel.title || ""}`
   );
 
+  await page.evaluate(() => {
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    raw.confidence = raw.confidence || {};
+    raw.confidence["01-python-for-data-science/readme"] = 0;
+    raw.confidence["01-python-for-data-science/01-numpy"] = 2;
+    localStorage.setItem("nim-study-progress", JSON.stringify(raw));
+  });
+  await page.goto(`${BASE}/learn.html?m=01-python-for-data-science&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(400);
+  const checkpointNotYet = await page.evaluate(() => ({
+    banner: !!document.querySelector(".module-checkpoint-banner"),
+    list: document.querySelectorAll(".module-checkpoint-notyet-list a").length,
+    text: document.querySelector(".module-checkpoint-notyet-title")?.textContent || "",
+  }));
+  record(
+    "T2-07",
+    "Module readme checkpoint lists Not yet lessons",
+    checkpointNotYet.banner && checkpointNotYet.list >= 1 && checkpointNotYet.text.includes("Not yet"),
+    `${checkpointNotYet.list} links`
+  );
+
+  const sidebarRollup = await page.evaluate(() => ({
+    row: !!document.querySelector(".sidebar-module-confidence"),
+    chips: document.querySelectorAll(".sidebar-module-conf").length,
+    notYetLesson: !!document.querySelector(".sidebar-lessons a.lesson-not-yet"),
+  }));
+  record(
+    "T2-08",
+    "Sidebar shows module confidence rollup and lesson markers",
+    sidebarRollup.row && sidebarRollup.chips >= 1 && sidebarRollup.notYetLesson,
+    `${sidebarRollup.chips} chips`
+  );
+
   await browser.close();
 
   const failed = results.filter((r) => !r.pass).length;

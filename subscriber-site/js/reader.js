@@ -3,12 +3,15 @@
  */
 import {
   buildLearnUrl,
+  CONFIDENCE_LABELS,
   countReviewDue,
   DEFAULT_REFLECTION_PROMPT,
   exportProgress,
   findBookmarks,
   findFirstReviewDue,
+  findModuleNotYetLessons,
   getConfidence,
+  getModuleConfidenceRollup,
   getModuleProgress,
   getReflection,
   getReflectionMeta,
@@ -53,7 +56,7 @@ import {
   mountPrintButton,
   mountReaderKeyboard,
   mountReaderMeasureToggle,
-  renderCheckpointBanner,
+  renderModuleCheckpoint,
 } from "./reader-tools.js";
 import { mountSearch } from "./search.js";
 import { mountStudyAssistant } from "./study-assistant.js";
@@ -1183,6 +1186,31 @@ function renderSidebarGuides(container) {
   if (other.length) appendGuideGroup(container, "More", other, true);
 }
 
+function appendModuleConfidenceRollup(parent, moduleSlug) {
+  const rollup = getModuleConfidenceRollup(moduleSlug, manifest);
+  if (!rollup.rated) return;
+
+  const row = el("div", "sidebar-module-confidence");
+  row.setAttribute(
+    "aria-label",
+    `Confidence among ${rollup.rated} rated lessons: Yes ${rollup.percentYes} percent, Partly ${rollup.percentPartly} percent, Not yet ${rollup.percentNotYet} percent`
+  );
+
+  const segments = [
+    { cls: "sidebar-conf-yes", label: "Yes", percent: rollup.percentYes, count: rollup.yes },
+    { cls: "sidebar-conf-partly", label: "Partly", percent: rollup.percentPartly, count: rollup.partly },
+    { cls: "sidebar-conf-notyet", label: "Not yet", percent: rollup.percentNotYet, count: rollup.notYet },
+  ].filter((segment) => segment.count > 0);
+
+  for (const segment of segments) {
+    row.append(
+      el("span", `sidebar-module-conf ${segment.cls}`, `${segment.label} ${segment.percent}%`)
+    );
+  }
+
+  parent.append(row);
+}
+
 function renderSidebarModules(container) {
   clearChildren(container);
 
@@ -1210,16 +1238,30 @@ function renderSidebarModules(container) {
     summary.append(title, badge);
     group.append(summary);
 
+    appendModuleConfidenceRollup(group, mod.slug);
+
     const list = el("div", "sidebar-lessons");
     for (const lesson of mod.lessons) {
       const key = lessonKey(mod.slug, lesson.id);
       const done = isLessonComplete(key);
-      const a = el(
-        "a",
-        `${current?.type === "module" && current.module === mod.slug && current.lessonId === lesson.id ? "active" : ""}${done ? " done" : ""}`
-      );
+      const confidence = getConfidence(key);
+      const classes = [
+        current?.type === "module" && current.module === mod.slug && current.lessonId === lesson.id
+          ? "active"
+          : "",
+        done ? "done" : "",
+        confidence === 0 ? "lesson-not-yet" : "",
+        confidence === 1 ? "lesson-partly" : "",
+        confidence === 2 ? "lesson-yes" : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+      const a = el("a", classes);
       a.href = buildLearnUrl({ module: mod.slug, lessonId: lesson.id });
       a.textContent = lesson.title.length > 42 ? `${lesson.title.slice(0, 39)}…` : lesson.title;
+      if (confidence !== null) {
+        a.title = `Confidence: ${CONFIDENCE_LABELS[confidence] || "Rated"}`;
+      }
       list.append(a);
     }
     group.append(list);
@@ -1319,6 +1361,19 @@ function updateProgressUI() {
     : `${stats.completedCount} / ${stats.total} read (${stats.percent}%)`;
   fill.style.width = `${stats.percent}%`;
   fill.parentElement.setAttribute("aria-valuenow", String(stats.percent));
+}
+
+function updateModuleCheckpoint(route) {
+  const checkpointHost = document.getElementById("module-checkpoint");
+  if (!checkpointHost) return;
+  if (route?.type === "module" && route.lessonId === "readme" && route.mod) {
+    const quickRef = findQuickReferenceLesson(route.mod);
+    const notYetLessons = findModuleNotYetLessons(route.module, manifest);
+    renderModuleCheckpoint(checkpointHost, route.mod, { quickRef, notYetLessons });
+  } else {
+    checkpointHost.hidden = true;
+    clearChildren(checkpointHost);
+  }
 }
 
 function updateConfidenceUI(route) {
@@ -1494,19 +1549,7 @@ async function showLesson(route) {
   renderLessonLegal(content);
 
   const checkpointHost = document.getElementById("module-checkpoint");
-  if (checkpointHost) {
-    if (route.type === "module" && route.lessonId === "readme" && resolved.mod) {
-      const quickRef = findQuickReferenceLesson(resolved.mod);
-      if (quickRef) renderCheckpointBanner(checkpointHost, resolved.mod, quickRef);
-      else {
-        checkpointHost.hidden = true;
-        clearChildren(checkpointHost);
-      }
-    } else {
-      checkpointHost.hidden = true;
-      clearChildren(checkpointHost);
-    }
-  }
+  if (checkpointHost) updateModuleCheckpoint({ ...route, mod: resolved.mod });
 
   githubLink.href = content.githubUrl;
   githubLink.hidden = false;
@@ -1582,6 +1625,7 @@ function bindChrome() {
       updateMarkRead(current);
       updateConfidenceUI(current);
       updateBookmarkUI(current);
+      updateModuleCheckpoint(current);
     }
   });
 }
