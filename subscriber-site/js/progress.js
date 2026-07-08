@@ -1090,6 +1090,97 @@ export function findFirstIncomplete(manifest, moduleSlugs = null) {
   return null;
 }
 
+const PRACTICE_NEXT_KEY = "nim-practice-next";
+
+/**
+ * Interleaved study plan: one review (if due), then one new lesson on the path.
+ */
+export function buildPracticePath(manifest, moduleSlugs = null) {
+  const review = findFirstReviewDue(manifest, moduleSlugs);
+  let learn = null;
+
+  if (review) {
+    learn = findNextInPath(manifest, moduleSlugs, review);
+    if (learn?.key === review.key) learn = null;
+  }
+
+  if (!learn) {
+    const candidate = findFirstIncomplete(manifest, moduleSlugs);
+    if (candidate && candidate.key !== review?.key) {
+      learn = { ...candidate, kind: "learn" };
+    }
+  }
+
+  const steps = [];
+  if (review) {
+    steps.push({
+      ...review,
+      step: "review",
+      stepLabel: "Review",
+      stepHint: review.confidenceLabel
+        ? `${review.confidenceLabel} · due for revisit`
+        : "Due for revisit",
+    });
+  }
+  if (learn) {
+    steps.push({
+      ...learn,
+      step: "learn",
+      stepLabel: review ? "New" : "Learn",
+      stepHint: review ? "Next on your path" : "Next unread lesson on your path",
+    });
+  }
+
+  return {
+    steps,
+    hasReview: !!review,
+    hasLearn: !!learn,
+    start: steps[0] || null,
+    nextAfterStart: steps[1] || null,
+  };
+}
+
+export function setPracticePathNext(item) {
+  if (!item?.key) return false;
+  try {
+    sessionStorage.setItem(
+      PRACTICE_NEXT_KEY,
+      JSON.stringify({
+        key: item.key,
+        module: item.module || null,
+        lessonId: item.lessonId || null,
+        guideId: item.guideId || null,
+        type: item.type || "module",
+        title: item.title || "",
+        stepLabel: item.stepLabel || "Next",
+      })
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function getPracticePathNext() {
+  try {
+    const raw = sessionStorage.getItem(PRACTICE_NEXT_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (!data?.key || typeof data.key !== "string") return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export function clearPracticePathNext() {
+  try {
+    sessionStorage.removeItem(PRACTICE_NEXT_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 export function findContinueLesson(manifest, moduleSlugs = null) {
   const state = loadRaw();
   const allowed = moduleSlugs?.length ? new Set(moduleSlugs) : null;

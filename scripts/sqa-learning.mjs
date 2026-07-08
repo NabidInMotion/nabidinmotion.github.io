@@ -525,6 +525,45 @@ async function run() {
     `${sidebarRollup.chips} chips`
   );
 
+  await page.evaluate(() => {
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    raw.confidence = raw.confidence || {};
+    raw.confidenceAt = raw.confidenceAt || {};
+    raw.confidence["01-python-for-data-science/readme"] = 0;
+    raw.confidenceAt["01-python-for-data-science/readme"] = new Date(
+      Date.now() - 3 * 86400000
+    ).toISOString();
+    localStorage.setItem("nim-study-progress", JSON.stringify(raw));
+  });
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
+  await delay(400);
+  const practiceHome = await page.evaluate(() => ({
+    panel: !!document.querySelector(".learning-panel-practice"),
+    steps: document.querySelectorAll(".practice-path-item").length,
+    start: !!document.querySelector(".practice-path-start"),
+    title: document.querySelector(".learning-panel-practice .learning-panel-title")?.textContent || "",
+  }));
+  record(
+    "T3-01",
+    "Home shows practice path panel",
+    practiceHome.panel && practiceHome.steps >= 1 && practiceHome.start,
+    `${practiceHome.steps} steps · ${practiceHome.title}`
+  );
+
+  await page.click(".practice-path-start");
+  await delay(500);
+  const practiceReader = await page.evaluate(() => ({
+    pp: new URL(window.location.href).searchParams.get("pp"),
+    stored: !!sessionStorage.getItem("nim-practice-next"),
+    banner: !!document.getElementById("practice-path-banner"),
+  }));
+  record(
+    "T3-02",
+    "Start practice opens step 1 and stores step 2",
+    practiceReader.pp === "1" && practiceReader.stored,
+    `pp=${practiceReader.pp}`
+  );
+
   await browser.close();
 
   const failed = results.filter((r) => !r.pass).length;

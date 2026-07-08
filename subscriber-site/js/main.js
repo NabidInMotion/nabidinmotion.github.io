@@ -4,6 +4,7 @@
  */
 import {
   buildLearnUrl,
+  buildPracticePath,
   exportProgress,
   importProgress,
   findBookmarks,
@@ -33,6 +34,8 @@ import {
   resetProgress,
   setWeeklyFocusGoal,
   setWeeklyLessonGoal,
+  setPracticePathNext,
+  clearPracticePathNext,
   storageAvailable,
 } from "./progress.js";
 import { loadManifest, renderContentError } from "./content-loader.js";
@@ -477,8 +480,64 @@ function bookmarkKeysForHome(manifest) {
   return new Set(findBookmarks(manifest).map((item) => item.key));
 }
 
+function renderPracticePath(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const path = buildPracticePath(manifest, slugs?.length ? slugs : null);
+  if (!path.steps.length) return;
+
+  const section = el("div", "learning-panel learning-panel-practice");
+  section.append(
+    el("h3", "learning-panel-title", "Today's practice path"),
+    el(
+      "p",
+      "learning-panel-desc",
+      path.hasReview && path.hasLearn
+        ? "One review, then one new lesson. Interleaved practice on your career path."
+        : path.hasReview
+          ? "One review is due. Open it, then continue with the next unread lesson when ready."
+          : "No reviews due right now. Start with the next unread lesson on your path."
+    )
+  );
+
+  const list = el("ol", "practice-path-list");
+  for (const [index, step] of path.steps.entries()) {
+    const row = el("li", "practice-path-item");
+    row.append(el("span", "practice-path-step", String(index + 1)));
+    const body = el("div", "practice-path-body");
+    body.append(el("span", "practice-path-label", step.stepLabel));
+    const link = el("a", "practice-path-link");
+    link.href = lessonHref(step);
+    link.textContent = step.title;
+    body.append(link);
+    if (step.stepHint) {
+      body.append(el("span", "practice-path-meta", step.stepHint));
+    }
+    const mins = formatReadingMinutes(step.readingMinutes);
+    if (mins) body.append(el("span", "practice-path-meta", mins));
+    row.append(body);
+    list.append(row);
+  }
+  section.append(list);
+
+  const actions = el("div", "practice-path-actions");
+  const startBtn = el("a", "btn btn-primary practice-path-start");
+  const startHref = lessonHref(path.start);
+  startBtn.href = path.nextAfterStart ? `${startHref}${startHref.includes("?") ? "&" : "?"}pp=1` : startHref;
+  startBtn.textContent = path.steps.length > 1 ? "Start practice ::" : "Open lesson ::";
+  startBtn.addEventListener("click", () => {
+    if (path.nextAfterStart) setPracticePathNext(path.nextAfterStart);
+    else clearPracticePathNext();
+  });
+  actions.append(startBtn);
+  section.append(actions);
+
+  container.append(section);
+}
+
 function renderLearningExtras(container, manifest, roleId, careerData) {
   clearChildren(container);
+  renderPracticePath(container, manifest, roleId, careerData);
   renderWeeklyGoal(container);
   renderWeeklyFocusGoal(container);
   renderInProgressLessons(container, manifest, roleId, careerData);

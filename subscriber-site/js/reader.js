@@ -5,6 +5,8 @@ import {
   buildLearnUrl,
   CONFIDENCE_LABELS,
   countReviewDue,
+  clearPracticePathNext,
+  getPracticePathNext,
   DEFAULT_REFLECTION_PROMPT,
   exportProgress,
   findBookmarks,
@@ -165,6 +167,44 @@ function updateReviewDueBanner(route) {
   } else {
     banner.append(label);
   }
+}
+
+function updatePracticePathBanner(route) {
+  const banner = document.getElementById("practice-path-banner");
+  if (!banner) return;
+
+  const next = getPracticePathNext();
+  const key = currentKey(route);
+
+  if (!next) {
+    banner.hidden = true;
+    clearChildren(banner);
+    return;
+  }
+
+  if (key && next.key === key) {
+    clearPracticePathNext();
+    banner.hidden = true;
+    clearChildren(banner);
+    return;
+  }
+
+  clearChildren(banner);
+  banner.hidden = false;
+  const link = el("a", "practice-path-banner-link");
+  link.href = lessonHref(next);
+  link.textContent =
+    next.title?.length > 52 ? `${next.title.slice(0, 49)}…` : next.title || "Continue";
+  banner.append(
+    el("span", "practice-path-banner-label", `Practice path · ${next.stepLabel || "Next"}`),
+    document.createTextNode(" "),
+    link,
+    el(
+      "span",
+      "practice-path-banner-hint",
+      "Finish this lesson, then continue your session."
+    )
+  );
 }
 
 function notePromptId(key) {
@@ -1561,6 +1601,7 @@ async function showLesson(route) {
   updateBookmarkUI(route);
   updateLessonNotesUI(route);
   updateReviewDueBanner(route);
+  updatePracticePathBanner(route);
   renderSidebarBookmarks();
 
   const readingMinutes = resolved.meta.readingMinutes || content.readingMinutes || null;
@@ -1698,13 +1739,15 @@ async function init() {
       renderSidebarModules(document.getElementById("sidebar-modules"));
       renderSidebarBookmarks();
       updateProgressUI();
-      if (current) updateReviewDueBanner(current);
+      if (current)       updateReviewDueBanner(current);
+      updatePracticePathBanner(current);
     });
 
     onProgressChange(() => {
       if (!current || lessonNotesSaving) return;
       updateLessonNotesUI(current);
       updateReviewDueBanner(current);
+      updatePracticePathBanner(current);
       updateConfidenceUI(current);
     });
 
