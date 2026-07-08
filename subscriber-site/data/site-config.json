@@ -89,6 +89,11 @@
   },
   "studyGuides": [
     {
+      "title": "How to Use the Study Hub",
+      "description": "10-minute setup, the Read→Reproduce→Build loop, and how career paths, progress, and projects work together.",
+      "localGuide": "learn.html?g=how-to-use-the-study-hub"
+    },
+    {
       "title": "Getting Started",
       "description": "Complete your first ML project in about 30 minutes with the Iris classification walkthrough.",
       "href": "https://github.com/NabidAlam/road-to-machine-learning/blob/main/GETTING_STARTED.md"

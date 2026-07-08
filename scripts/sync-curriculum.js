@@ -31,6 +31,7 @@ const MODULE_RE = /^\d{2}-[a-z0-9-]+$/;
 const ROOT_GUIDES = new Set([
   "FOUNDATION_AND_JOB_READINESS.md",
   "GETTING_STARTED.md",
+  "HOW_TO_USE_THE_STUDY_HUB.md",
   "LEARNING_ROADMAP.md",
   "QUICK_START.md",
   "README.md",

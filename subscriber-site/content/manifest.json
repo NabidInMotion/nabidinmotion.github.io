@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-06T20:06:34.205Z",
+  "syncedAt": "2026-07-08T21:56:58.945Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
-  "totalLessons": 265,
+  "totalLessons": 268,
   "modules": [
     {
       "slug": "00-prerequisites",
@@ -12,7 +12,7 @@
           "title": "Module 00: Prerequisites",
           "source": "00-prerequisites/README.md",
           "path": "modules/00-prerequisites/readme.json",
-          "readingMinutes": 6
+          "readingMinutes": 7
         },
         {
           "id": "01-python-basics",
@@ -82,7 +82,7 @@
           "title": "Module 01: Python for Data Science",
           "source": "01-python-for-data-science/README.md",
           "path": "modules/01-python-for-data-science/readme.json",
-          "readingMinutes": 7
+          "readingMinutes": 9
         },
         {
           "id": "01-numpy",
@@ -194,7 +194,7 @@
           "title": "Module 02: Introduction to Machine Learning",
           "source": "02-introduction-to-ml/README.md",
           "path": "modules/02-introduction-to-ml/readme.json",
-          "readingMinutes": 4
+          "readingMinutes": 5
         },
         {
           "id": "common-pitfalls-best-practices",
@@ -1715,6 +1715,13 @@
       "readingMinutes": 9
     },
     {
+      "id": "foundation-and-job-readiness",
+      "title": "Foundation & Job Market Readiness",
+      "source": "FOUNDATION_AND_JOB_READINESS.md",
+      "path": "guides/foundation-and-job-readiness.json",
+      "readingMinutes": 5
+    },
+    {
       "id": "resources--full_stack_ai_engineer_roadmap",
       "title": "Full-Stack AI Engineer Blueprint (Beginner to Advanced)",
       "source": "resources/full_stack_ai_engineer_roadmap.md",
@@ -1748,6 +1755,13 @@
       "source": "GETTING_STARTED.md",
       "path": "guides/getting-started.json",
       "readingMinutes": 2
+    },
+    {
+      "id": "how-to-use-the-study-hub",
+      "title": "How to Use the Study Hub for Maximum Learning",
+      "source": "HOW_TO_USE_THE_STUDY_HUB.md",
+      "path": "guides/how-to-use-the-study-hub.json",
+      "readingMinutes": 5
     },
     {
       "id": "resources--imbalanced_data_cheatsheet",
@@ -1789,7 +1803,7 @@
       "title": "Learning Roadmap - Visual Guide",
       "source": "LEARNING_ROADMAP.md",
       "path": "guides/learning-roadmap.json",
-      "readingMinutes": 5
+      "readingMinutes": 6
     },
     {
       "id": "resources--llamaindex_guide",
@@ -2037,6 +2051,13 @@
       "readingMinutes": 3
     },
     {
+      "id": "time-series-learning-path",
+      "title": "Time Series: Pick One Path",
+      "source": "TIME_SERIES_LEARNING_PATH.md",
+      "path": "guides/time-series-learning-path.json",
+      "readingMinutes": 1
+    },
+    {
       "id": "resources--transformer_fine_tuning_guide",
       "title": "Transformer Fine-Tuning Comprehensive Guide",
       "source": "resources/transformer_fine_tuning_guide.md",
@@ -2048,11 +2069,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-06T20:06:34.205Z",
-    "sourceCommit": "152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/152cc96126e3e4e945ac7ccff7fcbd98a87d264f",
-    "sourceCommitDate": "2026-07-05T12:05:58+02:00",
-    "sourceCommitMessage": "Point study hub dispatch docs to NabidInMotion Pages repo.",
+    "contentSyncedAt": "2026-07-08T21:56:58.945Z",
+    "sourceCommit": "956b499cfe5e288ed4f9e20460286a2b7f68f863",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/956b499cfe5e288ed4f9e20460286a2b7f68f863",
+    "sourceCommitDate": "2026-07-08T23:49:48+02:00",
+    "sourceCommitMessage": "Merge pull request #4 from NabidAlam/fix/curriculum-pedagogy-review",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }

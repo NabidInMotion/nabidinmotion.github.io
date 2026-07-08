@@ -73,6 +73,7 @@ const REPO_BASE = "https://github.com/NabidAlam/road-to-machine-learning/tree/ma
 const PLAYLIST_INITIAL = 6;
 
 const GUIDE_LOCAL = {
+  "How to Use the Study Hub": "how-to-use-the-study-hub",
   "Getting Started": "getting-started",
   "Learning Roadmap": "learning-roadmap",
   "Quick Start": "quick-start",
