@@ -32,6 +32,7 @@ This is the on-site home for the [Road to Machine Learning](https://github.com/N
 | Reader | `learn.html` with sidebar, table of contents, and prev/next links |
 | Career paths | 12 roles from the GitHub README; filters modules and the reader sidebar |
 | Progress | Saved in `localStorage` on the device. Mark lessons read, confidence check-ins, bookmarks, spaced review, module milestones, weekly goals, export or reset |
+| Practice path | Home panel: one review (if due), then one new lesson. Start practice links step 1 and nudges step 2 in the reader |
 | Content sync | Markdown becomes sanitized HTML with Shiki syntax highlighting (`dark-plus`) |
 | Study assistant | Retrieval-only RAG: finds excerpts from synced lessons with source links (no LLM, no network) |
 | Legal pages | Datenschutz, Impressum, Nutzungsbedingungen, plus English privacy and terms |
