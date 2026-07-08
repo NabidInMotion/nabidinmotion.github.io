@@ -10,6 +10,16 @@ function record(id, name, pass, detail = "") {
   console.log(`[${pass ? "PASS" : "FAIL"}] ${id}: ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
+async function dismissPreReviewIfOpen(page) {
+  const open = await page.evaluate(
+    () => document.getElementById("pre-review-overlay")?.hidden === false
+  );
+  if (!open) return false;
+  await page.click("#pre-review-skip");
+  await delay(250);
+  return true;
+}
+
 async function run() {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -35,9 +45,11 @@ async function run() {
 
   // EC-03: Confidence persists after reload
   await page.goto(`${BASE}/learn.html?m=00-prerequisites&l=readme`, { waitUntil: "networkidle0" });
+  await dismissPreReviewIfOpen(page);
   await page.click('[data-confidence="1"]');
   await delay(200);
   await page.reload({ waitUntil: "networkidle0" });
+  await dismissPreReviewIfOpen(page);
   const conf = await page.evaluate(() =>
     document.querySelector('[data-confidence="1"]')?.classList.contains("active")
   );
@@ -45,6 +57,7 @@ async function run() {
 
   // EC-04: Confidence on guide pages
   await page.goto(`${BASE}/learn.html?g=learning-roadmap`, { waitUntil: "networkidle0" });
+  await dismissPreReviewIfOpen(page);
   const guideConf = await page.evaluate(() => {
     const wrap = document.getElementById("confidence-checkin");
     return { visible: wrap && !wrap.hidden };
@@ -82,6 +95,7 @@ async function run() {
 
   // EC-07: Search empty query hides results
   await page.goto(`${BASE}/learn.html?g=quick-start`, { waitUntil: "networkidle0" });
+  await dismissPreReviewIfOpen(page);
   await page.type("#sidebar-search", "xyznonexistent12345", { delay: 20 });
   await delay(400);
   const noResults = await page.evaluate(() =>
@@ -93,6 +107,7 @@ async function run() {
   await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
   const contHref = await page.$eval(".progress-rec-link, .progress-hero .btn-primary", (a) => a.href);
   const contRes = await page.goto(contHref, { waitUntil: "networkidle0" });
+  await dismissPreReviewIfOpen(page);
   const lessonLoaded = await page.evaluate(() =>
     !document.querySelector(".content-error") && document.getElementById("reader-content")?.textContent?.length > 50
   );

@@ -83,10 +83,16 @@ async function run() {
     MAX_QUICK_REFLECTION_LENGTH,
     MAX_REFLECTION_LENGTH,
     lessonKey,
+    findConfusedLessons,
     findInProgressLessons,
     countReviewDue,
     isLessonReviewDue,
+    isReviewSnoozed,
     findFirstReviewDue,
+    setReviewRecall,
+    getReviewRecall,
+    snoozeReview,
+    REVIEW_SNOOZE_DAYS,
     recordLessonOpened,
     resetReflectionLimitsForTests: resetLimits,
   } = p;
@@ -299,6 +305,61 @@ async function run() {
     assert.ok(countReviewDue(manifest) >= 1);
     assert.equal(isLessonReviewDue(key, manifest), true);
     assert.ok(findFirstReviewDue(manifest)?.key === key || countReviewDue(manifest) >= 1);
+  });
+
+  test("default note prompt is summary when unset", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    setReflection(key, "Default summary note");
+    const meta = JSON.parse(localStorage.getItem("nim-study-progress")).reflectionMeta[key];
+    assert.equal(meta.prompt, "summary");
+  });
+
+  test("findConfusedLessons filters confused prompt only", () => {
+    localStorage.clear();
+    const confusedKey = lessonKey("01-python-for-data-science", "readme");
+    const summaryKey = lessonKey("02-introduction-to-ml", "readme");
+    setReflection(confusedKey, "Still fuzzy on imports", "confused");
+    setReflection(summaryKey, "Got the gist", "summary");
+    const items = findConfusedLessons(manifest);
+    assert.equal(items.length, 1);
+    assert.equal(items[0].key, confusedKey);
+    assert.equal(items[0].kind, "confused");
+  });
+
+  test("snoozeReview hides lesson from review due", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    setConfidence(key, 0);
+    const state = JSON.parse(localStorage.getItem("nim-study-progress"));
+    state.confidenceAt[key] = daysAgo(3);
+    localStorage.setItem("nim-study-progress", JSON.stringify(state));
+    assert.equal(isLessonReviewDue(key, manifest), true);
+    assert.equal(snoozeReview(key, REVIEW_SNOOZE_DAYS), true);
+    assert.equal(isReviewSnoozed(key), true);
+    assert.equal(isLessonReviewDue(key, manifest), false);
+    assert.equal(countReviewDue(manifest), 0);
+  });
+
+  test("setConfidence clears review snooze", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    setConfidence(key, 0);
+    snoozeReview(key, REVIEW_SNOOZE_DAYS);
+    assert.equal(isReviewSnoozed(key), true);
+    setConfidence(key, 2);
+    assert.equal(isReviewSnoozed(key), false);
+  });
+
+  test("setReviewRecall validates and stores recall text", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    const saved = setReviewRecall(key, "pandas read_csv and dtypes");
+    assert.equal(saved.ok, true);
+    assert.equal(getReviewRecall(key), "pandas read_csv and dtypes");
+    const cleared = setReviewRecall(key, "   ");
+    assert.equal(cleared.ok, true);
+    assert.equal(getReviewRecall(key), "");
   });
 
   test("v2 import upgrades to v3 fields", async () => {

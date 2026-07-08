@@ -391,6 +391,10 @@ a:hover { text-decoration: underline; }
   border-color: rgba(59, 130, 246, 0.2);
 }
 
+.learning-panel-confused {
+  border-color: rgba(251, 191, 36, 0.22);
+}
+
 .weekly-goal-label {
   display: block;
   font-family: var(--font-mono);

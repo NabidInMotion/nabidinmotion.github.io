@@ -13,6 +13,16 @@ function record(id, name, pass, detail = "") {
   console.log(`[${icon}] ${id}: ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
+async function dismissPreReviewIfOpen(page) {
+  const open = await page.evaluate(
+    () => document.getElementById("pre-review-overlay")?.hidden === false
+  );
+  if (!open) return false;
+  await page.click("#pre-review-skip");
+  await delay(250);
+  return true;
+}
+
 async function run() {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -98,6 +108,7 @@ async function run() {
   // ── TC-07: Reader page loads ──
   jsErrors.length = 0;
   await page.goto(`${BASE}/learn.html?m=00-prerequisites&l=readme`, { waitUntil: "networkidle0", timeout: 20000 });
+  await dismissPreReviewIfOpen(page);
   record("TC-07", "Reader page loads without JS errors", jsErrors.length === 0, jsErrors.join("; ") || "clean");
 
   // ── TC-08: Confidence check-in ──
@@ -164,18 +175,18 @@ async function run() {
   }));
   record("TC-12", "Progress export/import/reset controls present", progressUtils.export && progressUtils.reset);
 
-  // ── TC-13: Schema v2 localStorage ──
+  // ── TC-13: Schema v3 localStorage ──
   const storage = await page.evaluate(() => {
     const raw = localStorage.getItem("nim-study-progress");
     if (!raw) return { ok: true, note: "no data yet" };
     try {
       const d = JSON.parse(raw);
-      return { ok: d.v === 2, note: `v=${d.v}, lessons=${d.completedLessons?.length}` };
+      return { ok: d.v === 3, note: `v=${d.v}, lessons=${d.completedLessons?.length}` };
     } catch {
       return { ok: false, note: "invalid json" };
     }
   });
-  record("TC-13", "Progress schema v2 in localStorage", storage.ok, storage.note);
+  record("TC-13", "Progress schema v3 in localStorage", storage.ok, storage.note);
 
   // ── TC-14: Reading minutes in manifest ──
   const manifestRes = await page.goto(`${BASE}/content/manifest.json`, { waitUntil: "networkidle0" });

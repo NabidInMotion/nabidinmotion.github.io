@@ -13,6 +13,29 @@ function record(id, name, pass, detail = "") {
   console.log(`[${pass ? "PASS" : "FAIL"}] ${id}: ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
+async function dismissPreReviewIfOpen(page) {
+  const open = await page.evaluate(
+    () => document.getElementById("pre-review-overlay")?.hidden === false
+  );
+  if (!open) return false;
+  await page.click("#pre-review-skip");
+  await delay(250);
+  return true;
+}
+
+async function ensureLessonNotesEditMode(page) {
+  await page.evaluate(() => {
+    const panel = document.getElementById("lesson-notes-panel");
+    if (panel) panel.open = true;
+    const editWrap = document.getElementById("lesson-notes-edit-wrap");
+    const view = document.getElementById("lesson-notes-view");
+    if (editWrap && view && editWrap.hidden) {
+      document.getElementById("lesson-notes-edit")?.click();
+    }
+  });
+  await delay(150);
+}
+
 async function run() {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -103,6 +126,7 @@ async function run() {
     timeout: 30000,
   });
   await delay(800);
+  await dismissPreReviewIfOpen(page);
 
   const readerTools = await page.evaluate(() => ({
     print: !!document.getElementById("reader-print"),
@@ -144,6 +168,7 @@ async function run() {
     waitUntil: "networkidle0",
   });
   await delay(600);
+  await dismissPreReviewIfOpen(page);
   await page.evaluate(() => {
     const cb = document.getElementById("mark-read");
     if (cb && !cb.checked) cb.click();
@@ -169,6 +194,7 @@ async function run() {
     waitUntil: "networkidle0",
   });
   await delay(800);
+  await dismissPreReviewIfOpen(page);
   const colab = await page.evaluate(() => {
     const link = [...document.querySelectorAll(".code-block-btn")].find((a) =>
       a.textContent?.includes("Colab")
@@ -182,10 +208,18 @@ async function run() {
     colab || "no notebook link (OK)"
   );
 
-  // Keyboard: j navigates next
+  // Keyboard: j navigates next (use a lesson that has a next page)
+  await page.goto(`${BASE}/learn.html?m=00-prerequisites&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(500);
+  await dismissPreReviewIfOpen(page);
+  await page.evaluate(() => document.body.focus());
   const beforeUrl = page.url();
+  const navPromise = page.waitForNavigation({ waitUntil: "networkidle0", timeout: 8000 }).catch(() => null);
   await page.keyboard.press("j");
-  await delay(400);
+  await navPromise;
+  await delay(300);
   const afterJ = page.url();
   record("LR-19", "j key advances to next lesson", afterJ !== beforeUrl, `${beforeUrl} -> ${afterJ}`);
 
@@ -201,6 +235,7 @@ async function run() {
     waitUntil: "networkidle0",
   });
   await delay(600);
+  await dismissPreReviewIfOpen(page);
 
   const assistantDom = await page.evaluate(() => ({
     panel: !!document.getElementById("study-assistant-panel"),
@@ -236,19 +271,30 @@ async function run() {
     waitUntil: "networkidle0",
   });
   await delay(500);
+  await dismissPreReviewIfOpen(page);
 
   await page.evaluate(() => {
-    const panel = document.getElementById("lesson-notes-panel");
-    if (panel) panel.open = true;
+    const key = "02-introduction-to-ml/readme";
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    if (raw.reflections?.[key]) {
+      delete raw.reflections[key];
+      if (raw.reflectionMeta) delete raw.reflectionMeta[key];
+      localStorage.setItem("nim-study-progress", JSON.stringify(raw));
+    }
   });
 
+  await ensureLessonNotesEditMode(page);
+
   const noteText = `SQA note ${Date.now()}`;
+  await page.click('.lesson-notes-type-btn[data-note-prompt="confused"]');
+  await delay(150);
   await page.evaluate((text) => {
     const input = document.getElementById("lesson-notes-input");
     if (input) input.value = text;
   }, noteText);
-  await page.click("#lesson-notes-save");
-  await delay(2800);
+  await delay(200);
+  await page.evaluate(() => document.getElementById("lesson-notes-save")?.click());
+  await delay(3000);
 
   const noteSave = await page.evaluate(() => ({
     status: document.getElementById("lesson-notes-status")?.textContent?.trim(),
@@ -274,7 +320,7 @@ async function run() {
     noteSave.viewVisible &&
       noteSave.editHidden &&
       noteSave.statusVisible &&
-      noteSave.status?.includes("continue reading"),
+      (noteSave.status?.includes("Study Hub home") || noteSave.status?.includes("continue reading")),
     noteSave.status || "no status"
   );
   record(
@@ -298,6 +344,7 @@ async function run() {
 
   await page.reload({ waitUntil: "networkidle0" });
   await delay(500);
+  await dismissPreReviewIfOpen(page);
 
   const afterReload = await page.evaluate((text) => {
     const panel = document.getElementById("lesson-notes-panel");
@@ -328,6 +375,119 @@ async function run() {
     "Study Hub home lists saved notes",
     homeNotes.panel && homeNotes.items > 0,
     `${homeNotes.items} notes`
+  );
+
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
+  await delay(400);
+  const homeConfused = await page.evaluate(() => ({
+    panel: !!document.querySelector(".learning-panel-confused"),
+    items: document.querySelectorAll(".learning-panel-confused .learning-panel-item").length,
+    excerpt: document.querySelector(".learning-panel-confused .learning-panel-note-excerpt")?.textContent || "",
+  }));
+  record(
+    "LN-07",
+    "Still unclear chip puts note on home Still unclear panel",
+    homeConfused.panel && homeConfused.items > 0 && homeConfused.excerpt.includes("SQA note"),
+    `${homeConfused.items} · ${homeConfused.excerpt.slice(0, 40)}`
+  );
+
+  // ── Tier 2a: pre-review recall + confused panel ──
+  await page.goto(`${BASE}/learn.html?m=02-introduction-to-ml&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(400);
+
+  const preReviewDom = await page.evaluate(() => ({
+    overlay: !!document.getElementById("pre-review-overlay"),
+    input: !!document.getElementById("pre-review-input"),
+    snooze: !!document.getElementById("pre-review-snooze"),
+  }));
+  record("T2-01", "Pre-review overlay in DOM", preReviewDom.overlay && preReviewDom.input);
+
+  const preReviewShown = await page.evaluate(
+    () => document.getElementById("pre-review-overlay")?.hidden === false
+  );
+  record(
+    "T2-02",
+    "Pre-review shows for review-due lesson",
+    preReviewShown === true,
+    preReviewShown ? "visible" : "hidden"
+  );
+
+  if (preReviewShown) {
+    await page.type("#pre-review-input", "Recall: supervised vs unsupervised.");
+    await page.click("#pre-review-continue");
+    await delay(300);
+  }
+  const afterContinue = await page.evaluate(() => ({
+    overlayHidden: document.getElementById("pre-review-overlay")?.hidden !== false,
+    mainVisible: getComputedStyle(document.querySelector(".reader-main")).visibility !== "hidden",
+    recall: JSON.parse(localStorage.getItem("nim-study-progress") || "{}").reviewRecall?.[
+      "02-introduction-to-ml/readme"
+    ]?.text,
+  }));
+  record("T2-03", "Pre-review continue reveals lesson", afterContinue.overlayHidden && afterContinue.mainVisible);
+  record(
+    "T2-04",
+    "Pre-review recall saved locally",
+    afterContinue.recall?.includes("supervised"),
+    afterContinue.recall || "empty"
+  );
+
+  await page.goto(`${BASE}/learn.html?m=01-python-for-data-science&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(400);
+  await page.evaluate(() => {
+    const key = "01-python-for-data-science/readme";
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    raw.confidence = raw.confidence || {};
+    raw.confidenceAt = raw.confidenceAt || {};
+    raw.confidence[key] = 0;
+    raw.confidenceAt[key] = new Date(Date.now() - 3 * 86400000).toISOString();
+    delete raw.reviewSnoozedUntil?.[key];
+    localStorage.setItem("nim-study-progress", JSON.stringify(raw));
+  });
+  await page.reload({ waitUntil: "networkidle0" });
+  await delay(400);
+  const snoozeTest = await page.evaluate(() => ({
+    shown: document.getElementById("pre-review-overlay")?.hidden === false,
+  }));
+  if (snoozeTest.shown) {
+    await page.click("#pre-review-snooze");
+    await delay(300);
+  }
+  const snoozed = await page.evaluate(() => {
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    const key = "01-python-for-data-science/readme";
+    return {
+      until: raw.reviewSnoozedUntil?.[key] || null,
+      due: raw.confidence?.[key] === 0,
+    };
+  });
+  record("T2-05", "Pre-review snooze writes reviewSnoozedUntil", !!snoozed.until, snoozed.until || "none");
+
+  await page.evaluate(() => {
+    const key = "02-introduction-to-ml/readme";
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    raw.reflections = raw.reflections || {};
+    raw.reflectionMeta = raw.reflectionMeta || {};
+    raw.reflections[key] = "Still fuzzy on train/test split";
+    raw.reflectionMeta[key] = { prompt: "confused", at: new Date().toISOString() };
+    localStorage.setItem("nim-study-progress", JSON.stringify(raw));
+  });
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
+  await delay(400);
+  const confusedPanel = await page.evaluate(() => ({
+    panel: !!document.querySelector(".learning-panel-confused"),
+    items: document.querySelectorAll(".learning-panel-confused .learning-panel-item").length,
+    title: document.querySelector(".learning-panel-confused .learning-panel-title")?.textContent,
+  }));
+  record(
+    "T2-06",
+    "Home shows Still unclear panel for tagged notes",
+    confusedPanel.panel && confusedPanel.items > 0,
+    `${confusedPanel.items} · ${confusedPanel.title || ""}`
   );
 
   await browser.close();
