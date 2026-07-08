@@ -179,14 +179,50 @@ function updateLessonNotesUI(route) {
   const promptId = meta?.prompt || pickReflectionPrompt(key);
   const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
   if (promptEl) {
-    promptEl.textContent = meta?.at
-      ? `${prompt.title} — saved ${formatSyncDate(meta.at) || "on this device"}`
+    const savedAt = meta?.at ? formatSavedAt(meta.at) : null;
+    promptEl.textContent = savedAt
+      ? `${prompt.title} — saved ${savedAt}`
       : prompt.title;
   }
   input.placeholder = prompt.placeholder;
   input.value = getReflection(key);
   if (clearBtn) clearBtn.hidden = !input.value.trim();
-  panel.open = !!input.value.trim();
+  panel.open = true;
+}
+
+function saveLessonNote() {
+  if (!current || !storageAvailable()) return false;
+  const input = document.getElementById("lesson-notes-input");
+  const saveBtn = document.getElementById("lesson-notes-save");
+  if (!input) return false;
+
+  const key = currentKey(current);
+  if (!key) return false;
+
+  const text = input.value.trim();
+  const promptId = getReflectionMeta(key)?.prompt || pickReflectionPrompt(key);
+  const ok = setReflection(key, text, promptId);
+  if (!ok) {
+    showLessonNotesStatus("Could not save — browser storage may be full or blocked.");
+    return false;
+  }
+
+  updateLessonNotesUI(current);
+  showLessonNotesStatus(
+    text ? "Note saved on this device." : "Note cleared on this device."
+  );
+
+  if (saveBtn) {
+    const prior = saveBtn.textContent;
+    saveBtn.textContent = "Saved";
+    saveBtn.disabled = true;
+    setTimeout(() => {
+      saveBtn.textContent = prior;
+      saveBtn.disabled = false;
+    }, 1500);
+  }
+
+  return true;
 }
 
 function bindLessonNotes() {
@@ -196,14 +232,9 @@ function bindLessonNotes() {
   const clearBtn = document.getElementById("lesson-notes-clear");
   if (!panel || !input || !storageAvailable()) return;
 
-  saveBtn?.addEventListener("click", () => {
-    if (!current) return;
-    const key = currentKey(current);
-    if (!key) return;
-    const text = input.value.trim();
-    const promptId = getReflectionMeta(key)?.prompt || pickReflectionPrompt(key);
-    setReflection(key, text, promptId);
-    updateLessonNotesUI(current);
+  saveBtn?.addEventListener("click", (event) => {
+    event.preventDefault();
+    saveLessonNote();
   });
 
   clearBtn?.addEventListener("click", () => {
@@ -214,6 +245,7 @@ function bindLessonNotes() {
     setReflection(key, "");
     input.value = "";
     updateLessonNotesUI(current);
+    showLessonNotesStatus("Note cleared on this device.");
   });
 
   input.addEventListener("input", () => {
@@ -223,7 +255,7 @@ function bindLessonNotes() {
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();
-      saveBtn?.click();
+      saveLessonNote();
     }
   });
 }
@@ -257,6 +289,33 @@ function stripBookmarksHash() {
 }
 
 let bookmarkNoticeTimer = null;
+let lessonNotesStatusTimer = null;
+
+function formatSavedAt(iso) {
+  if (!iso) return null;
+  try {
+    return new Date(iso).toLocaleString("de-DE", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return iso.slice(0, 16);
+  }
+}
+
+function showLessonNotesStatus(message) {
+  const node = document.getElementById("lesson-notes-status");
+  if (!node) return;
+  node.textContent = message;
+  node.hidden = false;
+  clearTimeout(lessonNotesStatusTimer);
+  lessonNotesStatusTimer = setTimeout(() => {
+    node.hidden = true;
+  }, 4000);
+}
 
 function showBookmarkNotice(message) {
   const node = document.getElementById("bookmark-notice");

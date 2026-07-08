@@ -232,6 +232,58 @@ async function run() {
   record("LR-24", "Study assistant links to lessons", assistantResults.hasLink);
   record("LR-25", "Study assistant shows snippet text", assistantResults.snippet);
 
+  await page.goto(`${BASE}/learn.html?m=02-introduction-to-ml&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(500);
+
+  await page.evaluate(() => {
+    const panel = document.getElementById("lesson-notes-panel");
+    if (panel) panel.open = true;
+  });
+
+  const noteText = `SQA note ${Date.now()}`;
+  await page.evaluate((text) => {
+    const input = document.getElementById("lesson-notes-input");
+    if (input) input.value = text;
+  }, noteText);
+  await page.click("#lesson-notes-save");
+  await delay(300);
+
+  const noteSave = await page.evaluate(() => ({
+    status: document.getElementById("lesson-notes-status")?.textContent?.trim(),
+    statusVisible: document.getElementById("lesson-notes-status")?.hidden === false,
+    button: document.getElementById("lesson-notes-save")?.textContent?.trim(),
+    prompt: document.getElementById("lesson-notes-prompt")?.textContent?.trim(),
+    stored: (() => {
+      try {
+        const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+        return raw.reflections?.["02-introduction-to-ml/readme"] || "";
+      } catch {
+        return "";
+      }
+    })(),
+  }));
+
+  record(
+    "LN-01",
+    "Save note shows confirmation status",
+    noteSave.statusVisible && noteSave.status?.includes("saved"),
+    noteSave.status || "no status"
+  );
+  record(
+    "LN-02",
+    "Save note persists to localStorage",
+    noteSave.stored === noteText,
+    noteSave.stored || "empty"
+  );
+  record(
+    "LN-03",
+    "Save note updates saved timestamp in prompt",
+    noteSave.prompt?.includes("saved") && /\d{1,2}:\d{2}/.test(noteSave.prompt || ""),
+    noteSave.prompt || "no prompt"
+  );
+
   await browser.close();
 
   const failed = results.filter((r) => !r.pass).length;

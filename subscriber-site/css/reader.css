@@ -988,6 +988,16 @@
   margin-top: 0.55rem;
 }
 
+.lesson-notes-status {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  color: var(--accent, #7eb8e8);
+}
+
+.lesson-notes-status[hidden] {
+  display: none !important;
+}
+
 /* ── Reader tools: narrow measure, code blocks, checkpoint, explain prompt ── */
 
 .reader-page.reader-narrow .reader-content {
