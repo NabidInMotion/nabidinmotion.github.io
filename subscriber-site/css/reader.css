@@ -935,6 +935,16 @@
   border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
   border-radius: 0.5rem;
   background: rgba(0, 0, 0, 0.15);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lesson-notes-panel--dirty {
+  border-color: rgba(232, 184, 126, 0.45);
+}
+
+.lesson-notes-panel--saved {
+  border-color: rgba(126, 232, 168, 0.55);
+  box-shadow: 0 0 0 1px rgba(126, 232, 168, 0.15);
 }
 
 .lesson-notes-summary {
@@ -989,9 +999,14 @@
 }
 
 .lesson-notes-status {
-  margin: 0.55rem 0 0;
-  font-size: 0.82rem;
-  color: var(--accent, #7eb8e8);
+  margin: 0.65rem 0 0;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #9ee8c0;
+  background: rgba(126, 232, 168, 0.1);
+  border: 1px solid rgba(126, 232, 168, 0.35);
 }
 
 .lesson-notes-status[hidden] {

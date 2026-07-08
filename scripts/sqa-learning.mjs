@@ -253,8 +253,12 @@ async function run() {
   const noteSave = await page.evaluate(() => ({
     status: document.getElementById("lesson-notes-status")?.textContent?.trim(),
     statusVisible: document.getElementById("lesson-notes-status")?.hidden === false,
+    statusInPanel: !!document
+      .getElementById("lesson-notes-panel")
+      ?.contains(document.getElementById("lesson-notes-status")),
     button: document.getElementById("lesson-notes-save")?.textContent?.trim(),
     prompt: document.getElementById("lesson-notes-prompt")?.textContent?.trim(),
+    panelSaved: document.getElementById("lesson-notes-panel")?.classList.contains("lesson-notes-panel--saved"),
     stored: (() => {
       try {
         const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
@@ -267,8 +271,10 @@ async function run() {
 
   record(
     "LN-01",
-    "Save note shows confirmation status",
-    noteSave.statusVisible && noteSave.status?.includes("saved"),
+    "Save note shows confirmation inside My note panel",
+    noteSave.statusVisible &&
+      noteSave.statusInPanel &&
+      noteSave.status?.includes("saved"),
     noteSave.status || "no status"
   );
   record(
@@ -279,10 +285,23 @@ async function run() {
   );
   record(
     "LN-03",
-    "Save note updates saved timestamp in prompt",
-    noteSave.prompt?.includes("saved") && /\d{1,2}:\d{2}/.test(noteSave.prompt || ""),
+    "Save note flashes prompt and panel saved state",
+    noteSave.prompt?.includes("✓") && noteSave.panelSaved,
     noteSave.prompt || "no prompt"
   );
+
+  await page.reload({ waitUntil: "networkidle0" });
+  await delay(500);
+  await page.evaluate(() => {
+    const panel = document.getElementById("lesson-notes-panel");
+    if (panel) panel.open = true;
+  });
+
+  const afterReload = await page.evaluate((text) => {
+    const input = document.getElementById("lesson-notes-input");
+    return input?.value?.trim() === text;
+  }, noteText);
+  record("LN-04", "Saved note survives page reload", afterReload === true);
 
   await browser.close();
 

@@ -161,7 +161,7 @@ function updateReviewDueBanner(route) {
   }
 }
 
-function updateLessonNotesUI(route) {
+function updateLessonNotesUI(route, { preserveStatus = false } = {}) {
   const panel = document.getElementById("lesson-notes-panel");
   const promptEl = document.getElementById("lesson-notes-prompt");
   const input = document.getElementById("lesson-notes-input");
@@ -178,7 +178,7 @@ function updateLessonNotesUI(route) {
   const meta = getReflectionMeta(key);
   const promptId = meta?.prompt || pickReflectionPrompt(key);
   const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
-  if (promptEl) {
+  if (promptEl && !preserveStatus) {
     const savedAt = meta?.at ? formatSavedAt(meta.at) : null;
     promptEl.textContent = savedAt
       ? `${prompt.title} — saved ${savedAt}`
@@ -188,12 +188,14 @@ function updateLessonNotesUI(route) {
   input.value = getReflection(key);
   if (clearBtn) clearBtn.hidden = !input.value.trim();
   panel.open = true;
+  panel.classList.remove("lesson-notes-panel--dirty");
 }
 
 function saveLessonNote() {
   if (!current || !storageAvailable()) return false;
   const input = document.getElementById("lesson-notes-input");
   const saveBtn = document.getElementById("lesson-notes-save");
+  const promptEl = document.getElementById("lesson-notes-prompt");
   if (!input) return false;
 
   const key = currentKey(current);
@@ -201,25 +203,35 @@ function saveLessonNote() {
 
   const text = input.value.trim();
   const promptId = getReflectionMeta(key)?.prompt || pickReflectionPrompt(key);
+  const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+
+  lessonNotesSaving = true;
   const ok = setReflection(key, text, promptId);
+  lessonNotesSaving = false;
+
   if (!ok) {
     showLessonNotesStatus("Could not save — browser storage may be full or blocked.");
     return false;
   }
 
   updateLessonNotesUI(current);
+  const savedLabel = new Date().toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  flashLessonNotesPrompt(promptEl, prompt.title, `✓ saved just now (${savedLabel})`);
   showLessonNotesStatus(
     text ? "Note saved on this device." : "Note cleared on this device."
   );
 
   if (saveBtn) {
     const prior = saveBtn.textContent;
-    saveBtn.textContent = "Saved";
+    saveBtn.textContent = "Saved ✓";
     saveBtn.disabled = true;
     setTimeout(() => {
       saveBtn.textContent = prior;
       saveBtn.disabled = false;
-    }, 1500);
+    }, 2000);
   }
 
   return true;
@@ -228,28 +240,31 @@ function saveLessonNote() {
 function bindLessonNotes() {
   const panel = document.getElementById("lesson-notes-panel");
   const input = document.getElementById("lesson-notes-input");
-  const saveBtn = document.getElementById("lesson-notes-save");
   const clearBtn = document.getElementById("lesson-notes-clear");
   if (!panel || !input || !storageAvailable()) return;
 
-  saveBtn?.addEventListener("click", (event) => {
-    event.preventDefault();
-    saveLessonNote();
-  });
-
-  clearBtn?.addEventListener("click", () => {
-    if (!current) return;
-    const key = currentKey(current);
-    if (!key) return;
-    if (!window.confirm("Clear your note for this lesson on this device?")) return;
-    setReflection(key, "");
-    input.value = "";
-    updateLessonNotesUI(current);
-    showLessonNotesStatus("Note cleared on this device.");
+  panel.addEventListener("click", (event) => {
+    if (event.target.closest("#lesson-notes-save")) {
+      event.preventDefault();
+      saveLessonNote();
+      return;
+    }
+    if (event.target.closest("#lesson-notes-clear")) {
+      event.preventDefault();
+      if (!current) return;
+      const key = currentKey(current);
+      if (!key) return;
+      if (!window.confirm("Clear your note for this lesson on this device?")) return;
+      setReflection(key, "");
+      input.value = "";
+      updateLessonNotesUI(current);
+      showLessonNotesStatus("Note cleared on this device.");
+    }
   });
 
   input.addEventListener("input", () => {
     if (clearBtn) clearBtn.hidden = !input.value.trim();
+    updateNotesDirtyState();
   });
 
   input.addEventListener("keydown", (event) => {
@@ -290,6 +305,8 @@ function stripBookmarksHash() {
 
 let bookmarkNoticeTimer = null;
 let lessonNotesStatusTimer = null;
+let lessonNotesPromptTimer = null;
+let lessonNotesSaving = false;
 
 function formatSavedAt(iso) {
   if (!iso) return null;
@@ -308,13 +325,48 @@ function formatSavedAt(iso) {
 
 function showLessonNotesStatus(message) {
   const node = document.getElementById("lesson-notes-status");
+  const panel = document.getElementById("lesson-notes-panel");
   if (!node) return;
   node.textContent = message;
   node.hidden = false;
+  panel?.classList.add("lesson-notes-panel--saved");
   clearTimeout(lessonNotesStatusTimer);
   lessonNotesStatusTimer = setTimeout(() => {
     node.hidden = true;
+    panel?.classList.remove("lesson-notes-panel--saved");
   }, 4000);
+  node.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function flashLessonNotesPrompt(promptEl, promptTitle, message) {
+  if (!promptEl) return;
+  clearTimeout(lessonNotesPromptTimer);
+  promptEl.textContent = `${promptTitle} — ${message}`;
+  lessonNotesPromptTimer = setTimeout(() => {
+    if (!current) return;
+    updateLessonNotesUI(current, { preserveStatus: true });
+  }, 2500);
+}
+
+function updateNotesDirtyState() {
+  const input = document.getElementById("lesson-notes-input");
+  const promptEl = document.getElementById("lesson-notes-prompt");
+  const panel = document.getElementById("lesson-notes-panel");
+  if (!input || !promptEl || !current || !panel || panel.hidden) return;
+  const key = currentKey(current);
+  if (!key) return;
+  const stored = getReflection(key);
+  const dirty = input.value.trim() !== stored;
+  panel.classList.toggle("lesson-notes-panel--dirty", dirty);
+  const meta = getReflectionMeta(key);
+  const promptId = meta?.prompt || pickReflectionPrompt(key);
+  const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+  const savedAt = meta?.at ? formatSavedAt(meta.at) : null;
+  if (!dirty && savedAt && !promptEl.textContent.includes("✓")) {
+    promptEl.textContent = `${prompt.title} — saved ${savedAt}`;
+  } else if (dirty) {
+    promptEl.textContent = `${prompt.title} — unsaved changes`;
+  }
 }
 
 function showBookmarkNotice(message) {
@@ -914,7 +966,7 @@ async function init() {
     });
 
     onProgressChange(() => {
-      if (!current) return;
+      if (!current || lessonNotesSaving) return;
       updateLessonNotesUI(current);
       updateReviewDueBanner(current);
       updateConfidenceUI(current);
