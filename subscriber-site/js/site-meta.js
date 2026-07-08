@@ -61,12 +61,11 @@ export function renderContentStamp(container, manifest) {
   const legalLine = document.createElement("p");
   legalLine.className = "content-stamp-legal";
   const isDe = (document.documentElement.lang || "en").toLowerCase().startsWith("de");
-  const rights = isDe ? "Alle Rechte vorbehalten." : "All rights reserved.";
   const edu = isDe
     ? "Nur zu Bildungszwecken · Keine Genauigkeitsgarantie · Nutzung auf eigenes Risiko"
     : "Educational only · No accuracy guarantee · Use at your own risk";
   legalLine.innerHTML =
-    `© Nabid In Motion. ${rights} · ${edu} · <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a> · <a href="terms.html">Terms (EN)</a>`;
+    `${edu} · <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a> · <a href="terms.html">Terms (EN)</a>`;
   container.append(legalLine);
 }
 
