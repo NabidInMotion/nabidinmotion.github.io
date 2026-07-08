@@ -29,10 +29,12 @@ const CURRICULUM_DIR = process.env.CURRICULUM_DIR || path.join(ROOT, "road-to-ma
 
 const MODULE_RE = /^\d{2}-[a-z0-9-]+$/;
 const ROOT_GUIDES = new Set([
+  "FOUNDATION_AND_JOB_READINESS.md",
   "GETTING_STARTED.md",
   "LEARNING_ROADMAP.md",
   "QUICK_START.md",
   "README.md",
+  "TIME_SERIES_LEARNING_PATH.md",
 ]);
 
 const SANITIZE = {

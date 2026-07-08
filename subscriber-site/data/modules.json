@@ -13,6 +13,12 @@
       "modules": ["01-python-for-data-science"]
     },
     {
+      "id": "1.5",
+      "name": "SQL & Databases",
+      "time": "1–3 months",
+      "modules": ["19-sql-database-fundamentals"]
+    },
+    {
       "id": "2",
       "name": "ML Basics",
       "time": "2–6 months",
@@ -52,7 +58,7 @@
       "id": "7.5",
       "name": "Essential Skills",
       "time": "1–4 months",
-      "modules": ["19-sql-database-fundamentals", "20-handling-imbalanced-data", "21-model-explainability"]
+      "modules": ["20-handling-imbalanced-data", "21-model-explainability"]
     },
     {
       "id": "8",
