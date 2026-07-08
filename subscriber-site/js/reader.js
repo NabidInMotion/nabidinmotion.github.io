@@ -7,6 +7,7 @@ import {
   countReviewDue,
   clearPracticePathNext,
   getPracticePathNext,
+  syncPracticePathNext,
   DEFAULT_REFLECTION_PROMPT,
   exportProgress,
   findBookmarks,
@@ -173,6 +174,7 @@ function updatePracticePathBanner(route) {
   const banner = document.getElementById("practice-path-banner");
   if (!banner) return;
 
+  if (manifest) syncPracticePathNext(manifest, roleModuleSlugs());
   const next = getPracticePathNext();
   const key = currentKey(route);
 
@@ -1662,12 +1664,15 @@ function bindChrome() {
     renderSidebarGuides(document.getElementById("sidebar-guides"));
     renderSidebarModules(document.getElementById("sidebar-modules"));
     renderSidebarBookmarks();
-    if (current) {
-      updateMarkRead(current);
-      updateConfidenceUI(current);
-      updateBookmarkUI(current);
-      updateModuleCheckpoint(current);
-    }
+    if (!current) return;
+    updateMarkRead(current);
+    updateConfidenceUI(current);
+    updateBookmarkUI(current);
+    updateModuleCheckpoint(current);
+    if (lessonNotesSaving) return;
+    updateLessonNotesUI(current);
+    updateReviewDueBanner(current);
+    updatePracticePathBanner(current);
   });
 }
 
@@ -1739,16 +1744,10 @@ async function init() {
       renderSidebarModules(document.getElementById("sidebar-modules"));
       renderSidebarBookmarks();
       updateProgressUI();
-      if (current)       updateReviewDueBanner(current);
-      updatePracticePathBanner(current);
-    });
-
-    onProgressChange(() => {
-      if (!current || lessonNotesSaving) return;
-      updateLessonNotesUI(current);
-      updateReviewDueBanner(current);
-      updatePracticePathBanner(current);
-      updateConfidenceUI(current);
+      if (current) {
+        updateReviewDueBanner(current);
+        updatePracticePathBanner(current);
+      }
     });
 
     let route = parseRoute();

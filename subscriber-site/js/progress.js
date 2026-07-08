@@ -696,6 +696,7 @@ function* iterLessons(manifest, moduleSlugs = null) {
 
 function buildReviewItem(state, item, type, now) {
   if (isReviewSnoozedKey(state, item.key)) return null;
+  if (!state.completedLessons.includes(item.key)) return null;
   const level = state.confidence[item.key];
   if (level !== 0 && level !== 1) return null;
   const at = state.confidenceAt?.[item.key];
@@ -1100,8 +1101,10 @@ export function buildPracticePath(manifest, moduleSlugs = null) {
   let learn = null;
 
   if (review) {
-    learn = findNextInPath(manifest, moduleSlugs, review);
-    if (learn?.key === review.key) learn = null;
+    const next = findNextInPath(manifest, moduleSlugs, review);
+    if (next?.key !== review.key && !isLessonComplete(next.key)) {
+      learn = { ...next, kind: "learn" };
+    }
   }
 
   if (!learn) {
@@ -1138,6 +1141,43 @@ export function buildPracticePath(manifest, moduleSlugs = null) {
     start: steps[0] || null,
     nextAfterStart: steps[1] || null,
   };
+}
+
+/**
+ * Practice path is only shown when a review is due.
+ * Learn-only paths duplicate the Continue/Start row in the progress hero.
+ *
+ * | Reviews due | Unread lessons | Panel |
+ * |-------------|----------------|-------|
+ * | No          | No             | Hidden (caught up) |
+ * | No          | Yes            | Hidden (use Continue/Start) |
+ * | Yes         | No             | Visible (review only) |
+ * | Yes         | Yes            | Visible (review + new) |
+ */
+export function shouldShowPracticePath(path) {
+  if (!path?.steps?.length) return false;
+  return path.hasReview;
+}
+
+/** Drop stale session step-2 when the current plan no longer includes it. */
+export function syncPracticePathNext(manifest, moduleSlugs = null) {
+  const next = getPracticePathNext();
+  if (!next) return;
+
+  if (!manifest) {
+    clearPracticePathNext();
+    return;
+  }
+
+  if (!parseLessonKey(next.key, manifest)) {
+    clearPracticePathNext();
+    return;
+  }
+
+  const path = buildPracticePath(manifest, moduleSlugs);
+  if (!path.steps.some((step) => step.key === next.key)) {
+    clearPracticePathNext();
+  }
 }
 
 export function setPracticePathNext(item) {
@@ -1480,6 +1520,7 @@ export function resetProgress() {
     "This cannot be undone.";
   if (!window.confirm(message)) return false;
 
+  clearPracticePathNext();
   const prior = loadRaw();
   const next = {
     ...defaultState(),
