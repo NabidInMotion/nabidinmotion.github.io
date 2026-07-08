@@ -36,6 +36,8 @@ import {
   setWeeklyLessonGoal,
   setPracticePathNext,
   clearPracticePathNext,
+  shouldShowPracticePath,
+  syncPracticePathNext,
   storageAvailable,
 } from "./progress.js";
 import { loadManifest, renderContentError } from "./content-loader.js";
@@ -483,8 +485,10 @@ function bookmarkKeysForHome(manifest) {
 function renderPracticePath(container, manifest, roleId, careerData) {
   if (!storageAvailable() || !manifest) return;
   const slugs = moduleSlugsForRole(roleId, careerData);
-  const path = buildPracticePath(manifest, slugs?.length ? slugs : null);
-  if (!path.steps.length) return;
+  const scoped = slugs?.length ? slugs : null;
+  syncPracticePathNext(manifest, scoped);
+  const path = buildPracticePath(manifest, scoped);
+  if (!shouldShowPracticePath(path)) return;
 
   const section = el("div", "learning-panel learning-panel-practice");
   section.append(

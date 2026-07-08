@@ -55,7 +55,12 @@ async function run() {
       "nim-study-progress",
       JSON.stringify({
         v: 2,
-        completedLessons: ["00-prerequisites/readme", "18-projects-advanced/project-08-model-explainability"],
+        completedLessons: [
+          "00-prerequisites/readme",
+          "02-introduction-to-ml/readme",
+          "guide/learning-roadmap",
+          "18-projects-advanced/project-08-model-explainability",
+        ],
         lastLesson: "18-projects-advanced/project-08-model-explainability",
         confidence: { "02-introduction-to-ml/readme": 1, "guide/learning-roadmap": 0 },
         confidenceAt: {
@@ -101,6 +106,87 @@ async function run() {
   }));
   record("LR-04", "Spaced review queue shown", review.panel, `${review.items} items`);
   record("LR-05", "Review queue titled Worth revisiting", review.title === "Worth revisiting", review.title);
+
+  // ── Tier 2a: pre-review recall (before other visits dismiss the overlay) ──
+  await page.goto(`${BASE}/learn.html?m=02-introduction-to-ml&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(400);
+
+  const preReviewDom = await page.evaluate(() => ({
+    overlay: !!document.getElementById("pre-review-overlay"),
+    input: !!document.getElementById("pre-review-input"),
+    snooze: !!document.getElementById("pre-review-snooze"),
+  }));
+  record("T2-01", "Pre-review overlay in DOM", preReviewDom.overlay && preReviewDom.input);
+
+  const preReviewShown = await page.evaluate(
+    () => document.getElementById("pre-review-overlay")?.hidden === false
+  );
+  record(
+    "T2-02",
+    "Pre-review shows for review-due lesson",
+    preReviewShown === true,
+    preReviewShown ? "visible" : "hidden"
+  );
+
+  if (preReviewShown) {
+    await page.type("#pre-review-input", "Recall: supervised vs unsupervised.");
+    await page.click("#pre-review-continue");
+    await delay(300);
+  }
+  const afterContinue = await page.evaluate(() => ({
+    overlayHidden: document.getElementById("pre-review-overlay")?.hidden !== false,
+    mainVisible: getComputedStyle(document.querySelector(".reader-main")).visibility !== "hidden",
+    recall: JSON.parse(localStorage.getItem("nim-study-progress") || "{}").reviewRecall?.[
+      "02-introduction-to-ml/readme"
+    ]?.text,
+  }));
+  record("T2-03", "Pre-review continue reveals lesson", afterContinue.overlayHidden && afterContinue.mainVisible);
+  record(
+    "T2-04",
+    "Pre-review recall saved locally",
+    afterContinue.recall?.includes("supervised"),
+    afterContinue.recall || "empty"
+  );
+
+  await page.goto(`${BASE}/learn.html?m=01-python-for-data-science&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(400);
+  await page.evaluate(() => {
+    const key = "01-python-for-data-science/readme";
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    raw.completedLessons = raw.completedLessons || [];
+    if (!raw.completedLessons.includes(key)) raw.completedLessons.push(key);
+    raw.confidence = raw.confidence || {};
+    raw.confidenceAt = raw.confidenceAt || {};
+    raw.confidence[key] = 0;
+    raw.confidenceAt[key] = new Date(Date.now() - 3 * 86400000).toISOString();
+    delete raw.reviewSnoozedUntil?.[key];
+    localStorage.setItem("nim-study-progress", JSON.stringify(raw));
+  });
+  await page.reload({ waitUntil: "networkidle0" });
+  await delay(400);
+  const snoozeTest = await page.evaluate(() => ({
+    shown: document.getElementById("pre-review-overlay")?.hidden === false,
+  }));
+  if (snoozeTest.shown) {
+    await page.click("#pre-review-snooze");
+    await delay(300);
+  }
+  const snoozed = await page.evaluate(() => {
+    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    const key = "01-python-for-data-science/readme";
+    return {
+      until: raw.reviewSnoozedUntil?.[key] || null,
+      due: raw.confidence?.[key] === 0,
+    };
+  });
+  record("T2-05", "Pre-review snooze writes reviewSnoozedUntil", !!snoozed.until, snoozed.until || "none");
+
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
+  await delay(400);
 
   const projectBridge = await page.evaluate(() => {
     const card = [...document.querySelectorAll(".project-card")].find((c) =>
@@ -163,8 +249,8 @@ async function run() {
   }));
   record("LR-15", "Code blocks get copy toolbar", codeBlocks.copyBtns > 0 || codeBlocks.wraps >= 0, `${codeBlocks.copyBtns} buttons`);
 
-  // Explain prompt on mark read
-  await page.goto(`${BASE}/learn.html?m=01-python-for-data-science&l=readme`, {
+  // Explain prompt on mark read (use a lesson not already marked read in earlier steps)
+  await page.goto(`${BASE}/learn.html?m=00-prerequisites&l=01-python-basics`, {
     waitUntil: "networkidle0",
   });
   await delay(600);
@@ -185,7 +271,7 @@ async function run() {
 
   const reflection = await page.evaluate(() => {
     const data = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
-    return data.reflections?.["01-python-for-data-science/readme"] || "";
+    return data.reflections?.["00-prerequisites/01-python-basics"] || "";
   });
   record("LR-17", "Reflection saved locally", reflection.includes("Python basics"), reflection);
 
@@ -391,82 +477,7 @@ async function run() {
     `${homeConfused.items} · ${homeConfused.excerpt.slice(0, 40)}`
   );
 
-  // ── Tier 2a: pre-review recall + confused panel ──
-  await page.goto(`${BASE}/learn.html?m=02-introduction-to-ml&l=readme`, {
-    waitUntil: "networkidle0",
-  });
-  await delay(400);
-
-  const preReviewDom = await page.evaluate(() => ({
-    overlay: !!document.getElementById("pre-review-overlay"),
-    input: !!document.getElementById("pre-review-input"),
-    snooze: !!document.getElementById("pre-review-snooze"),
-  }));
-  record("T2-01", "Pre-review overlay in DOM", preReviewDom.overlay && preReviewDom.input);
-
-  const preReviewShown = await page.evaluate(
-    () => document.getElementById("pre-review-overlay")?.hidden === false
-  );
-  record(
-    "T2-02",
-    "Pre-review shows for review-due lesson",
-    preReviewShown === true,
-    preReviewShown ? "visible" : "hidden"
-  );
-
-  if (preReviewShown) {
-    await page.type("#pre-review-input", "Recall: supervised vs unsupervised.");
-    await page.click("#pre-review-continue");
-    await delay(300);
-  }
-  const afterContinue = await page.evaluate(() => ({
-    overlayHidden: document.getElementById("pre-review-overlay")?.hidden !== false,
-    mainVisible: getComputedStyle(document.querySelector(".reader-main")).visibility !== "hidden",
-    recall: JSON.parse(localStorage.getItem("nim-study-progress") || "{}").reviewRecall?.[
-      "02-introduction-to-ml/readme"
-    ]?.text,
-  }));
-  record("T2-03", "Pre-review continue reveals lesson", afterContinue.overlayHidden && afterContinue.mainVisible);
-  record(
-    "T2-04",
-    "Pre-review recall saved locally",
-    afterContinue.recall?.includes("supervised"),
-    afterContinue.recall || "empty"
-  );
-
-  await page.goto(`${BASE}/learn.html?m=01-python-for-data-science&l=readme`, {
-    waitUntil: "networkidle0",
-  });
-  await delay(400);
-  await page.evaluate(() => {
-    const key = "01-python-for-data-science/readme";
-    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
-    raw.confidence = raw.confidence || {};
-    raw.confidenceAt = raw.confidenceAt || {};
-    raw.confidence[key] = 0;
-    raw.confidenceAt[key] = new Date(Date.now() - 3 * 86400000).toISOString();
-    delete raw.reviewSnoozedUntil?.[key];
-    localStorage.setItem("nim-study-progress", JSON.stringify(raw));
-  });
-  await page.reload({ waitUntil: "networkidle0" });
-  await delay(400);
-  const snoozeTest = await page.evaluate(() => ({
-    shown: document.getElementById("pre-review-overlay")?.hidden === false,
-  }));
-  if (snoozeTest.shown) {
-    await page.click("#pre-review-snooze");
-    await delay(300);
-  }
-  const snoozed = await page.evaluate(() => {
-    const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
-    const key = "01-python-for-data-science/readme";
-    return {
-      until: raw.reviewSnoozedUntil?.[key] || null,
-      due: raw.confidence?.[key] === 0,
-    };
-  });
-  record("T2-05", "Pre-review snooze writes reviewSnoozedUntil", !!snoozed.until, snoozed.until || "none");
-
+  // ── Tier 2b: confused panel + module confidence ──
   await page.evaluate(() => {
     const key = "02-introduction-to-ml/readme";
     const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
@@ -526,13 +537,17 @@ async function run() {
   );
 
   await page.evaluate(() => {
+    const key = "01-python-for-data-science/readme";
     const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    raw.completedLessons = raw.completedLessons || [];
+    if (!raw.completedLessons.includes(key)) raw.completedLessons.push(key);
     raw.confidence = raw.confidence || {};
     raw.confidenceAt = raw.confidenceAt || {};
-    raw.confidence["01-python-for-data-science/readme"] = 0;
-    raw.confidenceAt["01-python-for-data-science/readme"] = new Date(
+    raw.confidence[key] = 0;
+    raw.confidenceAt[key] = new Date(
       Date.now() - 3 * 86400000
     ).toISOString();
+    delete raw.reviewSnoozedUntil?.[key];
     localStorage.setItem("nim-study-progress", JSON.stringify(raw));
   });
   await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
@@ -562,6 +577,20 @@ async function run() {
     "Start practice opens step 1 and stores step 2",
     practiceReader.pp === "1" && practiceReader.stored,
     `pp=${practiceReader.pp}`
+  );
+
+  await page.evaluate(() => localStorage.removeItem("nim-study-progress"));
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
+  await delay(400);
+  const noReviewHome = await page.evaluate(() => ({
+    panel: !!document.querySelector(".learning-panel-practice"),
+    continue: !!document.querySelector(".progress-rec-link"),
+  }));
+  record(
+    "T3-03",
+    "Practice path hidden when no reviews due",
+    !noReviewHome.panel && noReviewHome.continue,
+    noReviewHome.panel ? "shown" : "hidden"
   );
 
   await browser.close();

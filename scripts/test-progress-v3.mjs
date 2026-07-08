@@ -101,9 +101,12 @@ async function run() {
     findModuleNotYetLessons,
     getModuleConfidenceRollup,
     buildPracticePath,
+    shouldShowPracticePath,
+    syncPracticePathNext,
     setPracticePathNext,
     getPracticePathNext,
     clearPracticePathNext,
+    findContinueLesson,
     countReviewDue,
     isLessonReviewDue,
     isReviewSnoozed,
@@ -130,6 +133,7 @@ async function run() {
   test("review queue uses graduated intervals for Not yet", () => {
     localStorage.clear();
     const key = lessonKey("01-python-for-data-science", "readme");
+    markLessonComplete(key, true, manifest);
     setConfidence(key, 0);
     const state = JSON.parse(localStorage.getItem("nim-study-progress"));
     state.confidenceAt[key] = daysAgo(2);
@@ -317,6 +321,7 @@ async function run() {
   test("review due count and single-lesson check", () => {
     localStorage.clear();
     const key = lessonKey("01-python-for-data-science", "readme");
+    markLessonComplete(key, true, manifest);
     setConfidence(key, 1);
     const state = JSON.parse(localStorage.getItem("nim-study-progress"));
     state.confidenceAt[key] = daysAgo(8);
@@ -324,6 +329,18 @@ async function run() {
     assert.ok(countReviewDue(manifest) >= 1);
     assert.equal(isLessonReviewDue(key, manifest), true);
     assert.ok(findFirstReviewDue(manifest)?.key === key || countReviewDue(manifest) >= 1);
+  });
+
+  test("review queue ignores unread lessons even with low confidence", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    setConfidence(key, 0);
+    const state = JSON.parse(localStorage.getItem("nim-study-progress"));
+    state.confidenceAt[key] = daysAgo(3);
+    localStorage.setItem("nim-study-progress", JSON.stringify(state));
+    assert.equal(countReviewDue(manifest), 0);
+    assert.equal(isLessonReviewDue(key, manifest), false);
+    assert.equal(shouldShowPracticePath(buildPracticePath(manifest)), false);
   });
 
   test("default note prompt is summary when unset", () => {
@@ -349,6 +366,7 @@ async function run() {
   test("snoozeReview hides lesson from review due", () => {
     localStorage.clear();
     const key = lessonKey("01-python-for-data-science", "readme");
+    markLessonComplete(key, true, manifest);
     setConfidence(key, 0);
     const state = JSON.parse(localStorage.getItem("nim-study-progress"));
     state.confidenceAt[key] = daysAgo(3);
@@ -363,6 +381,7 @@ async function run() {
   test("setConfidence clears review snooze", () => {
     localStorage.clear();
     const key = lessonKey("01-python-for-data-science", "readme");
+    markLessonComplete(key, true, manifest);
     setConfidence(key, 0);
     snoozeReview(key, REVIEW_SNOOZE_DAYS);
     assert.equal(isReviewSnoozed(key), true);
@@ -446,6 +465,67 @@ async function run() {
     assert.equal(path.steps[0].key, reviewKey);
     assert.equal(path.steps[1].step, "learn");
     assert.ok(path.nextAfterStart);
+    assert.equal(shouldShowPracticePath(path), true);
+  });
+
+  test("shouldShowPracticePath hides learn-only and empty paths", () => {
+    localStorage.clear();
+    for (const mod of manifest.modules) {
+      for (const lesson of mod.lessons) {
+        markLessonComplete(lessonKey(mod.slug, lesson.id), true, manifest);
+      }
+    }
+    const empty = buildPracticePath(manifest);
+    assert.equal(empty.steps.length, 0);
+    assert.equal(shouldShowPracticePath(empty), false);
+
+    localStorage.clear();
+    const mod = manifest.modules[0];
+    const firstKey = lessonKey(mod.slug, mod.lessons[0].id);
+    const learnOnly = buildPracticePath(manifest);
+    assert.equal(learnOnly.steps.length, 1);
+    assert.equal(learnOnly.steps[0].step, "learn");
+    assert.equal(learnOnly.steps[0].key, firstKey);
+    assert.equal(shouldShowPracticePath(learnOnly), false);
+    const cont = findContinueLesson(manifest);
+    assert.equal(learnOnly.start.key, cont.key);
+  });
+
+  test("shouldShowPracticePath shows review-only when all lessons read", () => {
+    localStorage.clear();
+    const mod = manifest.modules[0];
+    const reviewKey = lessonKey(mod.slug, mod.lessons[0].id);
+    for (const m of manifest.modules) {
+      for (const lesson of m.lessons) {
+        markLessonComplete(lessonKey(m.slug, lesson.id), true, manifest);
+      }
+    }
+    setConfidence(reviewKey, 0);
+    const state = JSON.parse(localStorage.getItem("nim-study-progress"));
+    state.confidenceAt[reviewKey] = daysAgo(3);
+    localStorage.setItem("nim-study-progress", JSON.stringify(state));
+
+    const path = buildPracticePath(manifest);
+    assert.equal(path.steps.length, 1);
+    assert.equal(path.steps[0].step, "review");
+    assert.equal(shouldShowPracticePath(path), true);
+  });
+
+  test("syncPracticePathNext clears stale session step", () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    const mod = manifest.modules[0];
+    const staleKey = lessonKey(mod.slug, mod.lessons[1]?.id || mod.lessons[0].id);
+    setPracticePathNext({
+      key: staleKey,
+      module: mod.slug,
+      lessonId: mod.lessons[1]?.id || mod.lessons[0].id,
+      type: "module",
+      title: "Stale",
+      stepLabel: "New",
+    });
+    syncPracticePathNext(manifest);
+    assert.equal(getPracticePathNext(), null);
   });
 
   test("practice path next stores in sessionStorage", () => {
