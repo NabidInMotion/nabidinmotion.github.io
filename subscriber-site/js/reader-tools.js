@@ -162,19 +162,65 @@ export function findQuickReferenceLesson(mod) {
   return mod.lessons.find((l) => l.id.includes("quick-reference")) || null;
 }
 
-export function renderCheckpointBanner(container, mod, quickRef) {
-  if (!container || !quickRef || !mod) return;
+export function renderModuleCheckpoint(container, mod, { quickRef = null, notYetLessons = [] } = {}) {
+  if (!container || !mod) return;
   container.replaceChildren();
+
+  const hasQuickRef = !!quickRef;
+  const hasNotYet = notYetLessons.length > 0;
+  if (!hasQuickRef && !hasNotYet) {
+    container.hidden = true;
+    return;
+  }
+
   const box = document.createElement("aside");
   box.className = "module-checkpoint-banner";
-  box.append(
-    document.createTextNode("Before you move on: review the "),
-    Object.assign(document.createElement("a"), {
-      href: `learn.html?m=${encodeURIComponent(mod.slug)}&l=${encodeURIComponent(quickRef.id)}`,
-      textContent: "module checkpoint summary",
-    }),
-    document.createTextNode(".")
-  );
+
+  if (hasQuickRef) {
+    const intro = document.createElement("p");
+    intro.className = "module-checkpoint-intro";
+    intro.append(
+      document.createTextNode("Before you move on: review the "),
+      Object.assign(document.createElement("a"), {
+        href: `learn.html?m=${encodeURIComponent(mod.slug)}&l=${encodeURIComponent(quickRef.id)}`,
+        textContent: "module checkpoint summary",
+      }),
+      document.createTextNode(".")
+    );
+    box.append(intro);
+  }
+
+  if (hasNotYet) {
+    const section = document.createElement("div");
+    section.className = "module-checkpoint-notyet";
+
+    const heading = document.createElement("p");
+    heading.className = "module-checkpoint-notyet-title";
+    heading.textContent = hasQuickRef
+      ? "Lessons you marked Not yet — worth revisiting:"
+      : "Lessons you marked Not yet in this module:";
+    section.append(heading);
+
+    const list = document.createElement("ul");
+    list.className = "module-checkpoint-notyet-list";
+    for (const item of notYetLessons) {
+      const li = document.createElement("li");
+      const link = Object.assign(document.createElement("a"), {
+        href: `learn.html?m=${encodeURIComponent(item.module)}&l=${encodeURIComponent(item.lessonId)}`,
+        textContent: item.title,
+      });
+      li.append(link);
+      list.append(li);
+    }
+    section.append(list);
+    box.append(section);
+  }
+
   container.append(box);
   container.hidden = false;
+}
+
+/** @deprecated Use renderModuleCheckpoint */
+export function renderCheckpointBanner(container, mod, quickRef) {
+  renderModuleCheckpoint(container, mod, { quickRef, notYetLessons: [] });
 }

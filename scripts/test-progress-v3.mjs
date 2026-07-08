@@ -85,6 +85,8 @@ async function run() {
     lessonKey,
     findConfusedLessons,
     findInProgressLessons,
+    findModuleNotYetLessons,
+    getModuleConfidenceRollup,
     countReviewDue,
     isLessonReviewDue,
     isReviewSnoozed,
@@ -379,6 +381,34 @@ async function run() {
     assert.equal(raw.v, 3);
     assert.ok(Array.isArray(raw.bookmarks));
     assert.equal(raw.weeklyFocusGoal, 90);
+  });
+
+  test("getModuleConfidenceRollup counts rated lessons only", () => {
+    localStorage.clear();
+    const mod = manifest.modules[0];
+    const keyA = lessonKey(mod.slug, mod.lessons[0].id);
+    const keyB = lessonKey(mod.slug, mod.lessons[1]?.id || mod.lessons[0].id);
+    setConfidence(keyA, 2);
+    setConfidence(keyB, 0);
+    const rollup = getModuleConfidenceRollup(mod.slug, manifest);
+    assert.equal(rollup.rated, 2);
+    assert.equal(rollup.yes, 1);
+    assert.equal(rollup.notYet, 1);
+    assert.equal(rollup.percentYes, 50);
+    assert.equal(rollup.percentNotYet, 50);
+  });
+
+  test("findModuleNotYetLessons returns only confidence 0 in module", () => {
+    localStorage.clear();
+    const mod = manifest.modules[0];
+    const notYetKey = lessonKey(mod.slug, mod.lessons[0].id);
+    const yesKey = lessonKey(mod.slug, mod.lessons[1]?.id || mod.lessons[0].id);
+    setConfidence(notYetKey, 0);
+    setConfidence(yesKey, 2);
+    const items = findModuleNotYetLessons(mod.slug, manifest);
+    assert.equal(items.length, 1);
+    assert.equal(items[0].key, notYetKey);
+    assert.equal(items[0].kind, "not_yet");
   });
 
   console.log(`\n${passed} tests passed`);
