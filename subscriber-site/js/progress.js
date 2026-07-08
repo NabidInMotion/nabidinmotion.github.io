@@ -23,6 +23,8 @@ export const MIN_REFLECTION_LENGTH = 2;
 export const MAX_REFLECTIONS = 100;
 /** Total characters across all saved notes on one device (abuse + storage guard). */
 export const MAX_REFLECTIONS_TOTAL_CHARS = 120_000;
+export const REVIEW_SNOOZE_DAYS = 3;
+export const HOME_CONFUSED_PREVIEW = 5;
 
 const REFLECTION_SAVE_COOLDOWN_MS = 900;
 const MAX_REFLECTION_SAVES_PER_WINDOW = 40;
@@ -36,20 +38,31 @@ const reflectionLastSaveByKey = new Map();
 export const REFLECTION_PROMPTS = {
   summary: {
     title: "What did you learn?",
+    chip: "What I learned",
     desc: "Optional — one sentence helps memory. Saved on this device only.",
     placeholder: "In one sentence…",
+    homeHint: "Shows in Your notes on Study Hub home.",
+    savedStatus: "Saved — listed under Your notes on Study Hub home.",
   },
   confused: {
     title: "What's still unclear?",
+    chip: "Still unclear",
     desc: "Optional — naming gaps helps the next review. Saved on this device only.",
     placeholder: "I'm still unsure about…",
+    homeHint: "Lists under Still unclear and Your notes on Study Hub home.",
+    savedStatus: "Saved — listed under Still unclear and Your notes on Study Hub home.",
   },
   apply: {
     title: "Where would you use this?",
+    chip: "Where I'd use this",
     desc: "Optional — connect ideas to practice. Saved on this device only.",
     placeholder: "I could use this when…",
+    homeHint: "Shows in Your notes on Study Hub home.",
+    savedStatus: "Saved — listed under Your notes on Study Hub home.",
   },
 };
+
+export const DEFAULT_REFLECTION_PROMPT = "summary";
 
 function isValidProgressKey(key) {
   return typeof key === "string" && key.length > 0 && key.length <= 120 && PROGRESS_KEY_RE.test(key);
@@ -255,6 +268,28 @@ export function resetReflectionLimitsForTests() {
   reflectionLastSaveByKey.clear();
 }
 
+function normalizeReviewRecall(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const out = {};
+  for (const [key, entry] of Object.entries(raw)) {
+    if (!isValidProgressKey(key)) continue;
+    if (!entry || typeof entry !== "object") continue;
+    const validated = validateReflectionText(entry.text, {
+      maxLength: MAX_QUICK_REFLECTION_LENGTH,
+    });
+    if (!validated.ok || !validated.text) continue;
+    const at = typeof entry.at === "string" && entry.at.length <= 40 ? entry.at : null;
+    out[key] = { text: validated.text, at: at || new Date().toISOString() };
+  }
+  return out;
+}
+
+function isReviewSnoozedKey(state, key) {
+  const until = state.reviewSnoozedUntil?.[key];
+  if (!until || typeof until !== "string") return false;
+  return until >= new Date().toISOString().slice(0, 10);
+}
+
 function countReflections(state) {
   return Object.values(state.reflections || {}).filter((t) => String(t).trim()).length;
 }
@@ -302,6 +337,8 @@ function defaultState() {
     bookmarks: [],
     bookmarkedAt: {},
     focusByKey: {},
+    reviewSnoozedUntil: {},
+    reviewRecall: {},
     lastSeenCommit: null,
     lastVisitAt: null,
     updatedAt: null,
@@ -363,6 +400,8 @@ function normalizeImportState(data) {
     bookmarks: normalizeBookmarks(data.bookmarks),
     bookmarkedAt: normalizeIsoMap(data.bookmarkedAt),
     focusByKey: normalizeMinutesMap(data.focusByKey),
+    reviewSnoozedUntil: normalizeIsoMap(data.reviewSnoozedUntil),
+    reviewRecall: normalizeReviewRecall(data.reviewRecall),
     lastSeenCommit: typeof data.lastSeenCommit === "string" ? data.lastSeenCommit.slice(0, 64) : null,
     lastVisitAt: typeof data.lastVisitAt === "string" ? data.lastVisitAt : null,
     updatedAt: null,
@@ -508,6 +547,9 @@ export function setConfidence(key, level) {
   } else if (CONFIDENCE_LEVELS.has(level)) {
     state.confidence[key] = level;
     state.confidenceAt[key] = new Date().toISOString();
+    if (state.reviewSnoozedUntil?.[key]) {
+      delete state.reviewSnoozedUntil[key];
+    }
     if (hadRating) {
       state.reviewPass[key] = Math.min((state.reviewPass[key] || 0) + 1, 10);
     }
@@ -652,6 +694,7 @@ function* iterLessons(manifest, moduleSlugs = null) {
 }
 
 function buildReviewItem(state, item, type, now) {
+  if (isReviewSnoozedKey(state, item.key)) return null;
   const level = state.confidence[item.key];
   if (level !== 0 && level !== 1) return null;
   const at = state.confidenceAt?.[item.key];
@@ -780,6 +823,76 @@ export function findReflectionLessons(manifest, moduleSlugs = null, { limit = 5 
   );
 
   return limit ? items.slice(0, limit) : items;
+}
+
+export function findConfusedLessons(manifest, moduleSlugs = null, { limit = 5 } = {}) {
+  const state = loadRaw();
+  const allowed = moduleSlugs?.length ? new Set(moduleSlugs) : null;
+  const items = [];
+
+  for (const [key, text] of Object.entries(state.reflections || {})) {
+    if (!isValidProgressKey(key) || !String(text).trim()) continue;
+    if (state.reflectionMeta?.[key]?.prompt !== "confused") continue;
+    const parsed = parseLessonKey(key, manifest);
+    if (!parsed) continue;
+    if (parsed.type === "module" && allowed && !allowed.has(parsed.module)) continue;
+    items.push({
+      key,
+      ...parsed,
+      type: parsed.type,
+      kind: "confused",
+      text: String(text).trim(),
+      savedAt: state.reflectionMeta?.[key]?.at || null,
+    });
+  }
+
+  items.sort(
+    (a, b) => new Date(b.savedAt || 0).getTime() - new Date(a.savedAt || 0).getTime()
+  );
+
+  return limit ? items.slice(0, limit) : items;
+}
+
+export function isReviewSnoozed(key) {
+  if (!isValidProgressKey(key)) return false;
+  return isReviewSnoozedKey(loadRaw(), key);
+}
+
+export function snoozeReview(key, days = REVIEW_SNOOZE_DAYS) {
+  if (!isValidProgressKey(key)) return false;
+  const rounded = Math.min(Math.max(Math.round(days), 1), 30);
+  const state = loadRaw();
+  if (!state.reviewSnoozedUntil) state.reviewSnoozedUntil = {};
+  const until = new Date();
+  until.setUTCDate(until.getUTCDate() + rounded);
+  state.reviewSnoozedUntil[key] = until.toISOString().slice(0, 10);
+  return save(state);
+}
+
+export function getReviewRecall(key) {
+  const entry = loadRaw().reviewRecall?.[key];
+  return typeof entry?.text === "string" ? entry.text : "";
+}
+
+/** @returns {{ ok: true, text?: string } | { ok: false, error: string, text?: string }} */
+export function setReviewRecall(key, text) {
+  if (!isValidProgressKey(key)) {
+    return { ok: false, error: "Invalid lesson." };
+  }
+  const validated = validateReflectionText(text, { maxLength: MAX_QUICK_REFLECTION_LENGTH });
+  if (!validated.ok) return validated;
+  const trimmed = validated.text;
+  const state = loadRaw();
+  if (!state.reviewRecall) state.reviewRecall = {};
+  if (!trimmed) {
+    delete state.reviewRecall[key];
+  } else {
+    state.reviewRecall[key] = { text: trimmed, at: new Date().toISOString() };
+  }
+  if (!save(state)) {
+    return { ok: false, error: "Could not save — browser storage may be full or blocked." };
+  }
+  return { ok: true, text: trimmed };
 }
 
 export function findRefreshSuggestions(manifest, moduleSlugs = null, minDays = REFRESH_AFTER_DAYS) {
@@ -1192,8 +1305,8 @@ export function importProgress(onComplete) {
 export function resetProgress() {
   const message =
     "Reset all learning progress on this device?\n\n" +
-    "This clears: lessons read, continue position, confidence ratings, reflections, bookmarks, " +
-    "reading and focus goals, project status, module milestones, and focus time.\n" +
+    "This clears: lessons read, continue position, confidence ratings, reflections, review recall, " +
+    "review snoozes, bookmarks, reading and focus goals, project status, module milestones, and focus time.\n" +
     "Your career path filter and visit history are kept.\n\n" +
     "This cannot be undone.";
   if (!window.confirm(message)) return false;

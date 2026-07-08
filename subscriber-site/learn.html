@@ -137,6 +137,15 @@
         </summary>
         <div class="lesson-notes-body">
           <p class="lesson-notes-prompt" id="lesson-notes-prompt"></p>
+          <fieldset class="lesson-notes-type" id="lesson-notes-type">
+            <legend class="lesson-notes-type-legend">This note is</legend>
+            <div class="lesson-notes-type-chips" role="presentation">
+              <button type="button" class="lesson-notes-type-btn" data-note-prompt="summary" aria-pressed="true">What I learned</button>
+              <button type="button" class="lesson-notes-type-btn" data-note-prompt="confused" aria-pressed="false">Still unclear</button>
+              <button type="button" class="lesson-notes-type-btn" data-note-prompt="apply" aria-pressed="false">Where I'd use this</button>
+            </div>
+          </fieldset>
+          <p class="lesson-notes-type-hint" id="lesson-notes-type-hint">Shows in Your notes on Study Hub home.</p>
           <div class="lesson-notes-view" id="lesson-notes-view" hidden>
             <div class="lesson-notes-text" id="lesson-notes-text"></div>
             <p class="lesson-notes-view-hint" id="lesson-notes-view-hint"></p>
@@ -223,6 +232,20 @@
       <div class="explain-prompt-actions">
         <button type="button" class="btn btn-primary btn-sm" id="explain-prompt-save">Save</button>
         <button type="button" class="btn btn-ghost btn-sm" id="explain-prompt-skip">Skip</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pre-review-overlay" id="pre-review-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="pre-review-title">
+    <div class="pre-review-card">
+      <h2 class="pre-review-title" id="pre-review-title">Quick recall</h2>
+      <p class="pre-review-desc" id="pre-review-desc">Before you scroll — what do you remember? Optional; saved on this device only.</p>
+      <textarea id="pre-review-input" class="pre-review-input" rows="4" maxlength="500" placeholder="Without looking — key ideas, steps, or terms…"></textarea>
+      <p class="pre-review-status" id="pre-review-status" hidden role="status" aria-live="polite"></p>
+      <div class="pre-review-actions">
+        <button type="button" class="btn btn-primary btn-sm" id="pre-review-continue">Continue reading</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="pre-review-skip">Skip</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="pre-review-snooze">Snooze · 3 days</button>
       </div>
     </div>
   </div>

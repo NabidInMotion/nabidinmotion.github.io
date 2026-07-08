@@ -7,6 +7,7 @@ import {
   exportProgress,
   importProgress,
   findBookmarks,
+  findConfusedLessons,
   findContinueLesson,
   findGaps,
   findInProgressLessons,
@@ -27,6 +28,7 @@ import {
   getWeeklyLessonGoal,
   getWeeklyLessonProgress,
   HOME_BOOKMARK_PREVIEW,
+  HOME_CONFUSED_PREVIEW,
   onProgressChange,
   resetProgress,
   setWeeklyFocusGoal,
@@ -232,6 +234,19 @@ function renderInProgressLessons(container, manifest, roleId, careerData) {
   container.append(section);
 }
 
+function noteExcerpt(text, max = 72) {
+  let s = String(text ?? "");
+  s = s.replace(/```[\s\S]*?```/g, " ");
+  s = s.replace(/`([^`]+)`/g, "$1");
+  s = s.replace(/\*\*([^*]+)\*\*/g, "$1");
+  s = s.replace(/\*([^*]+)\*/g, "$1");
+  s = s.replace(/^#{1,3}\s+/gm, "");
+  s = s.replace(/^\s*[-*]\s+/gm, "");
+  s = s.replace(/\s+/g, " ").trim();
+  if (!s) return "";
+  return s.length > max ? `${s.slice(0, max - 3)}…` : s;
+}
+
 function renderReflectionNotes(container, manifest, roleId, careerData) {
   if (!storageAvailable() || !manifest) return;
   const slugs = moduleSlugsForRole(roleId, careerData);
@@ -264,9 +279,45 @@ function renderReflectionNotes(container, manifest, roleId, careerData) {
     link.href = lessonHref(item);
     link.textContent = item.title;
     row.append(link);
-    const excerpt =
-      item.text.length > 72 ? `${item.text.slice(0, 69)}…` : item.text;
-    row.append(el("span", "learning-panel-meta learning-panel-note-excerpt", excerpt));
+    const excerpt = noteExcerpt(item.text);
+    if (excerpt) {
+      row.append(el("span", "learning-panel-meta learning-panel-note-excerpt", excerpt));
+    }
+    list.append(row);
+  }
+  section.append(list);
+  container.append(section);
+}
+
+function renderConfusedLessons(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const items = findConfusedLessons(manifest, slugs?.length ? slugs : null, {
+    limit: HOME_CONFUSED_PREVIEW,
+  });
+  if (!items.length) return;
+
+  const section = el("div", "learning-panel learning-panel-confused");
+  section.append(
+    el("h3", "learning-panel-title", "Still unclear"),
+    el(
+      "p",
+      "learning-panel-desc",
+      "Lessons you tagged as still unclear — pick Still unclear when saving a note in the reader."
+    )
+  );
+
+  const list = el("ul", "learning-panel-list");
+  for (const item of items) {
+    const row = el("li", "learning-panel-item learning-panel-item--note");
+    const link = el("a", "learning-panel-link");
+    link.href = lessonHref(item);
+    link.textContent = item.title;
+    row.append(link);
+    const excerpt = noteExcerpt(item.text);
+    if (excerpt) {
+      row.append(el("span", "learning-panel-meta learning-panel-note-excerpt", excerpt));
+    }
     list.append(row);
   }
   section.append(list);
@@ -431,6 +482,7 @@ function renderLearningExtras(container, manifest, roleId, careerData) {
   renderWeeklyGoal(container);
   renderWeeklyFocusGoal(container);
   renderInProgressLessons(container, manifest, roleId, careerData);
+  renderConfusedLessons(container, manifest, roleId, careerData);
   renderReflectionNotes(container, manifest, roleId, careerData);
   renderBookmarks(container, manifest);
   const skipKeys = bookmarkKeysForHome(manifest);

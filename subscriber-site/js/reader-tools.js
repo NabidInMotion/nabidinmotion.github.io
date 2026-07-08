@@ -109,6 +109,7 @@ export function mountReaderKeyboard(options = {}) {
   document.addEventListener("keydown", (event) => {
     if (isTypingTarget(event.target)) return;
     if (document.getElementById("explain-prompt-overlay")?.hidden === false) return;
+    if (document.getElementById("pre-review-overlay")?.hidden === false) return;
     if (document.getElementById("focus-end-overlay")?.hidden === false) return;
 
     const key = event.key.toLowerCase();
