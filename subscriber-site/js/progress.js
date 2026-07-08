@@ -499,9 +499,18 @@ function buildReviewItem(state, item, type, now) {
   };
 }
 
-export function findReviewQueue(manifest, moduleSlugs = null) {
+function sortReviewItems(items) {
+  items.sort((a, b) => {
+    const priority = (b.confidenceLevel === 0 ? 2 : 1) - (a.confidenceLevel === 0 ? 2 : 1);
+    if (priority !== 0) return priority;
+    if (b.focusMinutes !== a.focusMinutes) return b.focusMinutes - a.focusMinutes;
+    return b.daysSince - a.daysSince;
+  });
+  return items;
+}
+
+function collectReviewDue(manifest, moduleSlugs = null, now = Date.now()) {
   const state = loadRaw();
-  const now = Date.now();
   const items = [];
 
   for (const item of iterLessons(manifest, moduleSlugs)) {
@@ -526,14 +535,50 @@ export function findReviewQueue(manifest, moduleSlugs = null) {
     if (row) items.push(row);
   }
 
-  items.sort((a, b) => {
-    const priority = (b.confidenceLevel === 0 ? 2 : 1) - (a.confidenceLevel === 0 ? 2 : 1);
-    if (priority !== 0) return priority;
-    if (b.focusMinutes !== a.focusMinutes) return b.focusMinutes - a.focusMinutes;
-    return b.daysSince - a.daysSince;
-  });
+  return sortReviewItems(items);
+}
 
-  return items.slice(0, 5);
+export function findReviewQueue(manifest, moduleSlugs = null) {
+  return collectReviewDue(manifest, moduleSlugs).slice(0, 5);
+}
+
+export function countReviewDue(manifest, moduleSlugs = null) {
+  return collectReviewDue(manifest, moduleSlugs).length;
+}
+
+export function findFirstReviewDue(manifest, moduleSlugs = null) {
+  return collectReviewDue(manifest, moduleSlugs)[0] || null;
+}
+
+export function isLessonReviewDue(key, manifest, moduleSlugs = null) {
+  if (!isValidProgressKey(key)) return false;
+  return collectReviewDue(manifest, moduleSlugs).some((item) => item.key === key);
+}
+
+export function findInProgressLessons(manifest, moduleSlugs = null, { limit = 5 } = {}) {
+  const state = loadRaw();
+  const allowed = moduleSlugs?.length ? new Set(moduleSlugs) : null;
+  const items = [];
+
+  for (const [key, openedAt] of Object.entries(state.openedAt || {})) {
+    if (!isValidProgressKey(key) || state.completedLessons.includes(key)) continue;
+    const parsed = parseLessonKey(key, manifest);
+    if (!parsed) continue;
+    if (parsed.type === "module" && allowed && !allowed.has(parsed.module)) continue;
+    items.push({
+      key,
+      ...parsed,
+      type: parsed.type,
+      kind: "in-progress",
+      openedAt,
+    });
+  }
+
+  items.sort(
+    (a, b) => new Date(b.openedAt || 0).getTime() - new Date(a.openedAt || 0).getTime()
+  );
+
+  return limit ? items.slice(0, limit) : items;
 }
 
 export function findRefreshSuggestions(manifest, moduleSlugs = null, minDays = REFRESH_AFTER_DAYS) {

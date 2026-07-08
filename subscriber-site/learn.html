@@ -102,6 +102,7 @@
         </div>
       </div>
       <p class="bookmark-notice" id="bookmark-notice" hidden role="status" aria-live="polite"></p>
+      <div class="review-due-banner" id="review-due-banner" hidden role="status" aria-live="polite"></div>
       <div id="module-checkpoint" class="module-checkpoint-host" hidden></div>
       <details class="study-assistant-panel" id="study-assistant-panel">
         <summary class="study-assistant-summary">Study assistant ::</summary>
@@ -127,6 +128,23 @@
           </form>
           <p class="study-assistant-status" id="study-assistant-status" hidden aria-live="polite">Searching…</p>
           <div class="study-assistant-results" id="study-assistant-results" hidden></div>
+        </div>
+      </details>
+      <details class="lesson-notes-panel" id="lesson-notes-panel" hidden>
+        <summary class="lesson-notes-summary">My note ::</summary>
+        <div class="lesson-notes-body">
+          <p class="lesson-notes-prompt" id="lesson-notes-prompt"></p>
+          <textarea
+            id="lesson-notes-input"
+            class="lesson-notes-input"
+            rows="3"
+            maxlength="500"
+            placeholder="Optional — one sentence helps memory. Saved on this device only."
+          ></textarea>
+          <div class="lesson-notes-actions">
+            <button type="button" class="btn btn-primary btn-sm" id="lesson-notes-save">Save note</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-clear" hidden>Clear</button>
+          </div>
         </div>
       </details>
       <article class="reader-content prose" id="reader-content">

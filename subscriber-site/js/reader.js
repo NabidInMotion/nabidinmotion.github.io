@@ -3,23 +3,32 @@
  */
 import {
   buildLearnUrl,
+  countReviewDue,
   exportProgress,
   findBookmarks,
+  findFirstReviewDue,
   getConfidence,
   getModuleProgress,
+  getReflection,
+  getReflectionMeta,
   getStats,
   guideKey,
   importProgress,
   isBookmarked,
+  isLessonReviewDue,
   isLessonComplete,
   lessonKey,
   markLessonComplete,
   MAX_BOOKMARKS,
   onProgressChange,
   parseLessonKey,
+  pickReflectionPrompt,
+  recordLessonOpened,
+  REFLECTION_PROMPTS,
   resetProgress,
   setConfidence,
   setLastLesson,
+  setReflection,
   storageAvailable,
   toggleBookmark,
 } from "./progress.js";
@@ -90,6 +99,133 @@ function currentKey(route) {
   if (route.type === "guide") return guideKey(route.guideId);
   if (route.type === "module") return lessonKey(route.module, route.lessonId);
   return null;
+}
+
+function lessonHref(item) {
+  if (item.type === "guide" || item.guideId) {
+    return buildLearnUrl({ guideId: item.guideId });
+  }
+  return buildLearnUrl({ module: item.module, lessonId: item.lessonId });
+}
+
+function roleModuleSlugs() {
+  const slugs = moduleSlugsForRole(selectedRoleId, careerData);
+  return slugs?.length ? slugs : null;
+}
+
+function updateReviewDueBanner(route) {
+  const banner = document.getElementById("review-due-banner");
+  if (!banner || !storageAvailable() || !manifest) {
+    if (banner) banner.hidden = true;
+    return;
+  }
+
+  const slugs = roleModuleSlugs();
+  const count = countReviewDue(manifest, slugs);
+  if (!count) {
+    banner.hidden = true;
+    clearChildren(banner);
+    return;
+  }
+
+  const key = currentKey(route);
+  const currentDue = key ? isLessonReviewDue(key, manifest, slugs) : false;
+  const first = findFirstReviewDue(manifest, slugs);
+
+  clearChildren(banner);
+  banner.hidden = false;
+
+  if (currentDue) {
+    banner.append(
+      el("span", "review-due-banner-label", "Worth revisiting today"),
+      el(
+        "span",
+        "review-due-banner-hint",
+        "Recall key ideas before scrolling — then re-read if needed."
+      )
+    );
+    return;
+  }
+
+  const label = el("span", "review-due-banner-label");
+  label.textContent =
+    count === 1 ? "1 lesson ready to review" : `${count} lessons ready to review`;
+
+  if (first) {
+    const link = el("a", "review-due-banner-link");
+    link.href = lessonHref(first);
+    link.textContent = `Start with “${first.title.length > 48 ? `${first.title.slice(0, 45)}…` : first.title}”`;
+    banner.append(label, document.createTextNode(" · "), link);
+  } else {
+    banner.append(label);
+  }
+}
+
+function updateLessonNotesUI(route) {
+  const panel = document.getElementById("lesson-notes-panel");
+  const promptEl = document.getElementById("lesson-notes-prompt");
+  const input = document.getElementById("lesson-notes-input");
+  const clearBtn = document.getElementById("lesson-notes-clear");
+  if (!panel || !input) return;
+
+  const key = currentKey(route);
+  if (!key || !storageAvailable()) {
+    panel.hidden = true;
+    return;
+  }
+
+  panel.hidden = false;
+  const meta = getReflectionMeta(key);
+  const promptId = meta?.prompt || pickReflectionPrompt(key);
+  const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+  if (promptEl) {
+    promptEl.textContent = meta?.at
+      ? `${prompt.title} — saved ${formatSyncDate(meta.at) || "on this device"}`
+      : prompt.title;
+  }
+  input.placeholder = prompt.placeholder;
+  input.value = getReflection(key);
+  if (clearBtn) clearBtn.hidden = !input.value.trim();
+  panel.open = !!input.value.trim();
+}
+
+function bindLessonNotes() {
+  const panel = document.getElementById("lesson-notes-panel");
+  const input = document.getElementById("lesson-notes-input");
+  const saveBtn = document.getElementById("lesson-notes-save");
+  const clearBtn = document.getElementById("lesson-notes-clear");
+  if (!panel || !input || !storageAvailable()) return;
+
+  saveBtn?.addEventListener("click", () => {
+    if (!current) return;
+    const key = currentKey(current);
+    if (!key) return;
+    const text = input.value.trim();
+    const promptId = getReflectionMeta(key)?.prompt || pickReflectionPrompt(key);
+    setReflection(key, text, promptId);
+    updateLessonNotesUI(current);
+  });
+
+  clearBtn?.addEventListener("click", () => {
+    if (!current) return;
+    const key = currentKey(current);
+    if (!key) return;
+    if (!window.confirm("Clear your note for this lesson on this device?")) return;
+    setReflection(key, "");
+    input.value = "";
+    updateLessonNotesUI(current);
+  });
+
+  input.addEventListener("input", () => {
+    if (clearBtn) clearBtn.hidden = !input.value.trim();
+  });
+
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      saveBtn?.click();
+    }
+  });
 }
 
 function setSanitizedHtml(container, html) {
@@ -528,6 +664,10 @@ async function showLesson(route) {
     document.getElementById("lesson-legal").hidden = true;
     const checkpointHost = document.getElementById("module-checkpoint");
     if (checkpointHost) checkpointHost.hidden = true;
+    const notesPanel = document.getElementById("lesson-notes-panel");
+    if (notesPanel) notesPanel.hidden = true;
+    const reviewBanner = document.getElementById("review-due-banner");
+    if (reviewBanner) reviewBanner.hidden = true;
     clearChildren(document.getElementById("reader-breadcrumb"));
     clearChildren(document.getElementById("reader-pager"));
     const markWrap = document.querySelector(".mark-read");
@@ -574,6 +714,8 @@ async function showLesson(route) {
   updateMarkRead(route);
   updateConfidenceUI(route);
   updateBookmarkUI(route);
+  updateLessonNotesUI(route);
+  updateReviewDueBanner(route);
   renderSidebarBookmarks();
 
   const readingMinutes = resolved.meta.readingMinutes || content.readingMinutes || null;
@@ -582,6 +724,7 @@ async function showLesson(route) {
   const key = currentKey(route);
   if (key) {
     setLastLesson(key);
+    recordLessonOpened(key);
     setFocusLessonKey(key);
   } else {
     setFocusLessonKey(null);
@@ -691,6 +834,7 @@ async function init() {
       },
     });
     mountExplainPrompt();
+    bindLessonNotes();
     mountReaderMeasureToggle();
     mountPrintButton();
     applyReaderMeasurePref();
@@ -707,6 +851,14 @@ async function init() {
       renderSidebarModules(document.getElementById("sidebar-modules"));
       renderSidebarBookmarks();
       updateProgressUI();
+      if (current) updateReviewDueBanner(current);
+    });
+
+    onProgressChange(() => {
+      if (!current) return;
+      updateLessonNotesUI(current);
+      updateReviewDueBanner(current);
+      updateConfidenceUI(current);
     });
 
     let route = parseRoute();

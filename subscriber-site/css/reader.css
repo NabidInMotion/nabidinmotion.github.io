@@ -896,6 +896,98 @@
   color: var(--text-muted, #9aa5b1);
 }
 
+/* ── Review due banner & lesson notes (learning loop tier 1) ── */
+
+.review-due-banner {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(126, 184, 232, 0.35);
+  border-radius: 0.5rem;
+  background: rgba(126, 184, 232, 0.08);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.review-due-banner-label {
+  font-weight: 600;
+  color: var(--accent, #7eb8e8);
+}
+
+.review-due-banner-hint {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--text-muted, #9aa5b1);
+  font-size: 0.82rem;
+}
+
+.review-due-banner-link {
+  color: var(--accent, #7eb8e8);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.review-due-banner-link:hover {
+  text-decoration: underline;
+}
+
+.lesson-notes-panel {
+  margin: 0 0 1rem;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.lesson-notes-summary {
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted, #9aa5b1);
+  list-style: none;
+}
+
+.lesson-notes-summary::-webkit-details-marker {
+  display: none;
+}
+
+.lesson-notes-body {
+  padding: 0 0.85rem 0.85rem;
+}
+
+.lesson-notes-prompt {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  color: var(--text-muted, #9aa5b1);
+}
+
+.lesson-notes-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.14));
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+  font: inherit;
+  line-height: 1.45;
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.lesson-notes-input:focus {
+  outline: 2px solid rgba(126, 184, 232, 0.45);
+  outline-offset: 1px;
+}
+
+.lesson-notes-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+}
+
 /* ── Reader tools: narrow measure, code blocks, checkpoint, explain prompt ── */
 
 .reader-page.reader-narrow .reader-content {

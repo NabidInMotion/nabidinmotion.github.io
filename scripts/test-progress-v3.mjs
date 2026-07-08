@@ -72,6 +72,11 @@ async function run() {
     setReflection,
     getReflectionMeta,
     lessonKey,
+    findInProgressLessons,
+    countReviewDue,
+    isLessonReviewDue,
+    findFirstReviewDue,
+    recordLessonOpened,
   } = p;
 
   mockStorage();
@@ -157,6 +162,29 @@ async function run() {
     setReflection(key, "Test reflection", "apply");
     const meta = getReflectionMeta(key);
     assert.equal(meta.prompt, "apply");
+  });
+
+  test("in-progress lessons lists opened but incomplete", () => {
+    localStorage.clear();
+    const key = lessonKey("02-introduction-to-ml", "readme");
+    recordLessonOpened(key);
+    const items = findInProgressLessons(manifest);
+    assert.ok(items.some((i) => i.key === key));
+    markLessonComplete(key, true, manifest);
+    const after = findInProgressLessons(manifest);
+    assert.ok(!after.some((i) => i.key === key));
+  });
+
+  test("review due count and single-lesson check", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    setConfidence(key, 1);
+    const state = JSON.parse(localStorage.getItem("nim-study-progress"));
+    state.confidenceAt[key] = daysAgo(8);
+    localStorage.setItem("nim-study-progress", JSON.stringify(state));
+    assert.ok(countReviewDue(manifest) >= 1);
+    assert.equal(isLessonReviewDue(key, manifest), true);
+    assert.ok(findFirstReviewDue(manifest)?.key === key || countReviewDue(manifest) >= 1);
   });
 
   test("v2 import upgrades to v3 fields", async () => {
