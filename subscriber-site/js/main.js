@@ -9,13 +9,19 @@ import {
   findBookmarks,
   findContinueLesson,
   findGaps,
+  findInProgressLessons,
   findNextInPath,
+  findReflectionLessons,
   findRefreshSuggestions,
   findReviewQueue,
+  findFirstReviewDue,
+  countReviewDue,
   formatReadingMinutes,
   getModuleMilestones,
   getModuleProgress,
   getStats,
+  guideKey,
+  lessonKey,
   getWeeklyFocusGoal,
   getWeeklyFocusProgress,
   getWeeklyLessonGoal,
@@ -181,6 +187,92 @@ function renderPathGaps(container, manifest, roleId, careerData) {
   container.append(section);
 }
 
+function progressItemKey(item) {
+  if (!item) return null;
+  if (item.key) return item.key;
+  if (item.type === "guide" || item.guideId) return guideKey(item.guideId);
+  if (item.module) return lessonKey(item.module, item.lessonId);
+  return null;
+}
+
+function renderInProgressLessons(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const scoped = slugs?.length ? slugs : null;
+  const cont = findContinueLesson(manifest, scoped);
+  const continueKey = progressItemKey(cont);
+  const items = findInProgressLessons(manifest, scoped).filter(
+    (item) => item.key !== continueKey
+  );
+  if (!items.length) return;
+
+  const section = el("div", "learning-panel learning-panel-in-progress");
+  section.append(
+    el("h3", "learning-panel-title", "Started, not finished"),
+    el(
+      "p",
+      "learning-panel-desc",
+      "Lessons you opened but have not marked read yet — pick up where you left off."
+    )
+  );
+
+  const list = el("ul", "learning-panel-list");
+  for (const item of items) {
+    const row = el("li", "learning-panel-item");
+    const link = el("a", "learning-panel-link");
+    link.href = lessonHref(item);
+    link.textContent = item.title;
+    row.append(link);
+    if (item.moduleTitle) {
+      row.append(el("span", "learning-panel-meta", item.moduleTitle));
+    }
+    list.append(row);
+  }
+  section.append(list);
+  container.append(section);
+}
+
+function renderReflectionNotes(container, manifest, roleId, careerData) {
+  if (!storageAvailable() || !manifest) return;
+  const slugs = moduleSlugsForRole(roleId, careerData);
+  const items = findReflectionLessons(manifest, slugs?.length ? slugs : null);
+  if (!items.length) return;
+
+  const preview = items.slice(0, 5);
+  const extra = items.length - preview.length;
+
+  const section = el("div", "learning-panel learning-panel-notes");
+  section.append(
+    el(
+      "h3",
+      "learning-panel-title",
+      items.length > 5 ? `Your notes (${items.length})` : "Your notes"
+    ),
+    el(
+      "p",
+      "learning-panel-desc",
+      extra > 0
+        ? `Saved while reading. ${extra} more note${extra === 1 ? "" : "s"} on other lessons.`
+        : "One note per lesson, saved on this device. Open a lesson to edit."
+    )
+  );
+
+  const list = el("ul", "learning-panel-list");
+  for (const item of preview) {
+    const row = el("li", "learning-panel-item learning-panel-item--note");
+    const link = el("a", "learning-panel-link");
+    link.href = lessonHref(item);
+    link.textContent = item.title;
+    row.append(link);
+    const excerpt =
+      item.text.length > 72 ? `${item.text.slice(0, 69)}…` : item.text;
+    row.append(el("span", "learning-panel-meta learning-panel-note-excerpt", excerpt));
+    list.append(row);
+  }
+  section.append(list);
+  container.append(section);
+}
+
 function renderBookmarks(container, manifest) {
   if (!storageAvailable() || !manifest) return;
   const all = findBookmarks(manifest);
@@ -338,6 +430,8 @@ function renderLearningExtras(container, manifest, roleId, careerData) {
   clearChildren(container);
   renderWeeklyGoal(container);
   renderWeeklyFocusGoal(container);
+  renderInProgressLessons(container, manifest, roleId, careerData);
+  renderReflectionNotes(container, manifest, roleId, careerData);
   renderBookmarks(container, manifest);
   const skipKeys = bookmarkKeysForHome(manifest);
   renderModuleMilestones(container, manifest, roleId, careerData);
@@ -382,6 +476,30 @@ function renderProgressHero(container, manifest, roleId, careerData) {
           : `You have read ${stats.completedCount} of ${manifest.totalLessons} lessons (${stats.percent}%). Progress stays on this device only.`;
 
   card.append(el("p", "progress-hero-meta", metaText));
+
+  if (storageAvailable()) {
+    const slugs = roleSlugs?.length ? roleSlugs : null;
+    const reviewCount = countReviewDue(manifest, slugs);
+    if (reviewCount > 0) {
+      const reviewRow = el("p", "progress-hero-review");
+      const first = findFirstReviewDue(manifest, slugs);
+      if (first) {
+        const link = el("a", "progress-hero-review-link");
+        link.href = lessonHref(first);
+        link.textContent =
+          reviewCount === 1
+            ? "1 lesson ready to review"
+            : `${reviewCount} lessons ready to review`;
+        reviewRow.append(link);
+      } else {
+        reviewRow.textContent =
+          reviewCount === 1
+            ? "1 lesson ready to review"
+            : `${reviewCount} lessons ready to review`;
+      }
+      card.append(reviewRow);
+    }
+  }
 
   if (cont || upNext) {
     const recs = el("div", "progress-hero-recs");

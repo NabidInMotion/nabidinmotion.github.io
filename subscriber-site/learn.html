@@ -5,7 +5,7 @@
   <link rel="icon" href="assets/logo.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Read the Road to Machine Learning curriculum on Nabid In Motion." />
-  <!-- deploy: 2026-07-06 -->
+  <!-- deploy: 2026-07-08 -->
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; upgrade-insecure-requests" />
@@ -102,6 +102,7 @@
         </div>
       </div>
       <p class="bookmark-notice" id="bookmark-notice" hidden role="status" aria-live="polite"></p>
+      <div class="review-due-banner" id="review-due-banner" hidden role="status" aria-live="polite"></div>
       <div id="module-checkpoint" class="module-checkpoint-host" hidden></div>
       <details class="study-assistant-panel" id="study-assistant-panel">
         <summary class="study-assistant-summary">Study assistant ::</summary>
@@ -127,6 +128,54 @@
           </form>
           <p class="study-assistant-status" id="study-assistant-status" hidden aria-live="polite">Searching…</p>
           <div class="study-assistant-results" id="study-assistant-results" hidden></div>
+        </div>
+      </details>
+      <details class="lesson-notes-panel" id="lesson-notes-panel" hidden>
+        <summary class="lesson-notes-summary">
+          <span class="lesson-notes-summary-label">My note ::</span>
+          <span class="lesson-notes-summary-preview" id="lesson-notes-summary-preview"></span>
+        </summary>
+        <div class="lesson-notes-body">
+          <p class="lesson-notes-prompt" id="lesson-notes-prompt"></p>
+          <div class="lesson-notes-view" id="lesson-notes-view" hidden>
+            <div class="lesson-notes-text" id="lesson-notes-text"></div>
+            <p class="lesson-notes-view-hint" id="lesson-notes-view-hint"></p>
+            <div class="lesson-notes-actions">
+              <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-edit">Edit note</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-clear-view">Clear</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-export-pdf" hidden>Export PDF</button>
+            </div>
+          </div>
+          <div class="lesson-notes-edit" id="lesson-notes-edit-wrap">
+            <div class="lesson-notes-toolbar" role="toolbar" aria-label="Note formatting">
+              <button type="button" class="lesson-notes-format-btn" data-note-format="bullet" title="Bullet list">• List</button>
+              <button type="button" class="lesson-notes-format-btn" data-note-format="heading" title="Heading">Heading</button>
+              <button type="button" class="lesson-notes-format-btn" data-note-format="bold" title="Bold"><strong>B</strong></button>
+              <button type="button" class="lesson-notes-format-btn" data-note-format="quote" title="Quote">Quote</button>
+              <button type="button" class="lesson-notes-format-btn" data-note-format="code" title="Code">Code</button>
+              <button type="button" class="lesson-notes-format-btn lesson-notes-preview-toggle" id="lesson-notes-preview-toggle" aria-pressed="false">Preview</button>
+            </div>
+            <textarea
+              id="lesson-notes-input"
+              class="lesson-notes-input"
+              rows="6"
+              maxlength="1500"
+              placeholder="Write your note here. Use the buttons above for bullets, headings, and more."
+            ></textarea>
+            <div class="lesson-notes-live-preview lesson-notes-text" id="lesson-notes-live-preview" hidden aria-label="Note preview"></div>
+            <p class="lesson-notes-format-hint" id="lesson-notes-format-hint">
+              Tips: put quotes on their own line with <code>&gt; </code>, or use the Quote button. Bullets: <code>- </code>, headings: <code>## </code>, bold: <code>**text**</code>.
+            </p>
+            <p class="lesson-notes-privacy" id="lesson-notes-privacy">
+              Stored locally in your browser only. Export uses your device (print-to-PDF).
+            </p>
+            <p class="lesson-notes-hint" id="lesson-notes-hint" hidden aria-live="polite"></p>
+            <div class="lesson-notes-actions">
+              <button type="button" class="btn btn-primary btn-sm" id="lesson-notes-save">Save note</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-cancel">Cancel</button>
+            </div>
+          </div>
+          <p class="lesson-notes-status" id="lesson-notes-status" hidden role="status" aria-live="polite"></p>
         </div>
       </details>
       <article class="reader-content prose" id="reader-content">
@@ -170,6 +219,7 @@
       <h2 class="explain-prompt-title" id="explain-prompt-title">What did you learn?</h2>
       <p class="explain-prompt-desc" id="explain-prompt-desc">Optional — one sentence helps memory. Saved on this device only.</p>
       <textarea id="explain-prompt-input" class="explain-prompt-input" rows="3" maxlength="500" placeholder="In one sentence…"></textarea>
+      <p class="explain-prompt-status" id="explain-prompt-status" hidden role="status" aria-live="polite"></p>
       <div class="explain-prompt-actions">
         <button type="button" class="btn btn-primary btn-sm" id="explain-prompt-save">Save</button>
         <button type="button" class="btn btn-ghost btn-sm" id="explain-prompt-skip">Skip</button>

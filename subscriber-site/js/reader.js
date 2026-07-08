@@ -3,23 +3,34 @@
  */
 import {
   buildLearnUrl,
+  countReviewDue,
   exportProgress,
   findBookmarks,
+  findFirstReviewDue,
   getConfidence,
   getModuleProgress,
+  getReflection,
+  getReflectionMeta,
   getStats,
   guideKey,
   importProgress,
   isBookmarked,
+  isLessonReviewDue,
   isLessonComplete,
   lessonKey,
   markLessonComplete,
   MAX_BOOKMARKS,
+  MAX_REFLECTION_LENGTH,
+  MIN_REFLECTION_LENGTH,
   onProgressChange,
   parseLessonKey,
+  pickReflectionPrompt,
+  recordLessonOpened,
+  REFLECTION_PROMPTS,
   resetProgress,
   setConfidence,
   setLastLesson,
+  setReflection,
   storageAvailable,
   toggleBookmark,
 } from "./progress.js";
@@ -92,6 +103,705 @@ function currentKey(route) {
   return null;
 }
 
+function lessonHref(item) {
+  if (item.type === "guide" || item.guideId) {
+    return buildLearnUrl({ guideId: item.guideId });
+  }
+  return buildLearnUrl({ module: item.module, lessonId: item.lessonId });
+}
+
+function roleModuleSlugs() {
+  const slugs = moduleSlugsForRole(selectedRoleId, careerData);
+  return slugs?.length ? slugs : null;
+}
+
+function updateReviewDueBanner(route) {
+  const banner = document.getElementById("review-due-banner");
+  if (!banner || !storageAvailable() || !manifest) {
+    if (banner) banner.hidden = true;
+    return;
+  }
+
+  const slugs = roleModuleSlugs();
+  const count = countReviewDue(manifest, slugs);
+  if (!count) {
+    banner.hidden = true;
+    clearChildren(banner);
+    return;
+  }
+
+  const key = currentKey(route);
+  const currentDue = key ? isLessonReviewDue(key, manifest, slugs) : false;
+  const first = findFirstReviewDue(manifest, slugs);
+
+  clearChildren(banner);
+  banner.hidden = false;
+
+  if (currentDue) {
+    banner.append(
+      el("span", "review-due-banner-label", "Worth revisiting today"),
+      el(
+        "span",
+        "review-due-banner-hint",
+        "Recall key ideas before scrolling — then re-read if needed."
+      )
+    );
+    return;
+  }
+
+  const label = el("span", "review-due-banner-label");
+  label.textContent =
+    count === 1 ? "1 lesson ready to review" : `${count} lessons ready to review`;
+
+  if (first) {
+    const link = el("a", "review-due-banner-link");
+    link.href = lessonHref(first);
+    link.textContent = `Start with “${first.title.length > 48 ? `${first.title.slice(0, 45)}…` : first.title}”`;
+    banner.append(label, document.createTextNode(" · "), link);
+  } else {
+    banner.append(label);
+  }
+}
+
+function notePreview(text, max = 52) {
+  const stripped = stripMarkdownForPreview(text);
+  if (!stripped) return "Add a note for this lesson";
+  return stripped.length > max ? `${stripped.slice(0, max - 1)}…` : stripped;
+}
+
+function stripMarkdownForPreview(text) {
+  let s = String(text ?? "");
+  s = s.replace(/```[\s\S]*?```/g, " ");
+  s = s.replace(/`([^`]+)`/g, "$1");
+  s = s.replace(/\*\*([^*]+)\*\*/g, "$1");
+  s = s.replace(/\*([^*]+)\*/g, "$1");
+  s = s.replace(/^#{1,3}\s+/gm, "");
+  s = s.replace(/^\s*[-*]\s+/gm, "");
+  s = s.replace(/^\s*>\s?/gm, "");
+  s = s.replace(/\s+>\s+/g, " — ");
+  s = s.replace(/\s+/g, " ").trim();
+  return s;
+}
+
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function unescapeHtmlEntities(text) {
+  return String(text ?? "")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+function escapeAttr(text) {
+  // Minimal attribute escaping for safe href injection.
+  return String(text ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function isSafeHttpUrl(url) {
+  if (typeof url !== "string") return false;
+  if (url.length > 2048) return false;
+  return /^https?:\/\/[^\s)]+$/i.test(url);
+}
+
+function renderInlineMarkdown(md) {
+  // Convert a small markdown subset into HTML.
+  // Always escapes the input first, so the only HTML we output is from our own templates.
+  let s = escapeHtml(md);
+
+  // Inline code
+  s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+  // Bold and italic
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  s = s.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+  // Inline quote (same line): " … > quoted text"
+  s = s.replace(/(?:^|\s)&gt;\s+([^<\n]+)/g, (match, quote) => {
+    const lead = match.startsWith("&gt;") ? "" : " ";
+    return `${lead}<span class="lesson-notes-inline-quote">${quote.trim()}</span>`;
+  });
+
+  // Links: [label](https://example.com)
+  s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, labelEsc, urlEsc) => {
+    const url = unescapeHtmlEntities(urlEsc);
+    if (!isSafeHttpUrl(url)) return `${labelEsc} (${escapeHtml(url)})`;
+    const href = escapeAttr(url);
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer">${labelEsc}</a>`;
+  });
+
+  return s;
+}
+
+function renderMarkdownToSafeHtml(md) {
+  const text = String(md ?? "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const lines = text.split("\n");
+  let i = 0;
+  const out = [];
+
+  const isBlockStart = (line) => {
+    if (/^```/.test(line)) return true;
+    if (/^#{1,3}\s+/.test(line)) return true;
+    if (/^\s*>/.test(line)) return true;
+    if (/^\s*[-*]\s+/.test(line)) return true;
+    return false;
+  };
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Code fence
+    if (/^```/.test(line)) {
+      const fence = line.match(/^```/);
+      const lang = fence ? line.slice(3).trim() : "";
+      i += 1;
+      const buf = [];
+      while (i < lines.length && !/^```/.test(lines[i])) {
+        buf.push(lines[i]);
+        i += 1;
+      }
+      // Skip closing fence if present
+      if (i < lines.length && /^```/.test(lines[i])) i += 1;
+      const codeEsc = escapeHtml(buf.join("\n"));
+      out.push(`<pre><code data-lang="${escapeAttr(lang)}">${codeEsc}</code></pre>`);
+      continue;
+    }
+
+    // Headings
+    const h = line.match(/^(#{1,3})\s+(.+)\s*$/);
+    if (h) {
+      const level = h[1].length;
+      const content = renderInlineMarkdown(h[2]);
+      out.push(`<h${level}>${content}</h${level}>`);
+      i += 1;
+      continue;
+    }
+
+    // Blockquote
+    if (/^\s*>/.test(line)) {
+      const buf = [];
+      while (i < lines.length && /^\s*>/.test(lines[i])) {
+        buf.push(lines[i].replace(/^\s*>\s?/, ""));
+        i += 1;
+      }
+      out.push(`<blockquote>${renderInlineMarkdown(buf.join("\n")).replace(/\n/g, "<br/>")}</blockquote>`);
+      continue;
+    }
+
+    // Lists
+    if (/^\s*[-*]\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
+        items.push(lines[i].replace(/^\s*[-*]\s+/, ""));
+        i += 1;
+      }
+      const lis = items.map((it) => `<li>${renderInlineMarkdown(it)}</li>`).join("");
+      out.push(`<ul>${lis}</ul>`);
+      continue;
+    }
+
+    // Paragraphs
+    if (!line.trim()) {
+      i += 1;
+      continue;
+    }
+    const buf = [];
+    while (i < lines.length && lines[i].trim() && !isBlockStart(lines[i])) {
+      buf.push(lines[i]);
+      i += 1;
+    }
+    const paragraph = buf.join("\n");
+    const content = renderInlineMarkdown(paragraph).replace(/\n/g, "<br/>");
+    out.push(`<p>${content}</p>`);
+  }
+
+  return out.join("");
+}
+
+function renderLessonNoteMarkdown(container, text) {
+  if (!container) return;
+  const trimmed = String(text ?? "").trim();
+  container.innerHTML = trimmed ? renderMarkdownToSafeHtml(trimmed) : "";
+}
+
+function insertNoteFormat(kind) {
+  const input = document.getElementById("lesson-notes-input");
+  if (!input) return;
+
+  const start = input.selectionStart ?? 0;
+  const end = input.selectionEnd ?? 0;
+  const value = input.value;
+  const selected = value.slice(start, end);
+  let insert = "";
+  let selectStart = start;
+  let selectEnd = start;
+
+  switch (kind) {
+    case "bullet": {
+      const lines = (selected || "").split("\n");
+      const bulletLines = lines.map((line) => (line.trim() ? `- ${line.replace(/^\s*[-*]\s+/, "")}` : "- "));
+      insert = selected ? bulletLines.join("\n") : "- ";
+      selectEnd = start + insert.length;
+      break;
+    }
+    case "heading":
+      insert = selected ? `## ${selected}` : "## ";
+      selectEnd = start + insert.length;
+      break;
+    case "bold":
+      insert = selected ? `**${selected}**` : "**bold**";
+      if (!selected) {
+        selectStart = start + 2;
+        selectEnd = start + 6;
+      } else {
+        selectEnd = start + insert.length;
+      }
+      break;
+    case "quote": {
+      const lineStart = value.lastIndexOf("\n", Math.max(0, start - 1)) + 1;
+      const beforeCursor = value.slice(lineStart, start);
+      const atLineStart = beforeCursor.trim() === "";
+      const lines = (selected || "").split("\n");
+      if (selected) {
+        insert = lines
+          .map((line) => (line.trim() ? `> ${line.replace(/^\s*>\s?/, "")}` : "> "))
+          .join("\n");
+      } else if (!atLineStart) {
+        insert = "\n> ";
+      } else {
+        insert = "> ";
+      }
+      selectEnd = start + insert.length;
+      break;
+    }
+    case "code":
+      if (selected.includes("\n")) {
+        insert = `\`\`\`\n${selected}\n\`\`\``;
+        selectEnd = start + insert.length;
+      } else {
+        insert = `\`${selected || "code"}\``;
+        if (!selected) {
+          selectStart = start + 1;
+          selectEnd = start + 5;
+        } else {
+          selectEnd = start + insert.length;
+        }
+      }
+      break;
+    default:
+      return;
+  }
+
+  input.value = value.slice(0, start) + insert + value.slice(end);
+  input.focus();
+  input.setSelectionRange(selectStart, selectEnd);
+  updateNotesDirtyState();
+  updateLessonNotesHint();
+  updateLessonNotesLivePreview();
+}
+
+function updateLessonNotesLivePreview() {
+  const input = document.getElementById("lesson-notes-input");
+  const preview = document.getElementById("lesson-notes-live-preview");
+  const toggle = document.getElementById("lesson-notes-preview-toggle");
+  if (!input || !preview || !toggle || toggle.getAttribute("aria-pressed") !== "true") return;
+  renderLessonNoteMarkdown(preview, input.value);
+}
+
+function toggleLessonNotesPreview() {
+  const preview = document.getElementById("lesson-notes-live-preview");
+  const toggle = document.getElementById("lesson-notes-preview-toggle");
+  const input = document.getElementById("lesson-notes-input");
+  if (!preview || !toggle || !input) return;
+
+  const on = toggle.getAttribute("aria-pressed") !== "true";
+  toggle.setAttribute("aria-pressed", on ? "true" : "false");
+  preview.hidden = !on;
+  if (on) {
+    renderLessonNoteMarkdown(preview, input.value);
+  } else {
+    preview.innerHTML = "";
+  }
+}
+
+function buildNotePrintDocument({ lessonTitle, promptTitle, savedAt, noteHtml }) {
+  const safeLessonTitle = escapeHtml(lessonTitle || "Lesson note");
+  const safePromptTitle = escapeHtml(promptTitle || "Note");
+  const safeSavedAt = escapeHtml(savedAt || "");
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>${safeLessonTitle} — Note</title>
+  <meta name="referrer" content="no-referrer" />
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:28px;color:#0f172a}
+    h1{font-size:1.15rem;margin:0 0 0.5rem}
+    .meta{margin:0 0 1rem;color:#475569;font-size:0.9rem}
+    .note{padding:14px 16px;border:1px solid rgba(15,23,42,0.14);border-radius:12px;background:#f8fafc}
+    .note p{margin:0 0 0.7rem}
+    .note p:last-child{margin-bottom:0}
+    .note pre{white-space:pre;overflow:auto;padding:12px 14px;border-radius:10px;background:#0b1220;color:#e5e7eb;border:1px solid rgba(15,23,42,0.16)}
+    .note code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    .note blockquote{margin:0.7rem 0;padding:8px 12px;border-left:3px solid #3b82f6;background:rgba(59,130,246,0.08);color:#475569;border-radius:8px}
+    .note .lesson-notes-inline-quote{display:inline-block;margin-left:0.15rem;padding:2px 6px;border-left:2px solid #3b82f6;background:rgba(59,130,246,0.08);color:#475569;border-radius:6px;font-style:italic}
+    .note ul{padding-left:1.25rem;margin:0 0 0.7rem}
+    .note li{margin:0.25rem 0}
+    .note a{color:#0369a1}
+    .note h1,.note h2,.note h3{margin:0.2rem 0 0.7rem}
+    .note strong{font-weight:700}
+    .note em{font-style:italic}
+    @media print {
+      body { margin: 18mm; }
+      .note { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <h1>${safeLessonTitle}</h1>
+  <div class="meta">${safePromptTitle}${safeSavedAt ? ` · saved ${safeSavedAt}` : ""}</div>
+  <div class="note">${noteHtml}</div>
+</body>
+</html>`;
+}
+
+function exportLessonNotePdf({ lessonTitle, promptTitle, savedAt, noteHtml }) {
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("aria-hidden", "true");
+  iframe.setAttribute("title", "Note export");
+  iframe.style.cssText =
+    "position:fixed;width:0;height:0;border:0;opacity:0;pointer-events:none;left:-9999px;top:0";
+  document.body.appendChild(iframe);
+
+  const frameWindow = iframe.contentWindow;
+  const doc = iframe.contentDocument || frameWindow?.document;
+  if (!doc || !frameWindow) {
+    iframe.remove();
+    return { ok: false, error: "Could not prepare export on this device." };
+  }
+
+  doc.open();
+  doc.write(
+    buildNotePrintDocument({ lessonTitle, promptTitle, savedAt, noteHtml })
+  );
+  doc.close();
+
+  const cleanup = () => {
+    window.setTimeout(() => iframe.remove(), 1500);
+  };
+
+  const printFrame = () => {
+    try {
+      frameWindow.focus();
+      frameWindow.print();
+      cleanup();
+      return { ok: true };
+    } catch {
+      iframe.remove();
+      return { ok: false, error: "Could not open print dialog on this device." };
+    }
+  };
+
+  if (doc.readyState === "complete") {
+    return printFrame();
+  }
+
+  iframe.addEventListener(
+    "load",
+    () => {
+      printFrame();
+    },
+    { once: true }
+  );
+  return { ok: true };
+}
+
+let lessonNotesMode = "edit";
+
+function setLessonNotesMode(mode) {
+  lessonNotesMode = mode;
+  const view = document.getElementById("lesson-notes-view");
+  const edit = document.getElementById("lesson-notes-edit-wrap");
+  const panel = document.getElementById("lesson-notes-panel");
+  const exportBtn = document.getElementById("lesson-notes-export-pdf");
+  if (!view || !edit) return;
+  view.hidden = mode !== "view";
+  edit.hidden = mode !== "edit";
+  panel?.classList.toggle("lesson-notes-panel--viewing", mode === "view");
+  panel?.classList.toggle("lesson-notes-panel--editing", mode === "edit");
+  if (exportBtn) exportBtn.hidden = mode !== "view";
+  if (mode === "edit") {
+    updateLessonNotesHint();
+  } else {
+    const hint = document.getElementById("lesson-notes-hint");
+    if (hint) hint.hidden = true;
+    const preview = document.getElementById("lesson-notes-live-preview");
+    const toggle = document.getElementById("lesson-notes-preview-toggle");
+    if (preview) {
+      preview.hidden = true;
+      preview.innerHTML = "";
+    }
+    if (toggle) toggle.setAttribute("aria-pressed", "false");
+  }
+}
+
+function updateLessonNotesSummary(text) {
+  const preview = document.getElementById("lesson-notes-summary-preview");
+  if (preview) preview.textContent = notePreview(text);
+}
+
+function updateLessonNotesUI(route, { forceEdit = false, preserveStatus = false } = {}) {
+  const panel = document.getElementById("lesson-notes-panel");
+  const promptEl = document.getElementById("lesson-notes-prompt");
+  const input = document.getElementById("lesson-notes-input");
+  const textEl = document.getElementById("lesson-notes-text");
+  const hintEl = document.getElementById("lesson-notes-view-hint");
+  if (!panel || !input || !textEl) return;
+
+  const key = currentKey(route);
+  if (!key || !storageAvailable()) {
+    panel.hidden = true;
+    return;
+  }
+
+  const saved = getReflection(key);
+  const meta = getReflectionMeta(key);
+  const promptId = meta?.prompt || pickReflectionPrompt(key);
+  const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+  const hasSaved = !!saved.trim();
+
+  panel.hidden = false;
+  updateLessonNotesSummary(saved);
+
+  if (promptEl && !preserveStatus) {
+    const savedAt = meta?.at ? formatSavedAt(meta.at) : null;
+    promptEl.textContent = savedAt
+      ? `${prompt.title} — saved ${savedAt}`
+      : prompt.title;
+  }
+
+  input.placeholder = prompt.placeholder;
+  input.value = saved;
+  renderLessonNoteMarkdown(textEl, saved);
+
+  if (hintEl) {
+    hintEl.textContent = hasSaved
+      ? "Saved on this device for this lesson. Open Study Hub home to see all your notes."
+      : "";
+    hintEl.hidden = !hasSaved;
+  }
+
+  if (forceEdit || !hasSaved) {
+    setLessonNotesMode("edit");
+    panel.open = true;
+    updateLessonNotesHint();
+  } else {
+    setLessonNotesMode("view");
+    panel.open = false;
+  }
+
+  panel.classList.remove("lesson-notes-panel--dirty");
+}
+
+function saveLessonNote() {
+  if (!current || !storageAvailable()) return false;
+  const input = document.getElementById("lesson-notes-input");
+  const saveBtn = document.getElementById("lesson-notes-save");
+  const promptEl = document.getElementById("lesson-notes-prompt");
+  const panel = document.getElementById("lesson-notes-panel");
+  if (!input) return false;
+
+  const key = currentKey(current);
+  if (!key) return false;
+
+  const text = input.value;
+  const promptId = getReflectionMeta(key)?.prompt || pickReflectionPrompt(key);
+  const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+
+  lessonNotesSaving = true;
+  const result = setReflection(key, text, promptId);
+  lessonNotesSaving = false;
+
+  if (!result.ok) {
+    showLessonNotesStatus(result.error, { error: true });
+    if (result.text !== undefined) input.value = result.text;
+    updateLessonNotesHint();
+    return false;
+  }
+
+  const savedText = result.text || "";
+  if (!savedText) {
+    updateLessonNotesUI(current, { forceEdit: true });
+    showLessonNotesStatus("Note cleared on this device.");
+    return true;
+  }
+
+  renderLessonNoteMarkdown(document.getElementById("lesson-notes-text"), savedText);
+  updateLessonNotesSummary(savedText);
+  setLessonNotesMode("view");
+  updateLessonNotesUI(current, { preserveStatus: true });
+
+  const savedLabel = new Date().toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  if (promptEl) {
+    promptEl.textContent = `${prompt.title} — ✓ saved just now (${savedLabel})`;
+  }
+  showLessonNotesStatus("Saved — continue reading. Reopen My note anytime or find it on Study Hub home.");
+
+  if (saveBtn) {
+    const prior = saveBtn.textContent;
+    saveBtn.textContent = "Saved ✓";
+    saveBtn.disabled = true;
+    setTimeout(() => {
+      saveBtn.textContent = prior;
+      saveBtn.disabled = false;
+    }, 2000);
+  }
+
+  setTimeout(() => {
+    if (panel && lessonNotesMode === "view") panel.open = false;
+  }, 2200);
+
+  return true;
+}
+
+function clearLessonNote() {
+  if (!current) return;
+  const key = currentKey(current);
+  if (!key) return;
+  if (!window.confirm("Clear your note for this lesson on this device?")) return;
+  const result = setReflection(key, "");
+  if (!result.ok) {
+    showLessonNotesStatus(result.error, { error: true });
+    return;
+  }
+  updateLessonNotesUI(current, { forceEdit: true });
+  showLessonNotesStatus("Note cleared on this device.");
+}
+
+function bindLessonNotes() {
+  const panel = document.getElementById("lesson-notes-panel");
+  const input = document.getElementById("lesson-notes-input");
+  if (!panel || !input || !storageAvailable()) return;
+
+  panel.addEventListener("toggle", () => {
+    if (!panel.open || !current) return;
+    const key = currentKey(current);
+    if (!key) return;
+    const saved = getReflection(key).trim();
+    if (saved && lessonNotesMode !== "edit") {
+      setLessonNotesMode("view");
+    } else if (!saved) {
+      setLessonNotesMode("edit");
+      input.focus();
+    }
+  });
+
+  panel.addEventListener("click", (event) => {
+    if (event.target.closest("#lesson-notes-save")) {
+      event.preventDefault();
+      saveLessonNote();
+      return;
+    }
+    if (event.target.closest("#lesson-notes-export-pdf")) {
+      event.preventDefault();
+      const key = currentKey(current);
+      if (!key) return;
+      const savedText = getReflection(key).trim();
+      if (!savedText) {
+        showLessonNotesStatus("Add a note first, then export it.", { error: true });
+        return;
+      }
+
+      const meta = getReflectionMeta(key);
+      const promptId = meta?.prompt || pickReflectionPrompt(key);
+      const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+
+      const noteHtml = renderMarkdownToSafeHtml(savedText);
+      const savedAtLabel = meta?.at ? formatSavedAt(meta.at) : null;
+      const result = exportLessonNotePdf({
+        lessonTitle: currentTitle || "Lesson note",
+        promptTitle: prompt.title,
+        savedAt: savedAtLabel,
+        noteHtml,
+      });
+
+      if (!result.ok) {
+        showLessonNotesStatus(result.error, { error: true });
+        return;
+      }
+
+      showLessonNotesStatus("Print dialog opened — choose Save as PDF.");
+      return;
+    }
+    if (event.target.closest("#lesson-notes-cancel")) {
+      event.preventDefault();
+      if (!current) return;
+      const key = currentKey(current);
+      if (!key) return;
+      input.value = getReflection(key);
+      if (getReflection(key).trim()) {
+        setLessonNotesMode("view");
+        panel.classList.remove("lesson-notes-panel--dirty");
+      } else {
+        setLessonNotesMode("edit");
+      }
+      return;
+    }
+    if (event.target.closest("#lesson-notes-edit")) {
+      event.preventDefault();
+      setLessonNotesMode("edit");
+      input.focus();
+      return;
+    }
+    const formatBtn = event.target.closest("[data-note-format]");
+    if (formatBtn) {
+      event.preventDefault();
+      insertNoteFormat(formatBtn.dataset.noteFormat);
+      return;
+    }
+    if (event.target.closest("#lesson-notes-preview-toggle")) {
+      event.preventDefault();
+      toggleLessonNotesPreview();
+      return;
+    }
+    if (
+      event.target.closest("#lesson-notes-clear-view") ||
+      event.target.closest("#lesson-notes-clear")
+    ) {
+      event.preventDefault();
+      clearLessonNote();
+    }
+  });
+
+  input.addEventListener("input", () => {
+    updateNotesDirtyState();
+    updateLessonNotesHint();
+    updateLessonNotesLivePreview();
+  });
+
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      saveLessonNote();
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      document.getElementById("lesson-notes-cancel")?.click();
+    }
+  });
+}
+
 function setSanitizedHtml(container, html) {
   clearChildren(container);
   const wrap = document.createElement("div");
@@ -121,6 +831,79 @@ function stripBookmarksHash() {
 }
 
 let bookmarkNoticeTimer = null;
+let lessonNotesStatusTimer = null;
+let lessonNotesSaving = false;
+
+function formatSavedAt(iso) {
+  if (!iso) return null;
+  try {
+    return new Date(iso).toLocaleString("de-DE", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return iso.slice(0, 16);
+  }
+}
+
+function showLessonNotesStatus(message, { error = false } = {}) {
+  const node = document.getElementById("lesson-notes-status");
+  const panel = document.getElementById("lesson-notes-panel");
+  if (!node) return;
+  node.textContent = message;
+  node.hidden = false;
+  node.classList.toggle("lesson-notes-status--error", error);
+  panel?.classList.toggle("lesson-notes-panel--saved", !error);
+  if (panel && !panel.open) panel.open = true;
+  clearTimeout(lessonNotesStatusTimer);
+  lessonNotesStatusTimer = setTimeout(() => {
+    node.hidden = true;
+    node.classList.remove("lesson-notes-status--error");
+    panel?.classList.remove("lesson-notes-panel--saved");
+  }, error ? 8000 : 5000);
+}
+
+function updateLessonNotesHint() {
+  const input = document.getElementById("lesson-notes-input");
+  const hint = document.getElementById("lesson-notes-hint");
+  if (!input || !hint || lessonNotesMode !== "edit") {
+    if (hint) hint.hidden = true;
+    return;
+  }
+  hint.hidden = false;
+  const len = input.value.length;
+  const parts = [`${len}/${MAX_REFLECTION_LENGTH}`];
+  if (len > 0 && len < MIN_REFLECTION_LENGTH) {
+    parts.push(`at least ${MIN_REFLECTION_LENGTH} characters to save`);
+  } else {
+    parts.push("leave empty to clear");
+  }
+  hint.textContent = parts.join(" · ");
+  hint.classList.toggle("lesson-notes-hint--warn", len > 0 && len < MIN_REFLECTION_LENGTH);
+}
+
+function updateNotesDirtyState() {
+  const input = document.getElementById("lesson-notes-input");
+  const promptEl = document.getElementById("lesson-notes-prompt");
+  const panel = document.getElementById("lesson-notes-panel");
+  if (!input || !promptEl || !current || !panel || panel.hidden || lessonNotesMode !== "edit") {
+    return;
+  }
+  const key = currentKey(current);
+  if (!key) return;
+  const stored = getReflection(key);
+  const dirty = input.value.trim() !== stored;
+  panel.classList.toggle("lesson-notes-panel--dirty", dirty);
+  const meta = getReflectionMeta(key);
+  const promptId = meta?.prompt || pickReflectionPrompt(key);
+  const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+  if (dirty) {
+    promptEl.textContent = `${prompt.title} — unsaved changes`;
+  }
+}
 
 function showBookmarkNotice(message) {
   const node = document.getElementById("bookmark-notice");
@@ -528,6 +1311,10 @@ async function showLesson(route) {
     document.getElementById("lesson-legal").hidden = true;
     const checkpointHost = document.getElementById("module-checkpoint");
     if (checkpointHost) checkpointHost.hidden = true;
+    const notesPanel = document.getElementById("lesson-notes-panel");
+    if (notesPanel) notesPanel.hidden = true;
+    const reviewBanner = document.getElementById("review-due-banner");
+    if (reviewBanner) reviewBanner.hidden = true;
     clearChildren(document.getElementById("reader-breadcrumb"));
     clearChildren(document.getElementById("reader-pager"));
     const markWrap = document.querySelector(".mark-read");
@@ -574,6 +1361,8 @@ async function showLesson(route) {
   updateMarkRead(route);
   updateConfidenceUI(route);
   updateBookmarkUI(route);
+  updateLessonNotesUI(route);
+  updateReviewDueBanner(route);
   renderSidebarBookmarks();
 
   const readingMinutes = resolved.meta.readingMinutes || content.readingMinutes || null;
@@ -582,6 +1371,7 @@ async function showLesson(route) {
   const key = currentKey(route);
   if (key) {
     setLastLesson(key);
+    recordLessonOpened(key);
     setFocusLessonKey(key);
   } else {
     setFocusLessonKey(null);
@@ -691,6 +1481,7 @@ async function init() {
       },
     });
     mountExplainPrompt();
+    bindLessonNotes();
     mountReaderMeasureToggle();
     mountPrintButton();
     applyReaderMeasurePref();
@@ -707,6 +1498,14 @@ async function init() {
       renderSidebarModules(document.getElementById("sidebar-modules"));
       renderSidebarBookmarks();
       updateProgressUI();
+      if (current) updateReviewDueBanner(current);
+    });
+
+    onProgressChange(() => {
+      if (!current || lessonNotesSaving) return;
+      updateLessonNotesUI(current);
+      updateReviewDueBanner(current);
+      updateConfidenceUI(current);
     });
 
     let route = parseRoute();

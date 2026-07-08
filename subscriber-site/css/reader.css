@@ -896,6 +896,326 @@
   color: var(--text-muted, #9aa5b1);
 }
 
+/* ── Review due banner & lesson notes (learning loop tier 1) ── */
+
+.review-due-banner {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(126, 184, 232, 0.35);
+  border-radius: 0.5rem;
+  background: rgba(126, 184, 232, 0.08);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.review-due-banner-label {
+  font-weight: 600;
+  color: var(--accent, #7eb8e8);
+}
+
+.review-due-banner-hint {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--text-muted, #9aa5b1);
+  font-size: 0.82rem;
+}
+
+.review-due-banner-link {
+  color: var(--accent, #7eb8e8);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.review-due-banner-link:hover {
+  text-decoration: underline;
+}
+
+.lesson-notes-panel {
+  margin: 0 0 1rem;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.15);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lesson-notes-panel--dirty {
+  border-color: rgba(232, 184, 126, 0.45);
+}
+
+.lesson-notes-panel--saved {
+  border-color: rgba(126, 232, 168, 0.55);
+  box-shadow: 0 0 0 1px rgba(126, 232, 168, 0.15);
+}
+
+.lesson-notes-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.6rem;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted, #9aa5b1);
+  list-style: none;
+}
+
+.lesson-notes-summary-label {
+  flex: 0 0 auto;
+}
+
+.lesson-notes-summary-preview {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--accent, #9ec8ef);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lesson-notes-text {
+  margin: 0 0 0.65rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  white-space: normal;
+}
+
+.lesson-notes-view-hint {
+  margin: 0 0 0.65rem;
+  font-size: 0.78rem;
+  color: var(--text-muted, #9aa5b1);
+  line-height: 1.45;
+}
+
+.lesson-notes-privacy {
+  margin: 0.35rem 0 0.65rem;
+  font-size: 0.78rem;
+  color: var(--text-muted, #9aa5b1);
+  line-height: 1.35;
+}
+
+/* Markdown note preview (safe: generated from text, no raw HTML). */
+.lesson-notes-text p {
+  margin: 0 0 0.7rem;
+}
+.lesson-notes-text p:last-child {
+  margin-bottom: 0;
+}
+.lesson-notes-text h1,
+.lesson-notes-text h2,
+.lesson-notes-text h3 {
+  margin: 0.2rem 0 0.7rem;
+}
+.lesson-notes-text h1 {
+  font-size: 1.1rem;
+}
+.lesson-notes-text h2 {
+  font-size: 1.0rem;
+}
+.lesson-notes-text h3 {
+  font-size: 0.95rem;
+}
+.lesson-notes-text ul {
+  margin: 0 0 0.7rem;
+  padding-left: 1.25rem;
+}
+.lesson-notes-text li {
+  margin: 0.25rem 0;
+}
+.lesson-notes-text blockquote {
+  margin: 0.7rem 0;
+  padding: 0.25rem 0.7rem;
+  border-left: 3px solid rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--text-muted, #9aa5b1);
+  border-radius: 8px;
+}
+
+.lesson-notes-inline-quote {
+  display: inline-block;
+  margin-left: 0.15rem;
+  padding: 0.1rem 0.45rem;
+  border-left: 2px solid rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--text-muted, #c5d0dc);
+  border-radius: 6px;
+  font-style: italic;
+}
+.lesson-notes-text code {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-size: 0.92em;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 0.08rem 0.35rem;
+  border-radius: 6px;
+}
+.lesson-notes-text pre {
+  margin: 0 0 0.7rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+}
+.lesson-notes-text pre code {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+.lesson-notes-text a {
+  color: var(--accent, #9ec8ef);
+  word-break: break-word;
+}
+
+.lesson-notes-summary::-webkit-details-marker {
+  display: none;
+}
+
+.lesson-notes-body {
+  padding: 0 0.85rem 0.85rem;
+}
+
+.lesson-notes-prompt {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  color: var(--text-muted, #9aa5b1);
+}
+
+.lesson-notes-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+}
+
+.lesson-notes-format-btn {
+  padding: 0.28rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text-muted, #c5d0dc);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.lesson-notes-format-btn:hover,
+.lesson-notes-format-btn:focus-visible {
+  color: var(--accent, #9ec8ef);
+  border-color: rgba(126, 184, 232, 0.45);
+  outline: none;
+}
+
+.lesson-notes-format-btn[aria-pressed="true"] {
+  color: #0f172a;
+  background: rgba(126, 184, 232, 0.9);
+  border-color: transparent;
+}
+
+.lesson-notes-preview-toggle {
+  margin-left: auto;
+}
+
+.lesson-notes-live-preview {
+  margin: 0.45rem 0 0.65rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(126, 184, 232, 0.25);
+  min-height: 3rem;
+}
+
+.lesson-notes-live-preview:empty::before {
+  content: "Preview will appear here…";
+  color: var(--text-muted, #9aa5b1);
+  font-size: 0.84rem;
+}
+
+.lesson-notes-format-hint {
+  margin: 0.35rem 0 0.5rem;
+  font-size: 0.76rem;
+  color: var(--text-muted, #9aa5b1);
+  line-height: 1.4;
+}
+
+.lesson-notes-format-hint code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+  padding: 0.05rem 0.3rem;
+  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.lesson-notes-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.14));
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+  font: inherit;
+  line-height: 1.45;
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.lesson-notes-input:focus {
+  outline: 2px solid rgba(126, 184, 232, 0.45);
+  outline-offset: 1px;
+}
+
+.lesson-notes-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+}
+
+.lesson-notes-status {
+  margin: 0.65rem 0 0;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #9ee8c0;
+  background: rgba(126, 232, 168, 0.1);
+  border: 1px solid rgba(126, 232, 168, 0.35);
+}
+
+.lesson-notes-status[hidden] {
+  display: none !important;
+}
+
+.lesson-notes-status--error {
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+.lesson-notes-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.lesson-notes-hint--warn {
+  color: #fbbf24;
+}
+
 /* ── Reader tools: narrow measure, code blocks, checkpoint, explain prompt ── */
 
 .reader-page.reader-narrow .reader-content {
@@ -1148,6 +1468,27 @@
   font-size: 0.92rem;
   resize: vertical;
   min-height: 4.5rem;
+}
+
+.explain-prompt-status {
+  margin: 0.55rem 0 0;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #9ee8c0;
+  background: rgba(126, 232, 168, 0.1);
+  border: 1px solid rgba(126, 232, 168, 0.35);
+}
+
+.explain-prompt-status[hidden] {
+  display: none !important;
+}
+
+.explain-prompt-status--error {
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.35);
 }
 
 .explain-prompt-actions {

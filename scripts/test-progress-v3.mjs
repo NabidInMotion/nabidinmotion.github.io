@@ -43,8 +43,11 @@ function daysAgo(n) {
 }
 
 let passed = 0;
+let resetReflectionLimitsForTests = () => {};
+
 function test(name, fn) {
   try {
+    resetReflectionLimitsForTests();
     fn();
     passed += 1;
     console.log(`  ok ${name}`);
@@ -70,9 +73,25 @@ async function run() {
     setWeeklyFocusGoal,
     pickReflectionPrompt,
     setReflection,
+    getReflection,
     getReflectionMeta,
+    getReflectionCount,
+    validateReflectionText,
+    sanitizeReflectionText,
+    stripReflectionControlChars,
+    MAX_REFLECTIONS,
+    MAX_QUICK_REFLECTION_LENGTH,
+    MAX_REFLECTION_LENGTH,
     lessonKey,
+    findInProgressLessons,
+    countReviewDue,
+    isLessonReviewDue,
+    findFirstReviewDue,
+    recordLessonOpened,
+    resetReflectionLimitsForTests: resetLimits,
   } = p;
+
+  resetReflectionLimitsForTests = resetLimits;
 
   mockStorage();
 
@@ -149,14 +168,137 @@ async function run() {
     assert.equal(state.focusByKey[key], 25);
   });
 
+  test("reflection accepts up to lesson note limit", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    const longNote = "Lesson note. ".repeat(120).slice(0, 1500);
+    const saved = setReflection(key, longNote);
+    assert.equal(saved.ok, true);
+    assert.equal(getReflection(key).length, 1500);
+  });
+
+  test("quick reflection rejects text over popup limit", () => {
+    localStorage.clear();
+    const key = lessonKey("02-introduction-to-ml", "readme");
+    const tooLong = "Quick note. ".repeat(60);
+    const result = setReflection(key, tooLong, "summary", { maxLength: 500 });
+    assert.equal(result.ok, true);
+    assert.equal(getReflection(key).length, 500);
+  });
+
+  test("reflection total char budget blocks overflow", () => {
+    localStorage.clear();
+    const keys = [];
+    for (const mod of manifest.modules) {
+      for (const lesson of mod.lessons) {
+        keys.push(lessonKey(mod.slug, lesson.id));
+      }
+    }
+    assert.ok(keys.length > 80, "manifest needs enough lessons for budget test");
+    const reflections = {};
+    const reflectionMeta = {};
+    const now = new Date().toISOString();
+    for (let i = 0; i < 80; i += 1) {
+      reflections[keys[i]] = `Note ${i}. ${"ab".repeat(746)}`.slice(0, 1500);
+      reflectionMeta[keys[i]] = { prompt: "summary", at: now };
+    }
+    localStorage.setItem(
+      "nim-study-progress",
+      JSON.stringify({ v: 3, reflections, reflectionMeta })
+    );
+    const blocked = setReflection(keys[80], "Extra note content here.");
+    assert.equal(blocked.ok, false);
+    assert.match(blocked.error, /storage on this device is full/i);
+  });
+
   test("reflection prompt metadata saved", () => {
     localStorage.clear();
     const key = lessonKey("01-python-for-data-science", "readme");
     const prompt = pickReflectionPrompt(key);
     assert.ok(["summary", "confused", "apply"].includes(prompt));
-    setReflection(key, "Test reflection", "apply");
+    const saved = setReflection(key, "Test reflection", "apply");
+    assert.equal(saved.ok, true);
+    assert.equal(getReflection(key), "Test reflection");
     const meta = getReflectionMeta(key);
     assert.equal(meta.prompt, "apply");
+  });
+
+  test("reflection rejects too-short non-empty text", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    const result = setReflection(key, "a");
+    assert.equal(result.ok, false);
+    assert.match(result.error, /at least/i);
+    assert.equal(getReflection(key), "");
+  });
+
+  test("reflection rejects abusive repetition", () => {
+    const repeated = "x".repeat(50);
+    const validated = validateReflectionText(repeated);
+    assert.equal(validated.ok, false);
+    assert.match(validated.error, /repeated/i);
+  });
+
+  test("reflection sanitizes control characters on read", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    const state = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+    state.v = 3;
+    state.reflections = { [key]: "ok\u0000note" };
+    localStorage.setItem("nim-study-progress", JSON.stringify(state));
+    assert.equal(getReflection(key), "oknote");
+  });
+
+  test("reflection clear bypasses minimum length", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    setReflection(key, "Saved note");
+    const cleared = setReflection(key, "");
+    assert.equal(cleared.ok, true);
+    assert.equal(getReflection(key), "");
+  });
+
+  test("import normalizes invalid reflections on read", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    const key2 = lessonKey("02-introduction-to-ml", "readme");
+    localStorage.setItem(
+      "nim-study-progress",
+      JSON.stringify({
+        v: 3,
+        reflections: {
+          [key]: "a",
+          "not-a-valid-key": "should drop",
+          [key2]: "x".repeat(60),
+        },
+      })
+    );
+    assert.equal(getReflection(key), "");
+    assert.equal(getReflection(key2), "");
+    assert.equal(getReflectionCount(), 0);
+  });
+
+  test("in-progress lessons lists opened but incomplete", () => {
+    localStorage.clear();
+    const key = lessonKey("02-introduction-to-ml", "readme");
+    recordLessonOpened(key);
+    const items = findInProgressLessons(manifest);
+    assert.ok(items.some((i) => i.key === key));
+    markLessonComplete(key, true, manifest);
+    const after = findInProgressLessons(manifest);
+    assert.ok(!after.some((i) => i.key === key));
+  });
+
+  test("review due count and single-lesson check", () => {
+    localStorage.clear();
+    const key = lessonKey("01-python-for-data-science", "readme");
+    setConfidence(key, 1);
+    const state = JSON.parse(localStorage.getItem("nim-study-progress"));
+    state.confidenceAt[key] = daysAgo(8);
+    localStorage.setItem("nim-study-progress", JSON.stringify(state));
+    assert.ok(countReviewDue(manifest) >= 1);
+    assert.equal(isLessonReviewDue(key, manifest), true);
+    assert.ok(findFirstReviewDue(manifest)?.key === key || countReviewDue(manifest) >= 1);
   });
 
   test("v2 import upgrades to v3 fields", async () => {

@@ -3,6 +3,7 @@
  */
 import {
   getReflection,
+  MAX_QUICK_REFLECTION_LENGTH,
   pickReflectionPrompt,
   REFLECTION_PROMPTS,
   setReflection,
@@ -10,6 +11,14 @@ import {
 } from "./progress.js";
 
 let pending = null;
+
+function showExplainPromptStatus(message, { error = false } = {}) {
+  const node = document.getElementById("explain-prompt-status");
+  if (!node) return;
+  node.textContent = message;
+  node.hidden = !message;
+  node.classList.toggle("explain-prompt-status--error", error);
+}
 
 function overlayEl() {
   return document.getElementById("explain-prompt-overlay");
@@ -41,6 +50,7 @@ export function maybeExplainPrompt({ lessonKey, lessonTitle }) {
   if (desc) desc.textContent = prompt.desc;
   input.placeholder = prompt.placeholder;
   input.value = "";
+  showExplainPromptStatus("");
   overlay.hidden = false;
   input.focus();
 }
@@ -54,8 +64,16 @@ export function mountExplainPrompt() {
 
   saveBtn?.addEventListener("click", () => {
     if (!pending) return hideExplainPrompt();
-    const text = input.value.trim();
-    if (text) setReflection(pending.lessonKey, text, pending.promptId);
+    const text = input.value;
+    if (!text.trim()) return hideExplainPrompt();
+    const result = setReflection(pending.lessonKey, text, pending.promptId, {
+      maxLength: MAX_QUICK_REFLECTION_LENGTH,
+    });
+    if (!result.ok) {
+      showExplainPromptStatus(result.error, { error: true });
+      if (result.text !== undefined) input.value = result.text;
+      return;
+    }
     hideExplainPrompt();
   });
 

@@ -232,6 +232,104 @@ async function run() {
   record("LR-24", "Study assistant links to lessons", assistantResults.hasLink);
   record("LR-25", "Study assistant shows snippet text", assistantResults.snippet);
 
+  await page.goto(`${BASE}/learn.html?m=02-introduction-to-ml&l=readme`, {
+    waitUntil: "networkidle0",
+  });
+  await delay(500);
+
+  await page.evaluate(() => {
+    const panel = document.getElementById("lesson-notes-panel");
+    if (panel) panel.open = true;
+  });
+
+  const noteText = `SQA note ${Date.now()}`;
+  await page.evaluate((text) => {
+    const input = document.getElementById("lesson-notes-input");
+    if (input) input.value = text;
+  }, noteText);
+  await page.click("#lesson-notes-save");
+  await delay(2800);
+
+  const noteSave = await page.evaluate(() => ({
+    status: document.getElementById("lesson-notes-status")?.textContent?.trim(),
+    statusVisible: document.getElementById("lesson-notes-status")?.hidden === false,
+    viewVisible: document.getElementById("lesson-notes-view")?.hidden === false,
+    editHidden: document.getElementById("lesson-notes-edit-wrap")?.hidden === true,
+    panelOpen: document.getElementById("lesson-notes-panel")?.open === true,
+    summary: document.getElementById("lesson-notes-summary-preview")?.textContent?.trim(),
+    viewText: document.getElementById("lesson-notes-text")?.textContent?.trim(),
+    stored: (() => {
+      try {
+        const raw = JSON.parse(localStorage.getItem("nim-study-progress") || "{}");
+        return raw.reflections?.["02-introduction-to-ml/readme"] || "";
+      } catch {
+        return "";
+      }
+    })(),
+  }));
+
+  record(
+    "LN-01",
+    "Save note switches to read view with confirmation",
+    noteSave.viewVisible &&
+      noteSave.editHidden &&
+      noteSave.statusVisible &&
+      noteSave.status?.includes("continue reading"),
+    noteSave.status || "no status"
+  );
+  record(
+    "LN-02",
+    "Save note persists to localStorage",
+    noteSave.stored === noteText,
+    noteSave.stored || "empty"
+  );
+  record(
+    "LN-03",
+    "Saved note collapses and shows preview in summary",
+    !noteSave.panelOpen && noteSave.summary?.includes("SQA note"),
+    noteSave.summary || "no summary"
+  );
+  record(
+    "LN-04",
+    "Read view shows saved note text",
+    noteSave.viewText === noteText,
+    noteSave.viewText || "empty"
+  );
+
+  await page.reload({ waitUntil: "networkidle0" });
+  await delay(500);
+
+  const afterReload = await page.evaluate((text) => {
+    const panel = document.getElementById("lesson-notes-panel");
+    const summary = document.getElementById("lesson-notes-summary-preview")?.textContent || "";
+    const viewText = document.getElementById("lesson-notes-text")?.textContent?.trim() || "";
+    return {
+      collapsed: panel?.open === false,
+      summaryHasNote: summary.includes("SQA note"),
+      viewText,
+      matches: viewText === text,
+    };
+  }, noteText);
+  record(
+    "LN-05",
+    "Saved note survives reload in collapsed summary",
+    afterReload.matches && afterReload.collapsed,
+    afterReload.summaryHasNote ? afterReload.viewText : "missing"
+  );
+
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle0" });
+  await delay(400);
+  const homeNotes = await page.evaluate(() => ({
+    panel: !!document.querySelector(".learning-panel-notes"),
+    items: document.querySelectorAll(".learning-panel-item--note").length,
+  }));
+  record(
+    "LN-06",
+    "Study Hub home lists saved notes",
+    homeNotes.panel && homeNotes.items > 0,
+    `${homeNotes.items} notes`
+  );
+
   await browser.close();
 
   const failed = results.filter((r) => !r.pass).length;

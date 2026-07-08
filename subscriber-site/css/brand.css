@@ -530,6 +530,10 @@ a:hover { text-decoration: underline; }
   margin-top: 0.15rem;
 }
 
+.learning-panel-note-excerpt {
+  font-style: italic;
+}
+
 .learning-panel-list--scroll {
   max-height: 280px;
   overflow-y: auto;
@@ -552,6 +556,22 @@ a:hover { text-decoration: underline; }
   margin-top: 0.75rem;
   font-size: 0.82rem;
   text-decoration: none;
+}
+
+.progress-hero-review {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--blue, #7eb8e8);
+}
+
+.progress-hero-review-link {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.progress-hero-review-link:hover {
+  text-decoration: underline;
 }
 
 .project-lesson-bridge {
