@@ -60,8 +60,13 @@ export function renderContentStamp(container, manifest) {
 
   const legalLine = document.createElement("p");
   legalLine.className = "content-stamp-legal";
+  const isDe = (document.documentElement.lang || "en").toLowerCase().startsWith("de");
+  const rights = isDe ? "Alle Rechte vorbehalten." : "All rights reserved.";
+  const edu = isDe
+    ? "Nur zu Bildungszwecken · Keine Genauigkeitsgarantie · Nutzung auf eigenes Risiko"
+    : "Educational only · No accuracy guarantee · Use at your own risk";
   legalLine.innerHTML =
-    'Educational only · No accuracy guarantee · Use at your own risk · <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a> · <a href="terms.html">Terms (EN)</a>';
+    `© Nabid In Motion. ${rights} · ${edu} · <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a> · <a href="terms.html">Terms (EN)</a>`;
   container.append(legalLine);
 }
 
@@ -146,9 +151,38 @@ export function initTermsBanner() {
   });
 }
 
+export function enhanceFooterCopyright() {
+  const isDe = (document.documentElement.lang || "en").toLowerCase().startsWith("de");
+  const notice = isDe ? "Alle Rechte vorbehalten." : "All rights reserved.";
+
+  document.querySelectorAll(".site-footer #footer-year").forEach((yearEl) => {
+    const line = yearEl.closest("p");
+    if (!line || line.dataset.rightsReserved === "1") return;
+
+    const full = line.textContent || "";
+    if (/all rights reserved|alle rechte vorbehalten/i.test(full)) {
+      line.dataset.rightsReserved = "1";
+      return;
+    }
+
+    for (const node of line.childNodes) {
+      if (node.nodeType !== Node.TEXT_NODE) continue;
+      if (!node.textContent.includes("Nabid In Motion")) continue;
+      node.textContent = node.textContent.replace(
+        /(Nabid In Motion)\.?\s*/,
+        `$1. ${notice} `,
+      );
+      line.dataset.rightsReserved = "1";
+      return;
+    }
+  });
+}
+
 export async function initSiteMeta(options = {}) {
   const year = document.getElementById("footer-year");
   if (year) year.textContent = String(new Date().getFullYear());
+
+  enhanceFooterCopyright();
 
   initMobileNav();
 
