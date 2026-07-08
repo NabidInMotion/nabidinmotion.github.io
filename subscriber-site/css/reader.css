@@ -948,6 +948,10 @@
 }
 
 .lesson-notes-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.6rem;
   padding: 0.55rem 0.85rem;
   cursor: pointer;
   font-size: 0.82rem;
@@ -956,6 +960,41 @@
   text-transform: uppercase;
   color: var(--text-muted, #9aa5b1);
   list-style: none;
+}
+
+.lesson-notes-summary-label {
+  flex: 0 0 auto;
+}
+
+.lesson-notes-summary-preview {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--accent, #9ec8ef);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lesson-notes-text {
+  margin: 0 0 0.65rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.lesson-notes-view-hint {
+  margin: 0 0 0.65rem;
+  font-size: 0.78rem;
+  color: var(--text-muted, #9aa5b1);
+  line-height: 1.45;
 }
 
 .lesson-notes-summary::-webkit-details-marker {

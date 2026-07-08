@@ -161,12 +161,38 @@ function updateReviewDueBanner(route) {
   }
 }
 
-function updateLessonNotesUI(route, { preserveStatus = false } = {}) {
+function notePreview(text, max = 52) {
+  const trimmed = String(text || "").trim();
+  if (!trimmed) return "Add a note for this lesson";
+  return trimmed.length > max ? `${trimmed.slice(0, max - 1)}…` : trimmed;
+}
+
+let lessonNotesMode = "edit";
+
+function setLessonNotesMode(mode) {
+  lessonNotesMode = mode;
+  const view = document.getElementById("lesson-notes-view");
+  const edit = document.getElementById("lesson-notes-edit-wrap");
+  const panel = document.getElementById("lesson-notes-panel");
+  if (!view || !edit) return;
+  view.hidden = mode !== "view";
+  edit.hidden = mode !== "edit";
+  panel?.classList.toggle("lesson-notes-panel--viewing", mode === "view");
+  panel?.classList.toggle("lesson-notes-panel--editing", mode === "edit");
+}
+
+function updateLessonNotesSummary(text) {
+  const preview = document.getElementById("lesson-notes-summary-preview");
+  if (preview) preview.textContent = notePreview(text);
+}
+
+function updateLessonNotesUI(route, { forceEdit = false, preserveStatus = false } = {}) {
   const panel = document.getElementById("lesson-notes-panel");
   const promptEl = document.getElementById("lesson-notes-prompt");
   const input = document.getElementById("lesson-notes-input");
-  const clearBtn = document.getElementById("lesson-notes-clear");
-  if (!panel || !input) return;
+  const textEl = document.getElementById("lesson-notes-text");
+  const hintEl = document.getElementById("lesson-notes-view-hint");
+  if (!panel || !input || !textEl) return;
 
   const key = currentKey(route);
   if (!key || !storageAvailable()) {
@@ -174,20 +200,41 @@ function updateLessonNotesUI(route, { preserveStatus = false } = {}) {
     return;
   }
 
-  panel.hidden = false;
+  const saved = getReflection(key);
   const meta = getReflectionMeta(key);
   const promptId = meta?.prompt || pickReflectionPrompt(key);
   const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
+  const hasSaved = !!saved.trim();
+
+  panel.hidden = false;
+  updateLessonNotesSummary(saved);
+
   if (promptEl && !preserveStatus) {
     const savedAt = meta?.at ? formatSavedAt(meta.at) : null;
     promptEl.textContent = savedAt
       ? `${prompt.title} — saved ${savedAt}`
       : prompt.title;
   }
+
   input.placeholder = prompt.placeholder;
-  input.value = getReflection(key);
-  if (clearBtn) clearBtn.hidden = !input.value.trim();
-  panel.open = true;
+  input.value = saved;
+  textEl.textContent = saved;
+
+  if (hintEl) {
+    hintEl.textContent = hasSaved
+      ? "Saved on this device for this lesson. Open Study Hub home to see all your notes."
+      : "";
+    hintEl.hidden = !hasSaved;
+  }
+
+  if (forceEdit || !hasSaved) {
+    setLessonNotesMode("edit");
+    panel.open = true;
+  } else {
+    setLessonNotesMode("view");
+    panel.open = false;
+  }
+
   panel.classList.remove("lesson-notes-panel--dirty");
 }
 
@@ -196,6 +243,7 @@ function saveLessonNote() {
   const input = document.getElementById("lesson-notes-input");
   const saveBtn = document.getElementById("lesson-notes-save");
   const promptEl = document.getElementById("lesson-notes-prompt");
+  const panel = document.getElementById("lesson-notes-panel");
   if (!input) return false;
 
   const key = currentKey(current);
@@ -214,15 +262,25 @@ function saveLessonNote() {
     return false;
   }
 
-  updateLessonNotesUI(current);
+  if (!text) {
+    updateLessonNotesUI(current, { forceEdit: true });
+    showLessonNotesStatus("Note cleared on this device.");
+    return true;
+  }
+
+  document.getElementById("lesson-notes-text").textContent = text;
+  updateLessonNotesSummary(text);
+  setLessonNotesMode("view");
+  updateLessonNotesUI(current, { preserveStatus: true });
+
   const savedLabel = new Date().toLocaleTimeString("de-DE", {
     hour: "2-digit",
     minute: "2-digit",
   });
-  flashLessonNotesPrompt(promptEl, prompt.title, `✓ saved just now (${savedLabel})`);
-  showLessonNotesStatus(
-    text ? "Note saved on this device." : "Note cleared on this device."
-  );
+  if (promptEl) {
+    promptEl.textContent = `${prompt.title} — ✓ saved just now (${savedLabel})`;
+  }
+  showLessonNotesStatus("Saved — continue reading. Reopen My note anytime or find it on Study Hub home.");
 
   if (saveBtn) {
     const prior = saveBtn.textContent;
@@ -234,14 +292,40 @@ function saveLessonNote() {
     }, 2000);
   }
 
+  setTimeout(() => {
+    if (panel && lessonNotesMode === "view") panel.open = false;
+  }, 2200);
+
   return true;
+}
+
+function clearLessonNote() {
+  if (!current) return;
+  const key = currentKey(current);
+  if (!key) return;
+  if (!window.confirm("Clear your note for this lesson on this device?")) return;
+  setReflection(key, "");
+  updateLessonNotesUI(current, { forceEdit: true });
+  showLessonNotesStatus("Note cleared on this device.");
 }
 
 function bindLessonNotes() {
   const panel = document.getElementById("lesson-notes-panel");
   const input = document.getElementById("lesson-notes-input");
-  const clearBtn = document.getElementById("lesson-notes-clear");
   if (!panel || !input || !storageAvailable()) return;
+
+  panel.addEventListener("toggle", () => {
+    if (!panel.open || !current) return;
+    const key = currentKey(current);
+    if (!key) return;
+    const saved = getReflection(key).trim();
+    if (saved && lessonNotesMode !== "edit") {
+      setLessonNotesMode("view");
+    } else if (!saved) {
+      setLessonNotesMode("edit");
+      input.focus();
+    }
+  });
 
   panel.addEventListener("click", (event) => {
     if (event.target.closest("#lesson-notes-save")) {
@@ -249,21 +333,36 @@ function bindLessonNotes() {
       saveLessonNote();
       return;
     }
-    if (event.target.closest("#lesson-notes-clear")) {
+    if (event.target.closest("#lesson-notes-cancel")) {
       event.preventDefault();
       if (!current) return;
       const key = currentKey(current);
       if (!key) return;
-      if (!window.confirm("Clear your note for this lesson on this device?")) return;
-      setReflection(key, "");
-      input.value = "";
-      updateLessonNotesUI(current);
-      showLessonNotesStatus("Note cleared on this device.");
+      input.value = getReflection(key);
+      if (getReflection(key).trim()) {
+        setLessonNotesMode("view");
+        panel.classList.remove("lesson-notes-panel--dirty");
+      } else {
+        setLessonNotesMode("edit");
+      }
+      return;
+    }
+    if (event.target.closest("#lesson-notes-edit")) {
+      event.preventDefault();
+      setLessonNotesMode("edit");
+      input.focus();
+      return;
+    }
+    if (
+      event.target.closest("#lesson-notes-clear-view") ||
+      event.target.closest("#lesson-notes-clear")
+    ) {
+      event.preventDefault();
+      clearLessonNote();
     }
   });
 
   input.addEventListener("input", () => {
-    if (clearBtn) clearBtn.hidden = !input.value.trim();
     updateNotesDirtyState();
   });
 
@@ -271,6 +370,10 @@ function bindLessonNotes() {
     if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();
       saveLessonNote();
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      document.getElementById("lesson-notes-cancel")?.click();
     }
   });
 }
@@ -305,7 +408,6 @@ function stripBookmarksHash() {
 
 let bookmarkNoticeTimer = null;
 let lessonNotesStatusTimer = null;
-let lessonNotesPromptTimer = null;
 let lessonNotesSaving = false;
 
 function formatSavedAt(iso) {
@@ -330,29 +432,21 @@ function showLessonNotesStatus(message) {
   node.textContent = message;
   node.hidden = false;
   panel?.classList.add("lesson-notes-panel--saved");
+  if (panel && !panel.open) panel.open = true;
   clearTimeout(lessonNotesStatusTimer);
   lessonNotesStatusTimer = setTimeout(() => {
     node.hidden = true;
     panel?.classList.remove("lesson-notes-panel--saved");
-  }, 4000);
-  node.scrollIntoView({ block: "nearest", behavior: "smooth" });
-}
-
-function flashLessonNotesPrompt(promptEl, promptTitle, message) {
-  if (!promptEl) return;
-  clearTimeout(lessonNotesPromptTimer);
-  promptEl.textContent = `${promptTitle} — ${message}`;
-  lessonNotesPromptTimer = setTimeout(() => {
-    if (!current) return;
-    updateLessonNotesUI(current, { preserveStatus: true });
-  }, 2500);
+  }, 5000);
 }
 
 function updateNotesDirtyState() {
   const input = document.getElementById("lesson-notes-input");
   const promptEl = document.getElementById("lesson-notes-prompt");
   const panel = document.getElementById("lesson-notes-panel");
-  if (!input || !promptEl || !current || !panel || panel.hidden) return;
+  if (!input || !promptEl || !current || !panel || panel.hidden || lessonNotesMode !== "edit") {
+    return;
+  }
   const key = currentKey(current);
   if (!key) return;
   const stored = getReflection(key);
@@ -361,10 +455,7 @@ function updateNotesDirtyState() {
   const meta = getReflectionMeta(key);
   const promptId = meta?.prompt || pickReflectionPrompt(key);
   const prompt = REFLECTION_PROMPTS[promptId] || REFLECTION_PROMPTS.summary;
-  const savedAt = meta?.at ? formatSavedAt(meta.at) : null;
-  if (!dirty && savedAt && !promptEl.textContent.includes("✓")) {
-    promptEl.textContent = `${prompt.title} — saved ${savedAt}`;
-  } else if (dirty) {
+  if (dirty) {
     promptEl.textContent = `${prompt.title} — unsaved changes`;
   }
 }

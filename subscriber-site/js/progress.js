@@ -581,6 +581,33 @@ export function findInProgressLessons(manifest, moduleSlugs = null, { limit = 5 
   return limit ? items.slice(0, limit) : items;
 }
 
+export function findReflectionLessons(manifest, moduleSlugs = null, { limit = 5 } = {}) {
+  const state = loadRaw();
+  const allowed = moduleSlugs?.length ? new Set(moduleSlugs) : null;
+  const items = [];
+
+  for (const [key, text] of Object.entries(state.reflections || {})) {
+    if (!isValidProgressKey(key) || !String(text).trim()) continue;
+    const parsed = parseLessonKey(key, manifest);
+    if (!parsed) continue;
+    if (parsed.type === "module" && allowed && !allowed.has(parsed.module)) continue;
+    items.push({
+      key,
+      ...parsed,
+      type: parsed.type,
+      kind: "reflection",
+      text: String(text).trim(),
+      savedAt: state.reflectionMeta?.[key]?.at || null,
+    });
+  }
+
+  items.sort(
+    (a, b) => new Date(b.savedAt || 0).getTime() - new Date(a.savedAt || 0).getTime()
+  );
+
+  return limit ? items.slice(0, limit) : items;
+}
+
 export function findRefreshSuggestions(manifest, moduleSlugs = null, minDays = REFRESH_AFTER_DAYS) {
   const state = loadRaw();
   const now = Date.now();

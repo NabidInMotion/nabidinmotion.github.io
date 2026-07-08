@@ -530,6 +530,10 @@ a:hover { text-decoration: underline; }
   margin-top: 0.15rem;
 }
 
+.learning-panel-note-excerpt {
+  font-style: italic;
+}
+
 .learning-panel-list--scroll {
   max-height: 280px;
   overflow-y: auto;

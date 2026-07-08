@@ -131,19 +131,32 @@
         </div>
       </details>
       <details class="lesson-notes-panel" id="lesson-notes-panel" hidden>
-        <summary class="lesson-notes-summary">My note ::</summary>
+        <summary class="lesson-notes-summary">
+          <span class="lesson-notes-summary-label">My note ::</span>
+          <span class="lesson-notes-summary-preview" id="lesson-notes-summary-preview"></span>
+        </summary>
         <div class="lesson-notes-body">
           <p class="lesson-notes-prompt" id="lesson-notes-prompt"></p>
-          <textarea
-            id="lesson-notes-input"
-            class="lesson-notes-input"
-            rows="3"
-            maxlength="500"
-            placeholder="Optional — one sentence helps memory. Saved on this device only."
-          ></textarea>
-          <div class="lesson-notes-actions">
-            <button type="button" class="btn btn-primary btn-sm" id="lesson-notes-save">Save note</button>
-            <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-clear" hidden>Clear</button>
+          <div class="lesson-notes-view" id="lesson-notes-view" hidden>
+            <p class="lesson-notes-text" id="lesson-notes-text"></p>
+            <p class="lesson-notes-view-hint" id="lesson-notes-view-hint"></p>
+            <div class="lesson-notes-actions">
+              <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-edit">Edit note</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-clear-view">Clear</button>
+            </div>
+          </div>
+          <div class="lesson-notes-edit" id="lesson-notes-edit-wrap">
+            <textarea
+              id="lesson-notes-input"
+              class="lesson-notes-input"
+              rows="3"
+              maxlength="500"
+              placeholder="Optional — one sentence helps memory. Saved on this device only."
+            ></textarea>
+            <div class="lesson-notes-actions">
+              <button type="button" class="btn btn-primary btn-sm" id="lesson-notes-save">Save note</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="lesson-notes-cancel">Cancel</button>
+            </div>
           </div>
           <p class="lesson-notes-status" id="lesson-notes-status" hidden role="status" aria-live="polite"></p>
         </div>
