@@ -1329,7 +1329,12 @@ section { padding: 3.5rem 0; }
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 2rem;
-  align-items: center;
+  align-items: stretch;
+}
+.about-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .about-strip p {
   margin: 0;
