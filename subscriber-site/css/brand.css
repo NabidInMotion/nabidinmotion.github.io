@@ -1332,6 +1332,60 @@ section { padding: 3.5rem 0; }
   color: var(--text-muted);
   max-width: 720px;
 }
+.about-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.25rem;
+}
+.about-qr-panel {
+  text-align: center;
+}
+.about-qr-lead {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--slate-dim);
+  letter-spacing: 0.04em;
+  max-width: 16rem;
+}
+.about-qr-grid {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+.about-qr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  color: var(--slate);
+}
+.about-qr-card:hover { text-decoration: none; color: var(--text); }
+.about-qr-card img {
+  width: 132px;
+  height: 132px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  object-fit: contain;
+}
+.about-qr-card span {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.about-qr-note {
+  margin: 0.65rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--slate-dim);
+  letter-spacing: 0.03em;
+  max-width: 18rem;
+  line-height: 1.45;
+}
 
 /* ── Footer ── */
 .site-footer {
@@ -1441,6 +1495,8 @@ section { padding: 3.5rem 0; }
   }
   .nav-links a:hover { background: var(--blue-dim); text-decoration: none; }
   .about-strip { grid-template-columns: 1fr; }
+  .about-aside { align-items: stretch; }
+  .about-qr-panel { display: none; }
   .section-header h2 { font-size: clamp(1.1rem, 4vw, 1.5rem); }
   .phase-tabs { gap: 0.4rem; }
   .phase-tab { font-size: 0.65rem; padding: 0.4rem 0.65rem; }
