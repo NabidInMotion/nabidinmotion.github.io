@@ -1018,6 +1018,8 @@ function applyConfig(config) {
     github: config.links.githubRepo,
     youtube: config.links.youtubeChannel,
     subscribe: config.links.youtubeSubscribe,
+    support: config.links.buyMeACoffee,
+    amazon: config.links.amazonShop,
   };
 
   for (const [key, href] of Object.entries(linkMap)) {
