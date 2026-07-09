@@ -6,6 +6,38 @@ import { loadManifest } from "./content-loader.js";
 const TERMS_STORAGE_KEY = "nim-terms-v1";
 const TERMS_VERSION = "2026-06-22";
 
+const DEFAULT_MONETIZATION_LINKS = {
+  buyMeACoffee: "https://buymeacoffee.com/nabidinmotion",
+  amazonShop: "https://www.amazon.de/shop/nabidinmotion",
+};
+
+function isHttpsUrl(urlString) {
+  try {
+    return new URL(urlString).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+export async function fetchSiteLinks() {
+  try {
+    const res = await fetch("data/site-config.json");
+    if (!res.ok) return { ...DEFAULT_MONETIZATION_LINKS };
+    const raw = await res.json();
+    const links = raw?.links || {};
+    return {
+      buyMeACoffee: isHttpsUrl(links.buyMeACoffee)
+        ? links.buyMeACoffee
+        : DEFAULT_MONETIZATION_LINKS.buyMeACoffee,
+      amazonShop: isHttpsUrl(links.amazonShop)
+        ? links.amazonShop
+        : DEFAULT_MONETIZATION_LINKS.amazonShop,
+    };
+  } catch {
+    return { ...DEFAULT_MONETIZATION_LINKS };
+  }
+}
+
 export async function fetchManifest() {
   try {
     return await loadManifest();
@@ -177,17 +209,161 @@ export function enhanceFooterCopyright() {
   });
 }
 
+function monetizationCopy(isDe) {
+  return {
+    supportLabel: isDe ? "Unterstützen" : "Support",
+    shopLabel: isDe ? "Shop" : "Shop",
+    shopLabelLong: isDe ? "Shop (Affiliate)" : "Shop (affiliate)",
+    supportTitle: isDe
+      ? "Freiwillige Unterstützung über Buy Me a Coffee (externer Zahlungsdienst). Der Study Hub bleibt kostenlos."
+      : "Optional voluntary support via Buy Me a Coffee (third-party payment). The Study Hub stays free.",
+    shopTitle: isDe
+      ? "Affiliate-Link: Beim Kauf über diesen Link erhalte ich ggf. eine Provision, ohne Mehrkosten für Sie."
+      : "Affiliate link: we may earn a commission at no extra cost to you.",
+    heroLead: isDe
+      ? "Kostenlos · freiwillige Unterstützung willkommen"
+      : "Free forever · optional support welcome",
+  };
+}
+
+function createMonetizationLink(kind, links, { className = "", labels }) {
+  const a = document.createElement("a");
+  a.href = kind === "support" ? links.buyMeACoffee : links.amazonShop;
+  a.target = "_blank";
+  a.rel = kind === "support" ? "noopener noreferrer" : "noopener noreferrer sponsored";
+  a.dataset.link = kind === "support" ? "support" : "amazon";
+  a.title = kind === "support" ? labels.supportTitle : labels.shopTitle;
+  a.textContent = kind === "support" ? labels.supportLabel : labels.shopLabel;
+  if (className) a.className = className;
+  return a;
+}
+
+export function enhanceHeaderMonetization(links = DEFAULT_MONETIZATION_LINKS) {
+  const isDe = (document.documentElement.lang || "en").toLowerCase().startsWith("de");
+  const labels = monetizationCopy(isDe);
+
+  document.querySelectorAll(".site-header .nav-links").forEach((ul) => {
+    if (ul.dataset.monetizationHeader === "1" || ul.querySelector("[data-link='support']")) {
+      ul.dataset.monetizationHeader = "1";
+      return;
+    }
+
+    const li = document.createElement("li");
+    li.className = "nav-item-support";
+    li.append(createMonetizationLink("support", links, { className: "nav-link-support", labels }));
+    ul.append(li);
+    ul.dataset.monetizationHeader = "1";
+  });
+
+  const readerMeta = document.querySelector(".reader-header-meta");
+  if (readerMeta && !readerMeta.querySelector("[data-link='support']")) {
+    const support = createMonetizationLink("support", links, {
+      className: "btn btn-ghost btn-sm nav-link-support",
+      labels,
+    });
+    support.textContent = `${labels.supportLabel} ::`;
+    readerMeta.insertBefore(support, readerMeta.firstChild);
+  }
+}
+
+export function enhanceHeroMonetization(links = DEFAULT_MONETIZATION_LINKS) {
+  const heroActions = document.querySelector(".hero .hero-actions");
+  if (!heroActions || document.querySelector(".hero-support-hint")) return;
+
+  const isDe = (document.documentElement.lang || "en").toLowerCase().startsWith("de");
+  const labels = monetizationCopy(isDe);
+
+  const hint = document.createElement("p");
+  hint.className = "hero-support-hint";
+  hint.append(`${labels.heroLead} — `);
+
+  const support = createMonetizationLink("support", links, { labels });
+  support.className = "hero-support-link";
+  support.textContent = labels.supportLabel;
+  hint.append(support);
+
+  const sep = document.createElement("span");
+  sep.className = "hero-support-sep";
+  sep.setAttribute("aria-hidden", "true");
+  sep.textContent = " · ";
+  hint.append(sep);
+
+  const shop = createMonetizationLink("amazon", links, { labels });
+  shop.className = "hero-support-link";
+  shop.textContent = labels.shopLabelLong;
+  hint.append(shop);
+
+  heroActions.insertAdjacentElement("afterend", hint);
+}
+
+export function enhanceFooterMonetization(links = DEFAULT_MONETIZATION_LINKS) {
+  const isDe = (document.documentElement.lang || "en").toLowerCase().startsWith("de");
+  const labels = monetizationCopy(isDe);
+  const supportLabel = labels.supportLabel;
+  const shopLabel = isDe ? "Shop (Affiliate)" : "Shop";
+  const supportTitle = labels.supportTitle;
+  const shopTitle = labels.shopTitle;
+
+  document.querySelectorAll(".site-footer .footer-links").forEach((ul) => {
+    if (ul.dataset.monetization === "1" || ul.querySelector("[data-link='support']")) {
+      ul.dataset.monetization = "1";
+      return;
+    }
+
+    const supportLi = document.createElement("li");
+    const supportA = document.createElement("a");
+    supportA.href = links.buyMeACoffee;
+    supportA.target = "_blank";
+    supportA.rel = "noopener noreferrer";
+    supportA.dataset.link = "support";
+    supportA.title = supportTitle;
+    supportA.textContent = supportLabel;
+    supportLi.append(supportA);
+
+    const shopLi = document.createElement("li");
+    const shopA = document.createElement("a");
+    shopA.href = links.amazonShop;
+    shopA.target = "_blank";
+    shopA.rel = "noopener noreferrer sponsored";
+    shopA.dataset.link = "amazon";
+    shopA.title = shopTitle;
+    shopA.textContent = shopLabel;
+    shopLi.append(shopA);
+
+    ul.append(supportLi, shopLi);
+    ul.dataset.monetization = "1";
+  });
+
+  const noteText = isDe
+    ? "Amazon-Shop: Affiliate-Link (ggf. Provision). Buy Me a Coffee: freiwillige Unterstützung — der Study Hub bleibt kostenlos."
+    : "Amazon Shop: affiliate link (commission possible). Buy Me a Coffee: optional support — the Study Hub stays free.";
+
+  document.querySelectorAll(".site-footer .footer-inner").forEach((inner) => {
+    if (inner.querySelector(".footer-monetization-note")) return;
+    const linksUl = inner.querySelector(".footer-links");
+    if (!linksUl) return;
+    const note = document.createElement("p");
+    note.className = "footer-monetization-note";
+    note.textContent = noteText;
+    linksUl.insertAdjacentElement("afterend", note);
+  });
+}
+
 export async function initSiteMeta(options = {}) {
   const year = document.getElementById("footer-year");
   if (year) year.textContent = String(new Date().getFullYear());
 
   enhanceFooterCopyright();
 
+  const [manifest, monetizationLinks] = await Promise.all([fetchManifest(), fetchSiteLinks()]);
+  enhanceHeaderMonetization(monetizationLinks);
+  enhanceHeroMonetization(monetizationLinks);
+  enhanceFooterMonetization(monetizationLinks);
+
   initMobileNav();
 
   if (options.showBanner !== false) initTermsBanner();
 
-  const manifest = await fetchManifest();
   renderContentStamp(document.getElementById("content-stamp"), manifest);
   return manifest;
 }

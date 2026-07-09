@@ -7,6 +7,10 @@ const ALLOWED_LINK_HOSTS = new Set([
   "github.com",
   "www.youtube.com",
   "youtube.com",
+  "www.amazon.de",
+  "amazon.de",
+  "buymeacoffee.com",
+  "www.buymeacoffee.com",
 ]);
 
 const ALLOWED_IMAGE_HOSTS = new Set([
@@ -129,6 +133,8 @@ export function validateSiteConfig(raw) {
       youtubeSubscribe: sanitizeLink(links.youtubeSubscribe, "https://www.youtube.com/@NabidInMotion?sub_confirmation=1"),
       githubRepo: sanitizeLink(links.githubRepo, "https://github.com/NabidAlam/road-to-machine-learning"),
       githubProfile: sanitizeLink(links.githubProfile, "https://github.com/NabidAlam"),
+      buyMeACoffee: sanitizeLink(links.buyMeACoffee, "https://buymeacoffee.com/nabidinmotion"),
+      amazonShop: sanitizeLink(links.amazonShop, "https://www.amazon.de/shop/nabidinmotion"),
     },
     repo: {
       title: String(repo.title || "Road to ML").slice(0, 120),
