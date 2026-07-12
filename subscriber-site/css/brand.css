@@ -914,6 +914,7 @@ a:hover { text-decoration: underline; }
 
 /* ── Sections ── */
 section { padding: 3.5rem 0; }
+section[id] { scroll-margin-top: 5rem; }
 
 .section-header {
   margin-bottom: 2rem;
