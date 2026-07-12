@@ -777,7 +777,7 @@ function updateModulesSection(roleId, careerData, manifest) {
   if (desc) {
     desc.textContent = role
       ? `Showing modules from the ${role.title} career path. Phase tabs still work within this filtered set.`
-      : "Filter by phase or browse the full path. Study on site with saved progress, or open notebooks on GitHub.";
+      : "Pick a career path above, then study the modules for your role. Filter by phase or open notebooks on GitHub.";
   }
 
   renderCareerSummary(document.getElementById("career-role-summary"), roleId, careerData);
@@ -1092,6 +1092,7 @@ async function init() {
       renderCareerRoles(document.getElementById("career-role-grid"), careerData, roleId, onRoleSelect);
       if (manifest) refreshProgress(manifest, roleId, careerData);
       else updateModulesSection(roleId, careerData, manifest);
+      document.getElementById("modules")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
     if (manifest) {
