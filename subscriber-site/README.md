@@ -156,7 +156,7 @@ Site code changes (JS, CSS, HTML) follow the same PR → merge → deploy path (
 
 A GitHub Action (`.github/workflows/sync-curriculum.yml`) can rebuild `content/` from the submodule. Triggers: manual dispatch, daily schedule, or `repository_dispatch` from the curriculum repo.
 
-**Note:** With branch protection on `main`, the current workflow cannot push synced content directly — the job fails at `git push`. Use the [manual publish workflow](#publishing-to-production) above, or update the workflow to open a pull request instead of pushing to `main`.
+**Note:** With branch protection on `main`, the Sync curriculum workflow opens (or updates) a pull request on branch `sync/curriculum` instead of pushing to `main`. Review and merge that PR to publish content updates.
 
 Cross-repo auto-trigger setup (optional, in curriculum repo):
 
@@ -257,7 +257,7 @@ Run from the repo root:
 | Port 3080 in use | Stop the other process or change the port in `serve-site.js` |
 | Sync hits GitHub API instead of local files | Run `npm run curriculum:init` |
 | Cannot merge PR (“protected ref”) | Adjust ruleset: turn off **Restrict updates**, or add **Repository admin** to bypass |
-| Sync curriculum Action fails on push | Expected with branch protection — sync locally and open a PR instead |
+| Sync curriculum Action opens a PR instead of pushing to `main` | Expected with branch protection — review and merge the `sync/curriculum` PR |
 | Code blocks have no colors | CSP meta tag needs `'unsafe-inline'` in `style-src` (already set on HTML pages) |
 | New module missing on the hub | Add it to `data/modules.json` |
 | Wrong modules for a career path | Fix that role in `data/career-paths.json` |

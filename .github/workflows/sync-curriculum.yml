@@ -25,6 +25,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -51,7 +52,9 @@ jobs:
       - name: Build site content from local curriculum clone
         run: npm run sync:curriculum
 
-      - name: Commit synced content
+      - name: Commit synced content and open PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -60,5 +63,15 @@ jobs:
             echo "No curriculum changes to commit."
             exit 0
           fi
-          git commit -m "Sync curriculum from road-to-machine-learning." -m "Automated snapshot: markdown to sanitized HTML + syntax highlighting."
-          git push
+          BRANCH="sync/curriculum"
+          git checkout -B "$BRANCH"
+          git commit -m "Sync curriculum from road-to-machine-learning." \
+            -m "Automated snapshot: markdown to sanitized HTML + syntax highlighting."
+          git push origin "$BRANCH" --force-with-lease
+          if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
+            echo "Updated existing pull request for $BRANCH."
+          else
+            gh pr create --base main --head "$BRANCH" \
+              --title "Sync curriculum from road-to-machine-learning" \
+              --body "Automated curriculum snapshot from the Sync curriculum workflow. Review the content diff, then merge to publish."
+          fi
