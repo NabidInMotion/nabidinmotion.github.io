@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-08T21:56:58.945Z",
+  "syncedAt": "2026-07-14T11:13:00.575Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 268,
   "modules": [
@@ -1614,7 +1614,7 @@
       "title": "Career Roadmap Guide: Role-Specific Learning Paths",
       "source": "resources/career_roadmap_guide.md",
       "path": "guides/resources--career_roadmap_guide.json",
-      "readingMinutes": 32
+      "readingMinutes": 33
     },
     {
       "id": "resources--causal_inference_guide",
@@ -2034,7 +2034,7 @@
       "title": "Road to ML: From Zero to Hero",
       "source": "README.md",
       "path": "guides/readme.json",
-      "readingMinutes": 37
+      "readingMinutes": 38
     },
     {
       "id": "resources--stakeholder_communication",
@@ -2069,11 +2069,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-08T21:56:58.945Z",
-    "sourceCommit": "956b499cfe5e288ed4f9e20460286a2b7f68f863",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/956b499cfe5e288ed4f9e20460286a2b7f68f863",
-    "sourceCommitDate": "2026-07-08T23:49:48+02:00",
-    "sourceCommitMessage": "Merge pull request #4 from NabidAlam/fix/curriculum-pedagogy-review",
+    "contentSyncedAt": "2026-07-14T11:13:00.575Z",
+    "sourceCommit": "b9901e7533b2fe60ce59e25ff8f7ee28bf58b422",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/b9901e7533b2fe60ce59e25ff8f7ee28bf58b422",
+    "sourceCommitDate": "2026-07-09T00:01:08+02:00",
+    "sourceCommitMessage": "Merge pedagogy review branch: consistency fixes and study hub guide.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
