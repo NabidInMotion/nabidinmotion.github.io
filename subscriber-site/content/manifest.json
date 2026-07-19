@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-19T11:31:09.544Z",
+  "syncedAt": "2026-07-19T11:34:46.041Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 270,
   "modules": [
@@ -2083,11 +2083,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-19T11:31:09.544Z",
-    "sourceCommit": "498a228c02727b2da6cd684b0fcadcfb2540cceb",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/498a228c02727b2da6cd684b0fcadcfb2540cceb",
-    "sourceCommitDate": "2026-07-19T13:18:24+02:00",
-    "sourceCommitMessage": "Rewrite curriculum prose for a more human voice.",
+    "contentSyncedAt": "2026-07-19T11:34:46.041Z",
+    "sourceCommit": "f938a2d20bae5515553c58a668b2f5c6f95d5ac7",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/f938a2d20bae5515553c58a668b2f5c6f95d5ac7",
+    "sourceCommitDate": "2026-07-19T13:32:05+02:00",
+    "sourceCommitMessage": "Add AI Myths Busted guide for sticky expert mental models.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
