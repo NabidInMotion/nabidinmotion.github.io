@@ -124,6 +124,11 @@
       "title": "Full Stack AI Blueprint",
       "description": "TypeScript through deployment and AI integration across phases A to H.",
       "href": "https://github.com/NabidAlam/road-to-machine-learning/blob/main/resources/full_stack_ai_engineer_roadmap.md"
+    },
+    {
+      "title": "AI Engineering Glossary",
+      "description": "LLM, agent, RAG, and serving terms explained: what people say vs what it actually means.",
+      "localGuide": "learn.html?g=resources--ai_engineering_glossary"
     }
   ]
 }

@@ -80,6 +80,7 @@ const GUIDE_LOCAL = {
   "Career Roadmap Guide": "resources--career_roadmap_guide",
   "Full Stack AI Blueprint": "resources--full_stack_ai_engineer_roadmap",
   "System Design Track": "system-design--README",
+  "AI Engineering Glossary": "resources--ai_engineering_glossary",
 };
 
 async function loadJSON(path) {

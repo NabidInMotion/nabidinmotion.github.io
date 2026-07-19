@@ -11,7 +11,7 @@ NabidAlam/road-to-machine-learning     ← you still push markdown here (unchang
 NabidInMotion/nabidinmotion.github.io  ← sync + deploy → nabidinmotion.github.io
 ```
 
-## Step 1 — Brand repo on GitHub (you)
+## Step 1: Brand repo on GitHub (you)
 
 1. Log into **NabidInMotion** GitHub account.
 2. Repo must exist: **nabidinmotion.github.io** (public).
@@ -19,7 +19,7 @@ NabidInMotion/nabidinmotion.github.io  ← sync + deploy → nabidinmotion.githu
 4. **Settings → Pages → Source:** Deploy from branch → **gh-pages** → **/ (root)** → Save.
 5. **Actions → Deploy Study Hub → Run workflow** → wait for green → https://nabidinmotion.github.io
 
-## Step 2 — Push code from this IDE (automated below)
+## Step 2: Push code from this IDE (automated below)
 
 ```powershell
 git remote rename origin personal
@@ -31,7 +31,7 @@ Sign in as **NabidInMotion** when prompted (Windows Credential Manager if needed
 
 Keep `personal` remote as backup until the brand site is verified.
 
-## Step 3 — Update curriculum dispatch target (critical)
+## Step 3: Update curriculum dispatch target (critical)
 
 In **NabidAlam/road-to-machine-learning** → Settings → Actions:
 
@@ -48,13 +48,13 @@ CLI (if `gh` is logged in as NabidAlam):
 gh variable set STUDY_HUB_REPO --repo NabidAlam/road-to-machine-learning --body "NabidInMotion/nabidinmotion.github.io"
 ```
 
-## Step 4 — Verify Actions on brand repo
+## Step 4: Verify Actions on brand repo
 
 1. **Actions → Deploy Study Hub → Run workflow** → site live at https://nabidinmotion.github.io
 2. **Actions → Sync curriculum → Run workflow** → content rebuilds and redeploys
 3. Push a small `.md` change to `road-to-machine-learning` → notify → sync → deploy (end-to-end)
 
-## Step 5 — Archive old personal Study Hub (optional)
+## Step 5: Archive old personal Study Hub (optional)
 
 After brand site works:
 
@@ -69,4 +69,4 @@ origin   → NabidInMotion/nabidinmotion.github.io   (default push)
 personal → NabidAlam/nabidinmotion                 (backup / archive)
 ```
 
-Curriculum submodule URL stays `NabidAlam/road-to-machine-learning` — no change needed.
+Curriculum submodule URL stays `NabidAlam/road-to-machine-learning`, no change needed.

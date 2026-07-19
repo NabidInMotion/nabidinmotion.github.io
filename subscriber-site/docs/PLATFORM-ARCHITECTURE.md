@@ -9,7 +9,7 @@ Step by step plan to turn the subscriber site into a full on site learning hub s
 | Layer | Status | Detail |
 |-------|--------|--------|
 | Content sync script | Done | `npm run sync:curriculum` → `subscriber-site/content/` |
-| On-site reader | Done | `learn.html` — 265 lessons, VS Code syntax colors |
+| On-site reader | Done | `learn.html`. 265 lessons, VS Code syntax colors |
 | Progress | Done | localStorage on device only |
 | Auto sync on GitHub push | Optional | GitHub Action + cross-repo dispatch (see below) |
 | Live GitHub API in browser | No | By design (GDPR + speed) |
@@ -45,7 +45,7 @@ Step by step plan to turn the subscriber site into a full on site learning hub s
 | 3 | Converts to safe HTML, adds heading anchors, highlights code (Shiki `dark-plus`) |
 | 4 | Rewrites internal links → `learn.html?m=…&l=…` |
 | 5 | Writes JSON under `content/` + updates `manifest.json` with sync time + commit SHA |
-| 6 | You deploy `subscriber-site/` — subscribers read the snapshot |
+| 6 | You deploy `subscriber-site/`, subscribers read the snapshot |
 
 **Not automatic today unless you enable CI** (see section 1c).
 
@@ -70,7 +70,7 @@ Sync discovers new markdown automatically; the hub UI reads `modules.json` for l
 
 ## 1c. Automatic sync (recommended)
 
-Three patterns — pick one:
+Three patterns, pick one:
 
 | Pattern | When content updates | Best for |
 |---------|----------------------|----------|
@@ -96,7 +96,7 @@ Three patterns — pick one:
 
 ---
 
-## 2. Target architecture (Phase 1 to 5) — largely implemented
+## 2. Target architecture (Phase 1 to 5): largely implemented
 
 ```text
 ┌──────────────────────────────────────────────────────────────────┐
@@ -120,17 +120,17 @@ Three patterns — pick one:
 
 **Principles**
 
-1. **Static first** — scales to 100k users, minimal attack surface  
-2. **Content bundled at build** — no live GitHub API calls from user browsers (GDPR and speed)  
-3. **Progress stays on device** — localStorage only, never sent to a server  
-4. **No accounts** — no registration, no passwords, no personal data collection  
-5. **Opt in control** — export and reset progress buttons (GDPR user rights on device data)
+1. **Static first**, scales to 100k users, minimal attack surface  
+2. **Content bundled at build**, no live GitHub API calls from user browsers (GDPR and speed)  
+3. **Progress stays on device**, localStorage only, never sent to a server  
+4. **No accounts**, no registration, no passwords, no personal data collection  
+5. **Opt in control**, export and reset progress buttons (GDPR user rights on device data)
 
 ---
 
 ## 3. Step by step implementation plan
 
-### Step 1 — Content sync pipeline (build time)
+### Step 1: Content sync pipeline (build time)
 
 **Goal:** Copy curriculum from GitHub into your site so users read on your domain.
 
@@ -152,7 +152,7 @@ Three patterns — pick one:
 
 ---
 
-### Step 2 — Module reader UI
+### Step 2: Module reader UI
 
 **Goal:** Unified reading experience inside your brand shell.
 
@@ -173,7 +173,7 @@ Three patterns — pick one:
 
 ---
 
-### Step 3 — localStorage progress engine
+### Step 3: localStorage progress engine
 
 **Goal:** Save study status on the user device with no account.
 
@@ -210,7 +210,7 @@ Three patterns — pick one:
 |----------|--------|
 | Is localStorage personal data? | Can be, if it identifies a person. Here it stores **only learning progress**, no name, email, or ID. |
 | Legal basis | Art. 6(1)(f) GDPR legitimate interest, or Art. 6(1)(b) if viewed as service the user requested |
-| Cookie banner required? | **No**, for strictly functional storage that does not track across sites (eDPB: not ePrivacy “cookie” marketing/analytics) |
+| Cookie banner required? | **No**, for strictly functional storage that does not track across sites (eDPB, not ePrivacy “cookie” marketing/analytics) |
 | Must disclose? | **Yes** in `datenschutz.html` (new section: “Lokal gespeicherte Lernfortschritte”) |
 | User rights | Provide **Export** and **Delete** (reset) in UI. Data never leaves device unless user exports |
 
@@ -218,7 +218,7 @@ Three patterns — pick one:
 
 ---
 
-### Step 4 — Hub dashboard integration
+### Step 4: Hub dashboard integration
 
 **Goal:** Landing page becomes a study command center.
 
@@ -233,7 +233,7 @@ Three patterns — pick one:
 
 ---
 
-### Step 5 — GDPR and legal updates
+### Step 5: GDPR and legal updates
 
 **Goal:** Stay compliant after localStorage and content expansion.
 
@@ -251,7 +251,7 @@ Three patterns — pick one:
 
 ---
 
-### Step 6 — Deploy and operations
+### Step 6: Deploy and operations
 
 **Goal:** Production ready in Germany at scale.
 

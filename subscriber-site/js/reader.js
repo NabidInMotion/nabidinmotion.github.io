@@ -68,7 +68,7 @@ import { clearChildren, el } from "./security.js";
 
 const SLUG_RE = /^[0-9]{2}-[a-z0-9-]+$/;
 const LESSON_RE = /^[a-z0-9][a-z0-9.-]{0,80}$/i;
-const GUIDE_RE = /^[a-z0-9][a-z0-9-]{0,120}$/i;
+const GUIDE_RE = /^[a-z0-9][a-z0-9._-]{0,120}$/i;
 const BOOKMARKS_HASH = "#bookmarks";
 
 let manifest = null;
