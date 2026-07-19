@@ -7,9 +7,9 @@ The Study Hub is a **static site**: HTML, CSS, JS, and pre-built JSON. There is 
 | Layer | Behavior |
 |-------|----------|
 | **GitHub Pages + Fastly CDN** | Static files served from the edge; no app server to overload. |
-| **Client-only progress** | `localStorage` on each device — zero backend load from 100k users tracking lessons. |
+| **Client-only progress** | `localStorage` on each device, zero backend load from 100k users tracking lessons. |
 | **Build-time sanitization** | Curriculum HTML is sanitized during `npm run sync:curriculum`; reader trusts synced snapshots only. |
-| **No third-party runtime fetches** | Page load does not call YouTube, GitHub, or analytics APIs — only same-origin JSON. |
+| **No third-party runtime fetches** | Page load does not call YouTube, GitHub, or analytics APIs, only same-origin JSON. |
 
 ## Client-side abuse guards
 
@@ -28,7 +28,7 @@ Implemented in `subscriber-site/js/`:
 | Reader prefs whitelist (`narrow` only) | `reader-tools.js` |
 | Dev server: GET/HEAD only, path traversal blocked | `scripts/serve-site.js` |
 
-These protect **individual browsers** from malformed imports or extensions stuffing storage. They do **not** affect other users — there is no shared server state to corrupt.
+These protect **individual browsers** from malformed imports or extensions stuffing storage. They do **not** affect other users, there is no shared server state to corrupt.
 
 ## Cache strategy (bandwidth at scale)
 
@@ -53,15 +53,15 @@ After `loadManifest()`, `setContentVersion()` busts lesson cache when curriculum
 
 GitHub Pages **does not apply** `_headers` or custom `Cache-Control`. For serious scale or DDoS protection:
 
-1. **Put Cloudflare (or similar) in front of the custom domain** — WAF, DDoS mitigation, and cache rules that mirror `_headers`.
-2. **Monitor GitHub Pages bandwidth** — soft limits apply; CDN caching reduces origin hits.
+1. **Put Cloudflare (or similar) in front of the custom domain**. WAF, DDoS mitigation, and cache rules that mirror `_headers`.
+2. **Monitor GitHub Pages bandwidth**, soft limits apply; CDN caching reduces origin hits.
 3. **Optional: migrate host** to Cloudflare Pages, Netlify, or Vercel where `_headers` / `vercel.json` are enforced natively.
 
 ### Not needed (unless you add dynamic features)
 
-- Application rate limiting — no APIs to throttle
-- Database connection pools — no database
-- Session servers — progress is local-only
+- Application rate limiting, no APIs to throttle
+- Database connection pools, no database
+- Session servers, progress is local-only
 
 ## Threat model summary
 

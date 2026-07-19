@@ -1,4 +1,4 @@
-# Nabid In Motion Study Hub — Product Brand
+# Nabid In Motion Study Hub: Product Brand
 
 ## Positioning
 
@@ -20,7 +20,7 @@ The Study Hub is the subscriber companion to the open [Road to Machine Learning]
 
 ## Voice
 
-- Direct, engineer-to-engineer — no hype, no “10x” fluff
+- Direct, engineer-to-engineer, no hype, no “10x” fluff
 - Honest about scope: educational material, no warranty
 - Bilingual legal layer (DE primary, EN mirror) for EU/Germany launch
 - Terminal-inspired UI cues (`::` prompts) without cosplay
@@ -29,11 +29,11 @@ The Study Hub is the subscriber companion to the open [Road to Machine Learning]
 
 All dynamic behaviour runs in the browser or is pre-built at curriculum sync time. No third-party APIs at runtime.
 
-1. **Continue + Up next** — career-path-aware lesson recommendations from local progress
-2. **Project tracker** — separate checklist for 23 portfolio projects (not the same as “lesson read”)
-3. **Confidence check-ins** — optional self-assessment per lesson (Not yet / Partly / Yes), stored locally
-4. **New since last visit** — compares local `lastSeenCommit` to synced curriculum changelog
-5. **Full-text search** — offline index built at sync; search runs entirely in the browser
+1. **Continue + Up next**, career-path-aware lesson recommendations from local progress
+2. **Project tracker**, separate checklist for 23 portfolio projects (not the same as “lesson read”)
+3. **Confidence check-ins**, optional self-assessment per lesson (Not yet / Partly / Yes), stored locally
+4. **New since last visit**, compares local `lastSeenCommit` to synced curriculum changelog
+5. **Full-text search**, offline index built at sync; search runs entirely in the browser
 
 ## Data stored locally
 

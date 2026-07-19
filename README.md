@@ -1,4 +1,4 @@
-# Nabid In Motion — Study Hub
+# Nabid In Motion: Study Hub
 
 Static study hub for the [Road to Machine Learning](https://github.com/NabidAlam/road-to-machine-learning) curriculum. Subscribers read 265+ lessons in the browser, track progress locally, and filter modules by career path. No accounts, no cookies, no third-party tracking.
 
@@ -41,7 +41,7 @@ road-to-machine-learning          nabidinmotion (this repo)
 ### A. Curriculum changes (new or edited lessons)
 
 ```bash
-# 1 — In road-to-machine-learning (separate repo)
+# 1: In road-to-machine-learning (separate repo)
 cd road-to-machine-learning
 # edit .md files
 git add .
@@ -49,11 +49,11 @@ git commit -m "Update lesson X"
 git push origin main
 cd ..
 
-# 2 — In nabidinmotion (study hub)
+# 2: In nabidinmotion (study hub)
 npm run curriculum:sync          # pull submodule + rebuild subscriber-site/content/
 npm run site                     # optional: preview at http://localhost:3080
 
-# 3 — Publish via pull request (required: main is protected)
+# 3: Publish via pull request (required: main is protected)
 git checkout main
 git pull origin main
 git checkout -b sync/curriculum
@@ -61,9 +61,9 @@ git add subscriber-site/content/ road-to-machine-learning
 git commit -m "Sync curriculum from road-to-machine-learning."
 git push -u origin HEAD
 
-# 4 — On GitHub: open PR → base: main → review diff → merge
+# 4: On GitHub: open PR → base: main → review diff → merge
 #     (use your remote name if not origin, e.g. git push -u brand HEAD)
-# 5 — Actions → Deploy Study Hub runs automatically after merge
+# 5: Actions → Deploy Study Hub runs automatically after merge
 ```
 
 ### B. Site-only changes (JS, CSS, HTML, features)
@@ -94,7 +94,7 @@ git push -u origin HEAD
 | Workflow | When it runs | What it does |
 |----------|----------------|--------------|
 | **Deploy Study Hub** | Push to `main` touching `subscriber-site/` or deploy workflow | Builds artifact → deploys to GitHub Pages |
-| **Sync curriculum** | Manual, daily schedule, or optional cross-repo trigger | Rebuilds `content/` in CI — **fails on push to `main`** while branch protection is on; use the manual workflow above instead |
+| **Sync curriculum** | Manual, daily schedule, or optional cross-repo trigger | Rebuilds `content/` in CI. **fails on push to `main`** while branch protection is on; use the manual workflow above instead |
 
 The **Sync curriculum** Action is optional. Day-to-day publishing is: **push Road to ML → `npm run curriculum:sync` → PR to `main`**.
 
@@ -127,12 +127,12 @@ npm run site               # http://localhost:3080
 
 ```text
 nabidinmotion/
-├── subscriber-site/               # Deploy this — static study hub
+├── subscriber-site/               # Deploy this, static study hub
 │   ├── index.html, learn.html
 │   ├── js/, css/, data/
 │   ├── content/                 # Built from curriculum markdown
 │   └── assets/logo.png          # Site logo (exported copy)
-├── road-to-machine-learning/    # Git submodule — curriculum source
+├── road-to-machine-learning/    # Git submodule, curriculum source
 ├── scripts/
 │   ├── sync-curriculum.js       # Markdown → sanitized HTML + Shiki
 │   └── serve-site.js            # Local dev server
@@ -160,7 +160,7 @@ For architecture, security, publishing workflow, and GDPR checklist, see [subscr
 
 | Component | License |
 |-----------|---------|
-| **Study Hub** (this repo: code, design, JS/CSS, curated site) | **All rights reserved** — see [LICENSE](LICENSE) |
+| **Study Hub** (this repo: code, design, JS/CSS, curated site) | **All rights reserved**, see [LICENSE](LICENSE) |
 | **Curriculum markdown** (`road-to-machine-learning/`) | [MIT](https://github.com/NabidAlam/road-to-machine-learning/blob/main/LICENSE) in the curriculum repo only |
 
 Visitors may use the live site for personal learning. Copying, cloning, or republishing the Study Hub without written permission is prohibited. See [Nutzungsbedingungen](subscriber-site/nutzungsbedingungen.html) (DE) and [Terms](subscriber-site/terms.html) (EN).

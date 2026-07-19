@@ -19,40 +19,40 @@ Complete these steps before pointing your domain to production. The codebase is 
 - [x] HTTP security headers in `_headers`, `vercel.json`, `staticwebapp.config.json` (reference for forks / alt hosts; not applied on GitHub Pages)
 - [x] Contact email `nabidinmotionofficial@gmail.com` in legal pages and `security.txt`
 
-## Tier 1 — Before go live (required)
+## Tier 1: Before go live (required)
 
-- [ ] **Verify Impressum facts** — name, address, Gewerbe registration, Kleinunternehmer status must match reality
-- [ ] **Monitor `nabidinmotionofficial@gmail.com`** — privacy, legal, and security reports
-- [ ] **Hosting AVV (DPA)** — sign Article 28 GDPR agreement with host (GitHub, Cloudflare, Netlify, Vercel, etc.)
-- [ ] **HTTPS only** — deploy with valid TLS (GitHub Pages provides this)
-- [ ] **Set production URL** — after deploy, add canonical domain to `security.txt` `Canonical:` line and Impressum if desired
-- [ ] **Smoke test** — terms banner, one lesson, export/import progress, external links, mobile nav
+- [ ] **Verify Impressum facts**, name, address, Gewerbe registration, Kleinunternehmer status must match reality
+- [ ] **Monitor `nabidinmotionofficial@gmail.com`**, privacy, legal, and security reports
+- [ ] **Hosting AVV (DPA)**, sign Article 28 GDPR agreement with host (GitHub, Cloudflare, Netlify, Vercel, etc.)
+- [ ] **HTTPS only**, deploy with valid TLS (GitHub Pages provides this)
+- [ ] **Set production URL**, after deploy, add canonical domain to `security.txt` `Canonical:` line and Impressum if desired
+- [ ] **Smoke test**, terms banner, one lesson, export/import progress, external links, mobile nav
 
-## Tier 2 — Platform monetization (YouTube + Facebook)
+## Tier 2: Platform monetization (YouTube + Facebook)
 
 Revenue is off-site. Study Hub stays ad-free.
 
-- [ ] **YouTube** — channel complies with YouTube Terms, AdSense policies, and copyright rules
-- [ ] **Facebook** — profile/page complies with Meta Terms and monetization rules
+- [ ] **YouTube**, channel complies with YouTube Terms, AdSense policies, and copyright rules
+- [ ] **Facebook**, profile/page complies with Meta Terms and monetization rules
 - [ ] **Do not add** AdSense, Meta Pixel, or analytics to the Study Hub without consent UI and updated Datenschutz
 
-## Tier 3 — Tax and Gewerbe (Germany)
+## Tier 3: Tax and Gewerbe (Germany)
 
 - [ ] **Gewerbe** registration current at Bezirksamt Mitte von Berlin
-- [ ] **Steuerberater** — confirm Kleinunternehmer § 19 UStG and declare AdSense/Facebook payouts
-- [ ] **Bookkeeping** — track platform payouts even when small
+- [ ] **Steuerberater**, confirm Kleinunternehmer § 19 UStG and declare AdSense/Facebook payouts
+- [ ] **Bookkeeping**, track platform payouts even when small
 
-## Tier 4 — Content discipline
+## Tier 4: Content discipline
 
 - [ ] Label content as educational, not guaranteed outcomes
 - [ ] Fix reported serious factual errors in good faith
 - [ ] Do not copy unlicensed third-party course material
 - [ ] Avoid medical, legal, or investment advice framed as certainty
 
-## Tier 5 — Optional professional review
+## Tier 5: Optional professional review
 
-- [ ] **Medienrecht lawyer** — one-time review of Impressum + Nutzungsbedingungen (recommended, not mandatory for free static site)
-- [ ] **Steuerberater** — before first meaningful AdSense tax year
+- [ ] **Medienrecht lawyer**, one-time review of Impressum + Nutzungsbedingungen (recommended, not mandatory for free static site)
+- [ ] **Steuerberater**, before first meaningful AdSense tax year
 
 ## Fonts license
 

@@ -33,9 +33,10 @@ function safePath(urlPath) {
 function cacheControlFor(filePath) {
   const rel = path.relative(ROOT, filePath).replace(/\\/g, "/");
   if (rel.startsWith("assets/")) return "public, max-age=31536000, immutable";
-  if (rel.startsWith("content/")) return "public, max-age=86400";
-  if (rel.startsWith("css/") || rel.startsWith("js/")) return "public, max-age=604800";
-  if (rel.startsWith("data/")) return "public, max-age=3600";
+  // Dev server: never cache app JS/CSS/content so curriculum sync + bugfixes show up on refresh.
+  if (rel.startsWith("content/") || rel.startsWith("css/") || rel.startsWith("js/") || rel.startsWith("data/")) {
+    return "no-cache";
+  }
   return "no-cache";
 }
 

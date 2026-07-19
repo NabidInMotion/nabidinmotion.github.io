@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-08T21:56:58.945Z",
+  "syncedAt": "2026-07-19T11:18:14.900Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
-  "totalLessons": 268,
+  "totalLessons": 269,
   "modules": [
     {
       "slug": "00-prerequisites",
@@ -23,7 +23,7 @@
         },
         {
           "id": "02-linear-algebra",
-          "title": "Linear Algebra for Machine Learning - Deep Dive",
+          "title": "Linear Algebra for Machine Learning. Deep Dive",
           "source": "00-prerequisites/02-linear-algebra.md",
           "path": "modules/00-prerequisites/02-linear-algebra.json",
           "readingMinutes": 12
@@ -107,35 +107,35 @@
         },
         {
           "id": "04-exploratory-data-analysis",
-          "title": "Exploratory Data Analysis (EDA) - Complete Guide",
+          "title": "Exploratory Data Analysis (EDA): Complete Guide",
           "source": "01-python-for-data-science/04-exploratory-data-analysis.md",
           "path": "modules/01-python-for-data-science/04-exploratory-data-analysis.json",
           "readingMinutes": 7
         },
         {
           "id": "05-data-sources-and-integration",
-          "title": "Data Sources and Integration - Complete Guide",
+          "title": "Data Sources and Integration. Complete Guide",
           "source": "01-python-for-data-science/05-data-sources-and-integration.md",
           "path": "modules/01-python-for-data-science/05-data-sources-and-integration.json",
           "readingMinutes": 4
         },
         {
           "id": "06-regular-expressions-text-processing",
-          "title": "Regular Expressions and Text Processing - Complete Guide",
+          "title": "Regular Expressions and Text Processing. Complete Guide",
           "source": "01-python-for-data-science/06-regular-expressions-text-processing.md",
           "path": "modules/01-python-for-data-science/06-regular-expressions-text-processing.json",
           "readingMinutes": 2
         },
         {
           "id": "07-advanced-data-wrangling",
-          "title": "Advanced Data Wrangling - Complete Guide",
+          "title": "Advanced Data Wrangling. Complete Guide",
           "source": "01-python-for-data-science/07-advanced-data-wrangling.md",
           "path": "modules/01-python-for-data-science/07-advanced-data-wrangling.json",
           "readingMinutes": 2
         },
         {
           "id": "08-working-with-dates-times",
-          "title": "Working with Dates and Times - Complete Guide",
+          "title": "Working with Dates and Times. Complete Guide",
           "source": "01-python-for-data-science/08-working-with-dates-times.md",
           "path": "modules/01-python-for-data-science/08-working-with-dates-times.json",
           "readingMinutes": 2
@@ -212,7 +212,7 @@
         },
         {
           "id": "introduction-to-ml",
-          "title": "Introduction to Machine Learning - Complete Guide",
+          "title": "Introduction to Machine Learning. Complete Guide",
           "source": "02-introduction-to-ml/introduction-to-ml.md",
           "path": "modules/02-introduction-to-ml/introduction-to-ml.json",
           "readingMinutes": 10
@@ -233,7 +233,7 @@
         },
         {
           "id": "ml-terminology",
-          "title": "Machine Learning Terminology - Complete Reference",
+          "title": "Machine Learning Terminology. Complete Reference",
           "source": "02-introduction-to-ml/ml-terminology.md",
           "path": "modules/02-introduction-to-ml/ml-terminology.json",
           "readingMinutes": 8
@@ -254,14 +254,14 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Module 03: Supervised Learning - Regression",
+          "title": "Module 03: Supervised Learning. Regression",
           "source": "03-supervised-learning-regression/README.md",
           "path": "modules/03-supervised-learning-regression/readme.json",
           "readingMinutes": 3
         },
         {
           "id": "regression",
-          "title": "Supervised Learning - Regression Complete Guide",
+          "title": "Supervised Learning. Regression Complete Guide",
           "source": "03-supervised-learning-regression/regression.md",
           "path": "modules/03-supervised-learning-regression/regression.json",
           "readingMinutes": 3
@@ -296,14 +296,14 @@
       "lessons": [
         {
           "id": "readme",
-          "title": "Module 04: Supervised Learning - Classification",
+          "title": "Module 04: Supervised Learning. Classification",
           "source": "04-supervised-learning-classification/README.md",
           "path": "modules/04-supervised-learning-classification/readme.json",
           "readingMinutes": 3
         },
         {
           "id": "classification",
-          "title": "Supervised Learning - Classification Complete Guide",
+          "title": "Supervised Learning. Classification Complete Guide",
           "source": "04-supervised-learning-classification/classification.md",
           "path": "modules/04-supervised-learning-classification/classification.json",
           "readingMinutes": 14
@@ -551,7 +551,7 @@
           "title": "Module 10: Deep Learning Frameworks",
           "source": "10-deep-learning-frameworks/README.md",
           "path": "modules/10-deep-learning-frameworks/readme.json",
-          "readingMinutes": 3
+          "readingMinutes": 2
         },
         {
           "id": "deep-learning-frameworks",
@@ -684,7 +684,7 @@
           "title": "Model Deployment Complete Guide",
           "source": "13-model-deployment/deployment.md",
           "path": "modules/13-model-deployment/deployment.json",
-          "readingMinutes": 10
+          "readingMinutes": 9
         },
         {
           "id": "deployment-advanced-topics",
@@ -772,7 +772,7 @@
         },
         {
           "id": "resources",
-          "title": "Time Series Analysis — Additional Resources",
+          "title": "Time Series Analysis: Additional Resources",
           "source": "15-time-series-analysis/resources.md",
           "path": "modules/15-time-series-analysis/resources.json",
           "readingMinutes": 1
@@ -786,7 +786,7 @@
         },
         {
           "id": "time-series-analysis",
-          "title": "Time Series Analysis - Complete Guide",
+          "title": "Time Series Analysis. Complete Guide",
           "source": "15-time-series-analysis/time-series-analysis.md",
           "path": "modules/15-time-series-analysis/time-series-analysis.json",
           "readingMinutes": 7
@@ -975,21 +975,21 @@
         },
         {
           "id": "capstone-data-analytics-sql-ml",
-          "title": "Capstone: Data/Analytics — SQL → Metrics → Dashboard → ML (GDPR-Safe)",
+          "title": "Capstone: Data/Analytics: SQL → Metrics → Dashboard → ML (GDPR-Safe)",
           "source": "18-projects-advanced/capstones/capstone-data-analytics-sql-ml.md",
           "path": "modules/18-projects-advanced/capstone-data-analytics-sql-ml.json",
           "readingMinutes": 2
         },
         {
           "id": "capstone-llm-rag-engineer",
-          "title": "Capstone: LLM Engineer — RAG Knowledge Assistant (GDPR-Safe)",
+          "title": "Capstone: LLM Engineer: RAG Knowledge Assistant (GDPR-Safe)",
           "source": "18-projects-advanced/capstones/capstone-llm-rag-engineer.md",
           "path": "modules/18-projects-advanced/capstone-llm-rag-engineer.json",
           "readingMinutes": 2
         },
         {
           "id": "capstone-ml-engineer",
-          "title": "Capstone: ML Engineer — Real-Time Risk Scoring System (GDPR-Safe)",
+          "title": "Capstone: ML Engineer: Real-Time Risk Scoring System (GDPR-Safe)",
           "source": "18-projects-advanced/capstones/capstone-ml-engineer.md",
           "path": "modules/18-projects-advanced/capstone-ml-engineer.json",
           "readingMinutes": 3
@@ -1125,7 +1125,7 @@
           "title": "Handling Imbalanced Data Complete Guide",
           "source": "20-handling-imbalanced-data/imbalanced-data.md",
           "path": "modules/20-handling-imbalanced-data/imbalanced-data.json",
-          "readingMinutes": 5
+          "readingMinutes": 4
         },
         {
           "id": "imbalanced-data-advanced-topics",
@@ -1596,6 +1596,13 @@
       "readingMinutes": 6
     },
     {
+      "id": "resources--ai_engineering_glossary",
+      "title": "AI Engineering Glossary",
+      "source": "resources/ai_engineering_glossary.md",
+      "path": "guides/resources--ai_engineering_glossary.json",
+      "readingMinutes": 24
+    },
+    {
       "id": "resources--automl_basics",
       "title": "AutoML Basics Guide",
       "source": "resources/automl_basics.md",
@@ -1614,7 +1621,7 @@
       "title": "Career Roadmap Guide: Role-Specific Learning Paths",
       "source": "resources/career_roadmap_guide.md",
       "path": "guides/resources--career_roadmap_guide.json",
-      "readingMinutes": 32
+      "readingMinutes": 33
     },
     {
       "id": "resources--causal_inference_guide",
@@ -1667,7 +1674,7 @@
     },
     {
       "id": "resources--dsa_course_python",
-      "title": "Data Structures and Algorithms (DSA) in Python — Beginner to Interview-Ready",
+      "title": "Data Structures and Algorithms (DSA) in Python: Beginner to Interview-Ready",
       "source": "resources/dsa_course_python.md",
       "path": "guides/resources--dsa_course_python.json",
       "readingMinutes": 18
@@ -1730,7 +1737,7 @@
     },
     {
       "id": "resources--full_stack_track--README",
-      "title": "Full-Stack AI Track — In-Repo Lessons",
+      "title": "Full-Stack AI Track: In-Repo Lessons",
       "source": "resources/full_stack_track/README.md",
       "path": "guides/resources--full_stack_track--README.json",
       "readingMinutes": 1
@@ -1751,7 +1758,7 @@
     },
     {
       "id": "getting-started",
-      "title": "Getting Started - Your First ML Project",
+      "title": "Getting Started. Your First ML Project",
       "source": "GETTING_STARTED.md",
       "path": "guides/getting-started.json",
       "readingMinutes": 2
@@ -1800,7 +1807,7 @@
     },
     {
       "id": "learning-roadmap",
-      "title": "Learning Roadmap - Visual Guide",
+      "title": "Learning Roadmap. Visual Guide",
       "source": "LEARNING_ROADMAP.md",
       "path": "guides/learning-roadmap.json",
       "readingMinutes": 6
@@ -1817,7 +1824,7 @@
       "title": "Machine Learning Glossary",
       "source": "resources/ml_glossary.md",
       "path": "guides/resources--ml_glossary.json",
-      "readingMinutes": 13
+      "readingMinutes": 12
     },
     {
       "id": "resources--excel_data_analysis_guide",
@@ -1891,56 +1898,56 @@
     },
     {
       "id": "resources--full_stack_track--phase-a-typescript-foundations",
-      "title": "Phase A — TypeScript Foundations (In-Repo Lessons)",
+      "title": "Phase A: TypeScript Foundations (In-Repo Lessons)",
       "source": "resources/full_stack_track/phase-a-typescript-foundations.md",
       "path": "guides/resources--full_stack_track--phase-a-typescript-foundations.json",
       "readingMinutes": 3
     },
     {
       "id": "resources--full_stack_track--phase-b-node-apis",
-      "title": "Phase B — Node.js, HTTP, and API Core (In-Repo Lessons)",
+      "title": "Phase B: Node.js, HTTP, and API Core (In-Repo Lessons)",
       "source": "resources/full_stack_track/phase-b-node-apis.md",
       "path": "guides/resources--full_stack_track--phase-b-node-apis.json",
-      "readingMinutes": 3
+      "readingMinutes": 2
     },
     {
       "id": "resources--full_stack_track--phase-c-sql-databases",
-      "title": "Phase C — SQL and Relational Design (In-Repo Lessons)",
+      "title": "Phase C: SQL and Relational Design (In-Repo Lessons)",
       "source": "resources/full_stack_track/phase-c-sql-databases.md",
       "path": "guides/resources--full_stack_track--phase-c-sql-databases.json",
       "readingMinutes": 2
     },
     {
       "id": "resources--full_stack_track--phase-d-prisma-nextjs",
-      "title": "Phase D — Prisma and Next.js (In-Repo Lessons)",
+      "title": "Phase D: Prisma and Next.js (In-Repo Lessons)",
       "source": "resources/full_stack_track/phase-d-prisma-nextjs.md",
       "path": "guides/resources--full_stack_track--phase-d-prisma-nextjs.json",
       "readingMinutes": 2
     },
     {
       "id": "resources--full_stack_track--phase-e-backend-advanced",
-      "title": "Phase E — Advanced Backend Engineering (In-Repo Lessons)",
+      "title": "Phase E: Advanced Backend Engineering (In-Repo Lessons)",
       "source": "resources/full_stack_track/phase-e-backend-advanced.md",
       "path": "guides/resources--full_stack_track--phase-e-backend-advanced.json",
       "readingMinutes": 2
     },
     {
       "id": "resources--full_stack_track--phase-f-frontend-advanced",
-      "title": "Phase F — Advanced Frontend Engineering (In-Repo Lessons)",
+      "title": "Phase F: Advanced Frontend Engineering (In-Repo Lessons)",
       "source": "resources/full_stack_track/phase-f-frontend-advanced.md",
       "path": "guides/resources--full_stack_track--phase-f-frontend-advanced.json",
       "readingMinutes": 2
     },
     {
       "id": "resources--full_stack_track--phase-g-containers-cloud",
-      "title": "Phase G — Containers, Networking, and Delivery (In-Repo Lessons)",
+      "title": "Phase G: Containers, Networking, and Delivery (In-Repo Lessons)",
       "source": "resources/full_stack_track/phase-g-containers-cloud.md",
       "path": "guides/resources--full_stack_track--phase-g-containers-cloud.json",
       "readingMinutes": 1
     },
     {
       "id": "resources--full_stack_track--phase-h-ai-integration",
-      "title": "Phase H — AI Integration for Full-Stack Products (In-Repo Lessons)",
+      "title": "Phase H: AI Integration for Full-Stack Products (In-Repo Lessons)",
       "source": "resources/full_stack_track/phase-h-ai-integration.md",
       "path": "guides/resources--full_stack_track--phase-h-ai-integration.json",
       "readingMinutes": 2
@@ -2034,7 +2041,7 @@
       "title": "Road to ML: From Zero to Hero",
       "source": "README.md",
       "path": "guides/readme.json",
-      "readingMinutes": 37
+      "readingMinutes": 38
     },
     {
       "id": "resources--stakeholder_communication",
@@ -2069,11 +2076,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-08T21:56:58.945Z",
-    "sourceCommit": "956b499cfe5e288ed4f9e20460286a2b7f68f863",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/956b499cfe5e288ed4f9e20460286a2b7f68f863",
-    "sourceCommitDate": "2026-07-08T23:49:48+02:00",
-    "sourceCommitMessage": "Merge pull request #4 from NabidAlam/fix/curriculum-pedagogy-review",
+    "contentSyncedAt": "2026-07-19T11:18:14.900Z",
+    "sourceCommit": "b9901e7533b2fe60ce59e25ff8f7ee28bf58b422",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/b9901e7533b2fe60ce59e25ff8f7ee28bf58b422",
+    "sourceCommitDate": "2026-07-09T00:01:08+02:00",
+    "sourceCommitMessage": "Merge pedagogy review branch: consistency fixes and study hub guide.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
