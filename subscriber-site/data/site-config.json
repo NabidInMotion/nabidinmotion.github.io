@@ -129,6 +129,11 @@
       "title": "AI Engineering Glossary",
       "description": "LLM, agent, RAG, and serving terms explained: what people say vs what it actually means.",
       "localGuide": "learn.html?g=resources--ai_engineering_glossary"
+    },
+    {
+      "title": "AI Myths Busted",
+      "description": "Expert myth-busting for AI/ML/DL with sticky one-liners you can remember.",
+      "localGuide": "learn.html?g=resources--ai_myths_busted"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-19T11:18:14.900Z",
+  "syncedAt": "2026-07-19T11:31:09.544Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
-  "totalLessons": 269,
+  "totalLessons": 270,
   "modules": [
     {
       "slug": "00-prerequisites",
@@ -1603,6 +1603,13 @@
       "readingMinutes": 24
     },
     {
+      "id": "resources--ai_myths_busted",
+      "title": "AI Myths Busted",
+      "source": "resources/ai_myths_busted.md",
+      "path": "guides/resources--ai_myths_busted.json",
+      "readingMinutes": 14
+    },
+    {
       "id": "resources--automl_basics",
       "title": "AutoML Basics Guide",
       "source": "resources/automl_basics.md",
@@ -2076,11 +2083,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-19T11:18:14.900Z",
-    "sourceCommit": "b9901e7533b2fe60ce59e25ff8f7ee28bf58b422",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/b9901e7533b2fe60ce59e25ff8f7ee28bf58b422",
-    "sourceCommitDate": "2026-07-09T00:01:08+02:00",
-    "sourceCommitMessage": "Merge pedagogy review branch: consistency fixes and study hub guide.",
+    "contentSyncedAt": "2026-07-19T11:31:09.544Z",
+    "sourceCommit": "498a228c02727b2da6cd684b0fcadcfb2540cceb",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/498a228c02727b2da6cd684b0fcadcfb2540cceb",
+    "sourceCommitDate": "2026-07-19T13:18:24+02:00",
+    "sourceCommitMessage": "Rewrite curriculum prose for a more human voice.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
