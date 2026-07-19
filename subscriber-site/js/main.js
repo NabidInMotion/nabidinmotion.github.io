@@ -81,6 +81,7 @@ const GUIDE_LOCAL = {
   "Full Stack AI Blueprint": "resources--full_stack_ai_engineer_roadmap",
   "System Design Track": "system-design--README",
   "AI Engineering Glossary": "resources--ai_engineering_glossary",
+  "AI Myths Busted": "resources--ai_myths_busted",
 };
 
 async function loadJSON(path) {
