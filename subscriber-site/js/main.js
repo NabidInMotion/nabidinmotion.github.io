@@ -82,6 +82,7 @@ const GUIDE_LOCAL = {
   "System Design Track": "system-design--README",
   "AI Engineering Glossary": "resources--ai_engineering_glossary",
   "AI Myths Busted": "resources--ai_myths_busted",
+  "Backend Engineering Roadmap": "resources--backend_engineering_roadmap",
 };
 
 async function loadJSON(path) {

@@ -134,6 +134,11 @@
       "title": "AI Myths Busted",
       "description": "Expert myth-busting for AI/ML/DL with sticky one-liners you can remember.",
       "localGuide": "learn.html?g=resources--ai_myths_busted"
+    },
+    {
+      "title": "Backend Engineering Roadmap",
+      "description": "First-principles backend path: HTTP through scale, with free resources and in-repo links.",
+      "localGuide": "learn.html?g=resources--backend_engineering_roadmap"
     }
   ]
 }

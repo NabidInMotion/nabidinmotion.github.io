@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-19T11:34:46.041Z",
+  "syncedAt": "2026-07-20T13:18:35.339Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
-  "totalLessons": 270,
+  "totalLessons": 271,
   "modules": [
     {
       "slug": "00-prerequisites",
@@ -1617,6 +1617,13 @@
       "readingMinutes": 5
     },
     {
+      "id": "resources--backend_engineering_roadmap",
+      "title": "Backend Engineering from First Principles",
+      "source": "resources/backend_engineering_roadmap.md",
+      "path": "guides/resources--backend_engineering_roadmap.json",
+      "readingMinutes": 11
+    },
+    {
       "id": "resources--career_portfolio",
       "title": "Career & Portfolio Guide for ML/Data Science",
       "source": "resources/career_portfolio.md",
@@ -1628,7 +1635,7 @@
       "title": "Career Roadmap Guide: Role-Specific Learning Paths",
       "source": "resources/career_roadmap_guide.md",
       "path": "guides/resources--career_roadmap_guide.json",
-      "readingMinutes": 33
+      "readingMinutes": 35
     },
     {
       "id": "resources--causal_inference_guide",
@@ -1747,7 +1754,7 @@
       "title": "Full-Stack AI Track: In-Repo Lessons",
       "source": "resources/full_stack_track/README.md",
       "path": "guides/resources--full_stack_track--README.json",
-      "readingMinutes": 1
+      "readingMinutes": 2
     },
     {
       "id": "resources--genai_production_deployment",
@@ -2083,11 +2090,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-19T11:34:46.041Z",
-    "sourceCommit": "f938a2d20bae5515553c58a668b2f5c6f95d5ac7",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/f938a2d20bae5515553c58a668b2f5c6f95d5ac7",
-    "sourceCommitDate": "2026-07-19T13:32:05+02:00",
-    "sourceCommitMessage": "Add AI Myths Busted guide for sticky expert mental models.",
+    "contentSyncedAt": "2026-07-20T13:18:35.339Z",
+    "sourceCommit": "dca66f23dad2a5d0d4b2b19d15ebe683c6c211db",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/dca66f23dad2a5d0d4b2b19d15ebe683c6c211db",
+    "sourceCommitDate": "2026-07-20T15:17:06+02:00",
+    "sourceCommitMessage": "Merge pull request #5 from NabidAlam/feature/backend-engineering-roadmap",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }
