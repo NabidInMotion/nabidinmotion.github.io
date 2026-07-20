@@ -136,8 +136,8 @@
       "localGuide": "learn.html?g=resources--ai_myths_busted"
     },
     {
-      "title": "Backend Engineering Roadmap",
-      "description": "First-principles backend path: HTTP through scale, with free resources and in-repo links.",
+      "title": "Backend Engineer Roadmap",
+      "description": "Learn backend from HTTP to production: auth, Postgres, caching, queues, security, and scaling.",
       "localGuide": "learn.html?g=resources--backend_engineering_roadmap"
     }
   ]

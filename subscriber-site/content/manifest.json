@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "syncedAt": "2026-07-20T13:18:35.339Z",
+  "syncedAt": "2026-07-20T13:24:08.548Z",
   "repo": "https://github.com/NabidAlam/road-to-machine-learning",
   "totalLessons": 271,
   "modules": [
@@ -1618,7 +1618,7 @@
     },
     {
       "id": "resources--backend_engineering_roadmap",
-      "title": "Backend Engineering from First Principles",
+      "title": "Backend Engineer Roadmap",
       "source": "resources/backend_engineering_roadmap.md",
       "path": "guides/resources--backend_engineering_roadmap.json",
       "readingMinutes": 11
@@ -2090,11 +2090,11 @@
     "termsVersion": "2026-06-21",
     "termsUrl": "nutzungsbedingungen.html",
     "termsUrlEn": "terms.html",
-    "contentSyncedAt": "2026-07-20T13:18:35.339Z",
-    "sourceCommit": "dca66f23dad2a5d0d4b2b19d15ebe683c6c211db",
-    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/dca66f23dad2a5d0d4b2b19d15ebe683c6c211db",
-    "sourceCommitDate": "2026-07-20T15:17:06+02:00",
-    "sourceCommitMessage": "Merge pull request #5 from NabidAlam/feature/backend-engineering-roadmap",
+    "contentSyncedAt": "2026-07-20T13:24:08.548Z",
+    "sourceCommit": "0dc0eca15c7ca448fb244c11ad4d00dbbebf5c25",
+    "sourceCommitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/0dc0eca15c7ca448fb244c11ad4d00dbbebf5c25",
+    "sourceCommitDate": "2026-07-20T15:23:35+02:00",
+    "sourceCommitMessage": "Rename guide to Backend Engineer Roadmap.",
     "license": "MIT",
     "notice": "Educational content only. May be updated without prior notice. No warranty. See nutzungsbedingungen.html."
   }

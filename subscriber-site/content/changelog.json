@@ -2,6 +2,13 @@
   "version": 1,
   "entries": [
     {
+      "syncedAt": "2026-07-20T13:24:08.548Z",
+      "commit": "0dc0eca15c7ca448fb244c11ad4d00dbbebf5c25",
+      "commitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/0dc0eca15c7ca448fb244c11ad4d00dbbebf5c25",
+      "lessonCount": 271,
+      "termsVersion": "2026-06-21"
+    },
+    {
       "syncedAt": "2026-07-20T13:18:35.339Z",
       "commit": "dca66f23dad2a5d0d4b2b19d15ebe683c6c211db",
       "commitUrl": "https://github.com/NabidAlam/road-to-machine-learning/commit/dca66f23dad2a5d0d4b2b19d15ebe683c6c211db",
